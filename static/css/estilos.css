@@ -1,0 +1,239 @@
+/* GLOWLAB Skincare - hoja de estilos propia */
+
+:root {
+    --glow-bg: #fdf9f6;
+    --glow-bg-alt: #f6ece6;
+    --glow-panel: #ffffff;
+    --glow-border: #ecdfd6;
+    --glow-text: #3c2f2a;
+    --glow-text-muted: #8a7a72;
+    --glow-rose: #d98c86;
+    --glow-sage: #8ba888;
+    --glow-gold: #c9a26d;
+    --glow-gradient: linear-gradient(135deg, var(--glow-rose), var(--glow-gold));
+}
+
+body {
+    background-color: var(--glow-bg);
+    color: var(--glow-text);
+    font-family: "Jost", sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
+h1, h2, h3, h4, .brand-text, .glow-heading {
+    font-family: "Playfair Display", serif;
+    letter-spacing: 0.02em;
+}
+
+a {
+    text-decoration: none;
+}
+
+.text-accent {
+    color: var(--glow-rose);
+}
+
+.btn-accent {
+    background: var(--glow-gradient);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+}
+
+.btn-accent:hover {
+    filter: brightness(1.06);
+    color: #fff;
+}
+
+.btn-outline-accent {
+    border: 1px solid var(--glow-rose);
+    color: var(--glow-rose);
+    background: transparent;
+}
+
+.btn-outline-accent:hover {
+    background: var(--glow-rose);
+    color: #fff;
+}
+
+/* Navbar */
+.glow-navbar {
+    background-color: rgba(253, 249, 246, 0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--glow-border);
+}
+
+.glow-navbar .nav-link {
+    color: var(--glow-text-muted);
+    font-weight: 500;
+}
+
+.glow-navbar .nav-link:hover,
+.glow-navbar .nav-link.active {
+    color: var(--glow-rose);
+}
+
+.brand-text {
+    font-weight: 700;
+    color: var(--glow-text);
+}
+
+/* Cards */
+.card {
+    background-color: var(--glow-panel);
+    border: 1px solid var(--glow-border);
+    color: var(--glow-text);
+}
+
+.card-glow-hover {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card-glow-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(217, 140, 134, 0.2);
+}
+
+.card-img-top {
+    background-color: var(--glow-bg-alt);
+    object-fit: cover;
+    height: 200px;
+}
+
+/* Hero / Carousel */
+.hero-section {
+    background: radial-gradient(circle at top right, rgba(217, 140, 134, 0.18), transparent 55%),
+                radial-gradient(circle at bottom left, rgba(139, 168, 136, 0.18), transparent 50%),
+                var(--glow-bg-alt);
+    border-bottom: 1px solid var(--glow-border);
+}
+
+.carousel-item img {
+    height: 380px;
+    object-fit: cover;
+    filter: brightness(0.9);
+}
+
+.carousel-caption {
+    text-align: left;
+    left: 5%;
+    right: auto;
+    bottom: 20%;
+    color: #fff;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+}
+
+/* Sections */
+.section-title {
+    border-left: 4px solid var(--glow-rose);
+    padding-left: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+footer.glow-footer {
+    background-color: var(--glow-bg-alt);
+    border-top: 1px solid var(--glow-border);
+    color: var(--glow-text-muted);
+    margin-top: 3rem;
+}
+
+footer.glow-footer a {
+    color: var(--glow-text-muted);
+}
+
+footer.glow-footer a:hover {
+    color: var(--glow-rose);
+}
+
+/* Forms */
+.form-control, .form-select {
+    background-color: #fff;
+    border: 1px solid var(--glow-border);
+    color: var(--glow-text);
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #fff;
+    color: var(--glow-text);
+    border-color: var(--glow-rose);
+    box-shadow: 0 0 0 0.2rem rgba(217, 140, 134, 0.2);
+}
+
+.form-label {
+    color: var(--glow-text-muted);
+    font-weight: 500;
+}
+
+.auth-card {
+    background-color: var(--glow-panel);
+    border: 1px solid var(--glow-border);
+    border-radius: 0.75rem;
+}
+
+/* Admin */
+.admin-sidebar {
+    background-color: var(--glow-bg-alt);
+    border-right: 1px solid var(--glow-border);
+    min-height: calc(100vh - 76px);
+    padding: 1.5rem 1rem;
+}
+
+.admin-sidebar .nav-link,
+.offcanvas .nav-link {
+    color: var(--glow-text-muted);
+    border-radius: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.admin-sidebar .nav-link.active,
+.admin-sidebar .nav-link:hover,
+.offcanvas .nav-link.active,
+.offcanvas .nav-link:hover {
+    background-color: rgba(217, 140, 134, 0.15);
+    color: var(--glow-rose);
+}
+
+.admin-summary-card {
+    border-left: 4px solid var(--glow-sage);
+}
+
+/* Tables */
+table.dataTable {
+    color: var(--glow-text);
+}
+
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    color: var(--glow-text-muted);
+}
+
+.stock-critico {
+    color: #c0455a;
+    font-weight: 600;
+}
+
+/* Cart */
+.cart-qty-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    line-height: 1;
+}
+
+/* Utility */
+.bg-glow-panel {
+    background-color: var(--glow-panel);
+    border: 1px solid var(--glow-border);
+}
+
+.min-vh-70 {
+    min-height: 70vh;
+}

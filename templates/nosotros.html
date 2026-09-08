@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Nosotros - GLOWLAB Skincare{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+    <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+            <h1 class="section-title">Quienes somos</h1>
+            <p>
+                <strong>GLOWLAB Skincare</strong> es una tienda online dedicada al cuidado facial,
+                creada para acompanar a cada persona en su propia rutina de piel.
+            </p>
+            <p>
+                En GLOWLAB encontraras limpiadores, sueros, hidratantes, protectores solares,
+                exfoliantes, mascarillas y contornos de ojos, con una experiencia de compra
+                simple, rapida y pensada para todo tipo de piel.
+            </p>
+            <p>
+                Nuestro proposito es ofrecer un catalogo variado, informacion clara de cada producto
+                y un proceso de compra sin complicaciones, todo dentro de una interfaz moderna,
+                calida y con identidad propia.
+            </p>
+        </div>
+        <div class="col-lg-6 text-center">
+            <img src="{{ url_for('static', filename='img/about.svg') }}" alt="GLOWLAB Skincare" class="img-fluid rounded">
+        </div>
+    </div>
+
+    <div class="row g-4 mt-5">
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <i class="bi bi-droplet-half display-5 text-accent mb-3"></i>
+                <h3 class="h5">Que vendemos</h3>
+                <p class="small text-muted mb-0">Productos de skincare para rostro, de multiples categorias y para todo tipo de piel.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <i class="bi bi-bullseye display-5 text-accent mb-3"></i>
+                <h3 class="h5">Nuestro proposito</h3>
+                <p class="small text-muted mb-0">Acercar rutinas de cuidado facial de calidad a mas personas con una plataforma simple y confiable.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <i class="bi bi-people display-5 text-accent mb-3"></i>
+                <h3 class="h5">Quienes lo desarrollamos</h3>
+                <p class="small text-muted mb-0">Un equipo de estudiantes que construyo este proyecto academico con dedicacion.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
