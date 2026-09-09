@@ -1,22 +1,23 @@
-/* GLOWLAB Skincare - hoja de estilos propia */
+/* GLOWLAB Skincare - hoja de estilos propia
+   Paleta: celeste/agua fuerte + blanco, tipografia Poppins */
 
 :root {
-    --glow-bg: #fdf9f6;
-    --glow-bg-alt: #f6ece6;
+    --glow-bg: #ffffff;
+    --glow-bg-alt: #eafbfc;
     --glow-panel: #ffffff;
-    --glow-border: #ecdfd6;
-    --glow-text: #3c2f2a;
-    --glow-text-muted: #8a7a72;
-    --glow-rose: #d98c86;
-    --glow-sage: #8ba888;
-    --glow-gold: #c9a26d;
-    --glow-gradient: linear-gradient(135deg, var(--glow-rose), var(--glow-gold));
+    --glow-border: #d2f1f3;
+    --glow-text: #10282b;
+    --glow-text-muted: #5b7b7e;
+    --glow-rose: #1fc2d1;
+    --glow-sage: #4fd1d9;
+    --glow-gold: #0e9aae;
+    --glow-gradient: linear-gradient(135deg, #29d6e6, #0e9aae);
 }
 
 body {
     background-color: var(--glow-bg);
     color: var(--glow-text);
-    font-family: "Jost", sans-serif;
+    font-family: "Poppins", sans-serif;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -27,8 +28,9 @@ main {
 }
 
 h1, h2, h3, h4, .brand-text, .glow-heading {
-    font-family: "Playfair Display", serif;
-    letter-spacing: 0.02em;
+    font-family: "Poppins", sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.01em;
 }
 
 a {
@@ -40,14 +42,15 @@ a {
 }
 
 .btn-accent {
-    background: var(--glow-gradient);
+    background: #0f1f21;
     border: none;
     color: #fff;
     font-weight: 600;
+    border-radius: 50px;
 }
 
 .btn-accent:hover {
-    filter: brightness(1.06);
+    background: #000000;
     color: #fff;
 }
 
@@ -55,6 +58,7 @@ a {
     border: 1px solid var(--glow-rose);
     color: var(--glow-rose);
     background: transparent;
+    border-radius: 50px;
 }
 
 .btn-outline-accent:hover {
@@ -64,7 +68,7 @@ a {
 
 /* Navbar */
 .glow-navbar {
-    background-color: rgba(253, 249, 246, 0.92);
+    background-color: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(6px);
     border-bottom: 1px solid var(--glow-border);
 }
@@ -80,7 +84,7 @@ a {
 }
 
 .brand-text {
-    font-weight: 700;
+    font-weight: 800;
     color: var(--glow-text);
 }
 
@@ -89,6 +93,7 @@ a {
     background-color: var(--glow-panel);
     border: 1px solid var(--glow-border);
     color: var(--glow-text);
+    border-radius: 1rem;
 }
 
 .card-glow-hover {
@@ -97,7 +102,7 @@ a {
 
 .card-glow-hover:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 25px rgba(217, 140, 134, 0.2);
+    box-shadow: 0 10px 25px rgba(31, 194, 209, 0.22);
 }
 
 .card-img-top {
@@ -108,8 +113,8 @@ a {
 
 /* Hero / Carousel */
 .hero-section {
-    background: radial-gradient(circle at top right, rgba(217, 140, 134, 0.18), transparent 55%),
-                radial-gradient(circle at bottom left, rgba(139, 168, 136, 0.18), transparent 50%),
+    background: radial-gradient(circle at top right, rgba(31, 194, 209, 0.22), transparent 55%),
+                radial-gradient(circle at bottom left, rgba(79, 209, 217, 0.2), transparent 50%),
                 var(--glow-bg-alt);
     border-bottom: 1px solid var(--glow-border);
 }
@@ -117,7 +122,7 @@ a {
 .carousel-item img {
     height: 380px;
     object-fit: cover;
-    filter: brightness(0.9);
+    filter: brightness(0.95);
 }
 
 .carousel-caption {
@@ -162,7 +167,7 @@ footer.glow-footer a:hover {
     background-color: #fff;
     color: var(--glow-text);
     border-color: var(--glow-rose);
-    box-shadow: 0 0 0 0.2rem rgba(217, 140, 134, 0.2);
+    box-shadow: 0 0 0 0.2rem rgba(31, 194, 209, 0.2);
 }
 
 .form-label {
@@ -195,7 +200,7 @@ footer.glow-footer a:hover {
 .admin-sidebar .nav-link:hover,
 .offcanvas .nav-link.active,
 .offcanvas .nav-link:hover {
-    background-color: rgba(217, 140, 134, 0.15);
+    background-color: rgba(31, 194, 209, 0.15);
     color: var(--glow-rose);
 }
 

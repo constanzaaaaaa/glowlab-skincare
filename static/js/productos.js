@@ -15,7 +15,7 @@ function obtenerNombreCategoria(categoriaId) {
 }
 
 function rutaImagenProducto(producto) {
-    if (!producto.imagen) return "/static/img/logo.svg";
+    if (!producto.imagen) return "/static/img/logo.avif";
     return "/static/img/" + producto.imagen;
 }
 
@@ -343,7 +343,7 @@ function procesarFormularioProducto(codigoOriginal) {
         stock: Number(stock.value),
         stockCritico: stockCritico.value ? Number(stockCritico.value) : null,
         categoriaId: Number(categoria.value),
-        imagen: imagen.value.trim() || "logo.svg",
+        imagen: imagen.value.trim() || "logo.avif",
         estado: estado.value
     };
 

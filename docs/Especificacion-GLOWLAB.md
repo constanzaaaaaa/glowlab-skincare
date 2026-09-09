@@ -370,7 +370,7 @@ glowlab-skincare/
     │   └── validaciones.js
     │
     └── img/
-        ├── logo.png
+        ├── logo.avif
         ├── productos/
         └── blog/
 ```
@@ -558,7 +558,7 @@ Ejemplos:
 
 - Nuevos lanzamientos.
 - Noticias gamer.
-- Curiosidades.
+- .
 - Recomendaciones.
 - Novedades de GLOWLAB Skincare.
 

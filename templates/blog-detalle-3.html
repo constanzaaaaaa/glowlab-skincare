@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}5 curiosidades sobre el cuidado de la piel - Blog{% endblock %}
+
+{% block content %}
+<article class="container py-5" style="max-width: 800px;">
+    <img src="{{ url_for('static', filename='img/blog/curiosidades.jpeg') }}" class="img-fluid rounded mb-4" alt="5 curiosidades sobre el cuidado de la piel">
+    <p class="text-muted small mb-1">20 de agosto, 2026</p>
+    <h1 class="mb-4">5 curiosidades sobre el cuidado de la piel</h1>
+    <p>
+        La piel es el organo mas grande del cuerpo humano y se renueva por completo
+        aproximadamente cada 28 dias. Conocer como funciona ayuda a elegir mejor los
+        productos que usamos en nuestra rutina diaria.
+    </p>
+    <p>
+        Por ejemplo, aplicar protector solar todos los dias del ano -incluso cuando esta
+        nublado- es una de las acciones que mas retrasa la aparicion de lineas de expresion.
+        Tambien, la piel del contorno de ojos es hasta 10 veces mas delgada que el resto del
+        rostro, por eso requiere productos formulados especialmente para esa zona.
+    </p>
+    <p>
+        Otro dato curioso: el agua fria, mas que el agua caliente, ayuda a cerrar los poros
+        despues de la limpieza facial, dejando la piel con una sensacion mas fresca y firme.
+    </p>
+    <a href="{{ url_for('blog') }}" class="btn btn-accent mt-3"><i class="bi bi-arrow-left"></i> Volver al Blog</a>
+</article>
+{% endblock %}
