@@ -29,10 +29,25 @@
 | Medida | Estado actual |
 |---|---|
 | Casos unitarios definidos | 25 |
-| Casos aprobados | **Sin verificar: ejecutar `npm test` en Windows** |
-| Casos fallidos | Sin verificar |
+| Casos aprobados | **24 en ejecución del 18-10-2026, antes de la corrección** |
+| Casos fallidos | **1 en ejecución del 18-10-2026, antes de la corrección** |
 | Porcentaje de líneas | No medido |
 | Porcentaje de ramas | No medido |
+
+### Evidencia de ejecución del 18-10-2026
+
+Entorno observado: Karma 6.4.4, Webpack 5.112.0, ChromeHeadless 155.0.0.0, Windows 10.
+
+**Resultado enviado por la estudiante: 25 ejecutadas, 24 aprobadas y 1 fallida.**
+La prueba fallida fue **21 - muestra enlace al detalle correcto** (`test/componentes.spec.js`).
+La implementación usaba `<Button as={Link}>` de React-Bootstrap, que produjo un elemento `<a role="button">`.
+Testing Library buscaba un enlace accesible con `getByRole("link", {name:"Ver detalle"})`, así que no lo encontraba aunque la dirección `href="/productos/GL-001"` fuera correcta.
+
+**Corrección aplicada:** `ProductoCard.jsx` ahora representa la navegación con `<Link to={...} className="btn btn-outline-info btn-sm">`. Esta corrección preserva la apariencia Bootstrap y permite que el navegador exponga el elemento como enlace, que es lo apropiado para navegar.
+
+**Estado posterior a la corrección: pendiente de volver a ejecutar `npm.cmd test` y registrar el resultado.** No se afirma que las 25 hayan pasado.
+
+El registro también mostró advertencias `404 /static/img/productos/hidratante1.webp` emitidas por el servidor de Karma, independiente de Flask/Vite. Estas no explican el fallo 21 y no hicieron fallar los demás casos.
 
 ### Limitación de cobertura
 
