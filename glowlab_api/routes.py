@@ -3,7 +3,6 @@ from functools import wraps
 from uuid import uuid4
 
 from flask import Blueprint, jsonify, request, session
-from sqlalchemy import func
 
 from glowlab_api import db
 from glowlab_api.models import CarritoItem, Contacto, Noticia, Producto, Usuario
@@ -213,7 +212,7 @@ def sesion_actual():
 def iniciar_sesion():
     datos = request.get_json(silent=True) or {}
     correo = str(datos.get("correo", "")).lower().strip()
-    usuario = Usuario.query.filter(func.lower(Usuario.correo) == correo).first()
+    usuario = Usuario.query.filter(db.func.lower(Usuario.correo) == correo).first()
     if not usuario or not usuario.check_password(str(datos.get("password", ""))):
         return error("El correo o la contraseña no coinciden.", 401)
     if usuario.estado == "Inactivo":
@@ -236,7 +235,7 @@ def registrar():
         return error(mensaje)
     if db.session.get(Usuario, datos["run"].upper().strip()):
         return error("RUN ya registrado.", 409)
-    if Usuario.query.filter(func.lower(Usuario.correo) == datos["correo"].lower().strip()).first():
+    if Usuario.query.filter(db.func.lower(Usuario.correo) == datos["correo"].lower().strip()).first():
         return error("Correo ya registrado.", 409)
     usuario = Usuario(run=datos["run"].upper().strip())
     asignar_usuario(usuario, datos)
@@ -269,7 +268,7 @@ def crear_usuario():
         return error(mensaje)
     if db.session.get(Usuario, datos["run"].upper().strip()):
         return error("RUN ya registrado.", 409)
-    if Usuario.query.filter(func.lower(Usuario.correo) == datos["correo"].lower().strip()).first():
+    if Usuario.query.filter(db.func.lower(Usuario.correo) == datos["correo"].lower().strip()).first():
         return error("Correo ya registrado.", 409)
     usuario = Usuario(run=datos["run"].upper().strip())
     asignar_usuario(usuario, datos, permitir_rol=True)
@@ -290,7 +289,7 @@ def actualizar_usuario(run):
         return error(mensaje)
     if str(datos.get("run", "")).upper().strip() != run:
         return error("No puedes cambiar el RUN.")
-    repetido = Usuario.query.filter(func.lower(Usuario.correo) == datos["correo"].lower().strip(), Usuario.run != run).first()
+    repetido = Usuario.query.filter(db.func.lower(Usuario.correo) == datos["correo"].lower().strip(), Usuario.run != run).first()
     if repetido:
         return error("Correo ya registrado.", 409)
     asignar_usuario(usuario, datos, permitir_rol=True)
