@@ -1,0 +1,17 @@
+:root { font-family: "Poppins", sans-serif; color: #233942; background: #fff; }
+body { margin: 0; min-width: 320px; }
+#root { min-height: 100vh; display: flex; flex-direction: column; }
+main { flex: 1; }
+a { text-decoration: none; }
+.glow-navbar { background: #fff; border-bottom: 1px solid #d8eff0; }
+.glow-brand { font-weight: 800; letter-spacing: .03em; color: #087f8c; }
+.section-title { border-left: 4px solid #19b9c6; padding-left: .75rem; font-weight: 700; }
+.hero-glow { background: linear-gradient(135deg, #e8ffff, #fefcff); }
+.btn-glow { background: #0d9da9; color: white; border-color: #0d9da9; }
+.btn-glow:hover { background: #087f8c; color: white; }
+.card-glow { border: 1px solid #e0eff0; transition: transform .15s ease, box-shadow .15s ease; }
+.card-glow:hover { transform: translateY(-3px); box-shadow: 0 8px 28px #1aa0ac20; }
+.product-img { height: 210px; object-fit: contain; background: #f6fdfd; }
+.glow-footer { background: #f1fbfc; border-top: 1px solid #e0eff0; }
+.preview-img { max-height: 450px; object-fit: contain; }
+.admin-sidebar { background: #f5fbfc; min-height: 65vh; }
