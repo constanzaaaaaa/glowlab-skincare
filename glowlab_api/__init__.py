@@ -1,5 +1,6 @@
 """Extensión REST del Flask original; no modifica las rutas Jinja existentes."""
 import os
+from pathlib import Path
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -7,7 +8,7 @@ db = SQLAlchemy()
 
 def configurar_api(app):
     app.config["SECRET_KEY"] = os.environ.get("GLOWLAB_SECRET_KEY", "solo-desarrollo-cambiar-en-produccion")
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(app.root_path, "glowlab_react.sqlite")
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + Path(app.root_path, "glowlab_react.sqlite").as_posix()
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
 

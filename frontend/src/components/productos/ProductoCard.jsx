@@ -4,6 +4,7 @@ import { rutaImagen } from "../../api/axiosClient";
 import { useCart } from "../../hooks/useCart";
 import { formatearPrecio, stockDisponible } from "../../utils/format";
 import { mostrarError } from "../../utils/swal";
+import TituloProducto from "../atoms/TituloProducto";
 
 export default function ProductoCard({ producto }) {
   const { agregar } = useCart();
@@ -15,7 +16,7 @@ export default function ProductoCard({ producto }) {
     <Card className="h-100 card-glow">
       <Card.Img variant="top" className="product-img" src={rutaImagen(producto.imagen)} alt={producto.nombre} />
       <Card.Body className="d-flex flex-column">
-        <Card.Title className="h6">{producto.nombre}</Card.Title>
+        <TituloProducto nombre={producto.nombre} />
         <p className="fw-bold text-info">{formatearPrecio(producto.precio)}</p>
         <p className="small text-muted">{producto.stock > 0 ? "Stock: " + producto.stock : "Sin stock"}</p>
         <div className="mt-auto d-flex gap-2">
