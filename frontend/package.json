@@ -1,36 +1,42 @@
-
 {
-  "name": "glowlab-skincare-frontend",
+  "name": "glowlab-skincare-react",
   "version": "1.0.0",
   "private": true,
-  "description": "Frontend React para GlowLab Skincare con pruebas Jasmine y Karma",
+  "type": "module",
   "scripts": {
-    "start": "webpack serve --mode development",
-    "build": "webpack --mode production",
-    "test": "karma start karma.conf.js",
-    "test:coverage": "karma start karma.conf.js --single-run"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "karma start karma.conf.cjs --single-run",
+    "test:watch": "karma start karma.conf.cjs --no-single-run --browsers Chrome"
   },
   "dependencies": {
+    "axios": "^1.20.0",
     "bootstrap": "^5.3.8",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "bootstrap-icons": "^1.13.1",
+    "react": "^19.2.8",
+    "react-bootstrap": "^2.10.10",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.4",
+    "sweetalert2": "^11.26.25"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.4",
-    "@babel/preset-env": "^7.28.3",
-    "@babel/preset-react": "^7.27.1",
-    "babel-loader": "^10.0.0",
-    "css-loader": "^7.1.2",
-    "style-loader": "^4.0.0",
-    "html-webpack-plugin": "^5.6.4",
-    "jasmine-core": "^5.9.0",
+    "@babel/core": "^8.0.6",
+    "@babel/preset-env": "^8.0.6",
+    "@babel/preset-react": "^8.0.1",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
+    "@vitejs/plugin-react": "^6.1.1",
+    "babel-loader": "^10.1.1",
+    "jasmine-core": "^7.0.2",
     "karma": "^6.4.4",
     "karma-chrome-launcher": "^3.2.0",
-    "karma-coverage": "^2.2.1",
     "karma-jasmine": "^5.1.0",
+    "karma-jasmine-html-reporter": "^2.3.0",
+    "karma-spec-reporter": "^0.0.37",
     "karma-webpack": "^5.0.1",
-    "webpack": "^5.101.3",
-    "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.2"
+    "vite": "^8.3.0",
+    "webpack": "^5.111.1",
+    "webpack-cli": "^7.2.3"
   }
 }
