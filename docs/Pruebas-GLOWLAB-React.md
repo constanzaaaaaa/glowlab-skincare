@@ -13,7 +13,7 @@
 | Catálogo y carrito | `test/formato.spec.js` | 9 | Estado, nombre, categoría, stock, precios y totales |
 | Validaciones | `test/validaciones.spec.js` | 10 | Correo, dominios, contraseña, RUN, textos, stock entero |
 | Componentes | `test/componentes.spec.js` | 6 | Props, enlaces, evento de agregar, sin stock, catálogo vacío, ruta inexistente |
-| **Total** | | **25 definidos** | Supera el mínimo de 10 de la pauta, pendiente verificar resultado |
+| **Total** | | **25 definidos** | Supera el mínimo de 10 de la pauta; ejecución completa verificada por la estudiante |
 
 ## Proceso
 
@@ -29,8 +29,8 @@
 | Medida | Estado actual |
 |---|---|
 | Casos unitarios definidos | 25 |
-| Casos aprobados | **24 en ejecución del 18-10-2026, antes de la corrección** |
-| Casos fallidos | **1 en ejecución del 18-10-2026, antes de la corrección** |
+| Casos aprobados | **25 en la segunda ejecución del 18-10-2026** |
+| Casos fallidos | **0 en la segunda ejecución del 18-10-2026** |
 | Porcentaje de líneas | No medido |
 | Porcentaje de ramas | No medido |
 
@@ -45,9 +45,9 @@ Testing Library buscaba un enlace accesible con `getByRole("link", {name:"Ver de
 
 **Corrección aplicada:** `ProductoCard.jsx` ahora representa la navegación con `<Link to={...} className="btn btn-outline-info btn-sm">`. Esta corrección preserva la apariencia Bootstrap y permite que el navegador exponga el elemento como enlace, que es lo apropiado para navegar.
 
-**Estado posterior a la corrección: pendiente de volver a ejecutar `npm.cmd test` y registrar el resultado.** No se afirma que las 25 hayan pasado.
+**Estado posterior a la corrección, comprobado en Windows:** la estudiante ejecutó `npm.cmd test` nuevamente el 18-10-2026 a las 20:18. La captura muestra `Executed 25 of 25 SUCCESS` y `TOTAL: 25 SUCCESS`. Esto confirma que el caso 21 pasó tras la corrección y que no quedaron casos fallidos en esa ejecución.
 
-El registro también mostró advertencias `404 /static/img/productos/hidratante1.webp` emitidas por el servidor de Karma, independiente de Flask/Vite. Estas no explican el fallo 21 y no hicieron fallar los demás casos.
+Ambas ejecuciones mostraron advertencias `404 /static/img/productos/hidratante1.webp` emitidas por el servidor de Karma, independiente de Flask/Vite. Estas advertencias no afectaron las 25 pruebas ni implican, por sí solas, que las imágenes estén rotas en la aplicación real. La captura de la segunda ejecución es evidencia aportada en la conversación, no un archivo adjunto al repositorio.
 
 ### Limitación de cobertura
 
