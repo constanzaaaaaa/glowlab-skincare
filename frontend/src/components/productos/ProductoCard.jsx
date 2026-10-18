@@ -20,7 +20,7 @@ export default function ProductoCard({ producto }) {
         <p className="fw-bold text-info">{formatearPrecio(producto.precio)}</p>
         <p className="small text-muted">{producto.stock > 0 ? "Stock: " + producto.stock : "Sin stock"}</p>
         <div className="mt-auto d-flex gap-2">
-          <Button as={Link} to={"/productos/" + producto.codigo} variant="outline-info" size="sm">Ver detalle</Button>
+          <Link to={"/productos/" + producto.codigo} className="btn btn-outline-info btn-sm">Ver detalle</Link>
           <Button size="sm" className="btn-glow" disabled={!stockDisponible(producto)} onClick={agregarUno} aria-label={"Agregar " + producto.nombre}>Agregar</Button>
         </div>
       </Card.Body>
