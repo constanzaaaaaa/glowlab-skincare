@@ -62,9 +62,11 @@ def datos_usuario(datos, usuario=None):
         return "RUN inválido."
     if not usuario and not (4 <= len(str(datos.get("password", ""))) <= 10):
         return "La contraseña debe tener entre 4 y 10 caracteres."
-    if not any(int(datos["regionId"]) == r["id"] for r in REGIONES):
+    region_id = validar_numero(datos.get("regionId"), 1)
+    comuna_id = validar_numero(datos.get("comunaId"), 1)
+    if not any(region_id == r["id"] for r in REGIONES):
         return "La región no existe."
-    if not any(int(datos["comunaId"]) == c["id"] and int(datos["regionId"]) == c["regionId"] for c in COMUNAS):
+    if not any(comuna_id == c["id"] and region_id == c["regionId"] for c in COMUNAS):
         return "La comuna no pertenece a la región."
     return None
 

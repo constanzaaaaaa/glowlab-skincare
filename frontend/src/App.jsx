@@ -39,13 +39,13 @@ export default function App() {
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<AdminPanel />} />
             <Route path="/admin/productos" element={<AdminProductos />} />
-            <Route path="/admin/productos/nuevo" element={<AdminProductoForm />} />
-            <Route path="/admin/productos/editar/:codigo" element={<AdminProductoForm />} />
           </Route>
         </Route>
 
         <Route element={<ProtectedRoute rolesPermitidos={[ROLES.ADMINISTRADOR]} />}>
           <Route element={<AdminLayout />}>
+            <Route path="/admin/productos/nuevo" element={<AdminProductoForm />} />
+            <Route path="/admin/productos/editar/:codigo" element={<AdminProductoForm />} />
             <Route path="/admin/usuarios" element={<AdminUsuarios />} />
             <Route path="/admin/usuarios/nuevo" element={<AdminUsuarioForm />} />
             <Route path="/admin/usuarios/editar/:run" element={<AdminUsuarioForm />} />
