@@ -52,7 +52,7 @@ Migrar las páginas HTML/Jinja a componentes React reutilizables con Bootstrap r
 4. Crear/editar/borrar un producto y un usuario conserva el resultado al recargar.
 5. Una cuenta no administradora no puede realizar CRUD administrativo mediante las funciones JS.
 6. El diseño se adapta a móvil y escritorio.
-7. **Verificado históricamente:** `npm.cmd test` aprobó **35/35 casos** en ChromeHeadless 155 / Windows 10 (captura del 18-10-2026). **Pendiente:** ejecutar las 4 pruebas Atomic adicionales y confirmar **40/40**.
+7. **Verificado históricamente:** `npm.cmd test` aprobó **35/35 casos** en ChromeHeadless 155 / Windows 10 (captura del 18-10-2026). **Pendiente:** ejecutar las 5 pruebas Atomic adicionales y confirmar **40/40**.
 8. `npm.cmd run test:coverage` genera el informe actualizado; no reutilizar cifras antiguas como cobertura del nuevo código.
 
 ## Fuera de alcance
