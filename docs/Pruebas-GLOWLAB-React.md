@@ -49,11 +49,25 @@ Testing Library buscaba un enlace accesible con `getByRole("link", {name:"Ver de
 
 Ambas ejecuciones mostraron advertencias `404 /static/img/productos/hidratante1.webp` emitidas por el servidor de Karma, independiente de Flask/Vite. Estas advertencias no afectaron las 25 pruebas ni implican, por sí solas, que las imágenes estén rotas en la aplicación real. La captura de la segunda ejecución es evidencia aportada en la conversación, no un archivo adjunto al repositorio.
 
-### Limitación de cobertura
+### Informe de cobertura: configuración añadida según documento 037
 
-La configuración de Karma del **047** no utiliza `karma-coverage` y el usuario pidió conservar estrictamente las dependencias del profesor. Por eso **no se agregó una biblioteca de instrumentación ajena al ejemplo ni se informa un 85 % ficticio**.
+Los apuntes **037 MC_Informes de cobertura.pdf** del profesor explican que **Karma + Jasmine pueden medir cobertura con `karma-coverage`**. Esto amplía el ejemplo 047 (que enseña las pruebas, pero no configura ese paquete).
 
-La matriz anterior indica **cobertura funcional de casos**, no porcentajes instrumentados de líneas/ramas. Si la rúbrica exige porcentajes, deberán obtenerse mediante un mecanismo de medición explícitamente autorizado y ejecutado realmente. No presentar la matriz como reporte numérico de cobertura.
+En la rama `migracion-react-profesor` se añadió `karma-coverage` como dependencia de desarrollo, un script separado `test:coverage` y una instrumentación de módulos React originales mediante Istanbul, que ya es dependencia de `karma-coverage`. `npm test` permanece con la configuración de las 25 pruebas ya aprobadas.
+
+**Comandos para obtener una medición real en Windows:**
+
+```powershell
+cd frontend
+npm.cmd install
+npm.cmd run test:coverage
+```
+
+**Archivos generados:** `frontend/coverage/html/index.html` (HTML) y `frontend/coverage/lcov.info` (reporte LCOV). El informe indica porcentajes de líneas, funciones, sentencias y ramas.
+
+**Alcance importante:** la cobertura se calcula sobre los módulos `src/` que las pruebas alcanzan a importar. Los módulos no importados quedan fuera del denominador. Por eso esta primera medición es una **cobertura de los módulos ejercitados**, no una certificación de cobertura de toda GlowLab.
+
+**Pendiente:** ejecutar `npm.cmd run test:coverage` y registrar los valores exactos que muestre la terminal. **No se ha inventado ningún porcentaje.**
 
 ## Evidencias sugeridas
 

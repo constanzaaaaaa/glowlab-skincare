@@ -56,9 +56,21 @@ Para el modo interactivo:
 npm run test:watch
 ```
 
-Hay **25 casos definidos** en tres archivos `test/*.spec.js` sobre utilidades, validaciones, componentes, props, stock y carrito. Los resultados de ejecución real todavía deben anotarse tras probarlos en Windows.
+Hay **25 casos definidos y 25 aprobados** (ejecución aportada el 18-10-2026) en tres archivos `test/*.spec.js` sobre utilidades, validaciones, componentes, props, stock y carrito.
 
-**Cobertura:** la configuración 047 del profesor no incluye `karma-coverage`, por lo que aquí no se ha añadido ese paquete ni se declara un porcentaje numérico que no se haya medido. Consulta `docs/Pruebas-GLOWLAB-React.md`.
+### Informe de cobertura (apuntes 037 del profesor)
+
+El documento `037 MC_Informes de cobertura.pdf` explica el uso de **karma-coverage**, así que se añadió únicamente ese paquete. Para obtener los porcentajes reales:
+
+```powershell
+cd frontend
+npm.cmd install
+npm.cmd run test:coverage
+```
+
+Abre `frontend/coverage/html/index.html` para consultar el informe de líneas, ramas, funciones y sentencias; Karma también imprime un resumen en la terminal. La instrumentación se aplica a **módulos de `src/` importados por las pruebas**, no a las bibliotecas de `node_modules` ni a los archivos `test/*.spec.js`. Los módulos no importados por ninguna prueba no figurarán en el porcentaje: no interpretes ese número como cobertura de **toda** la aplicación. El informe se genera localmente y se excluye de Git por `.gitignore`.
+
+**No se ha ejecutado todavía `test:coverage` en Windows, por tanto no se informa ningún porcentaje numérico.** Consulta `docs/Pruebas-GLOWLAB-React.md`.
 
 ## 5. Compilar frontend
 
