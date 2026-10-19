@@ -1,45 +1,41 @@
 # GlowLab Skincare · React (evaluación DSY1104)
 
-Migración del frontend Flask/Jinja original a React, respetando la arquitectura de los ejemplos del profesor:
+Migración del frontend Flask/Jinja a React según **027 (tutorial HTML→React)**, **033 (estructura React)**, **034 (componentes reutilizables)**, **037 (informes de cobertura)**, **040 (anexo de Evaluación Parcial 2)** y **047 (Jasmine/Karma)**.
 
-- **033 Nexo Gaming React**: Vite, React, React Router, React-Bootstrap, Axios, SweetAlert2, páginas, layouts, contextos y API Flask.
-- **034 React Atomic**: separación de piezas reutilizables mediante props (tarjetas, cuadrícula, tabla y layouts).
-- **047 Test Karma Jasmine**: Jasmine, Karma, Webpack, Babel, ChromeHeadless, specs y Testing Library.
+**Origen de datos actual:** archivo JavaScript de prueba `src/data/datosIniciales.js` + CRUD en `src/storage/` + persistencia `localStorage`. Los módulos `src/api/` mantienen los mismos nombres públicos, pero ya no hacen solicitudes HTTP. No se requiere Flask para ejecutar el frontend de React. No se añadieron librerías de datos, estado ni autenticación externas.
 
-No se agregó un gestor de estado externo ni una biblioteca distinta a las usadas en estos ejemplos. **La rama `main` y el archivo `app.py` original no se reemplazaron.**
+**Respaldo conservado:** `app.py`, `run_react_api.py`, `glowlab_api/` y SQLite no fueron borrados. La rama `main` permanece intacta.
 
 ## 1. Requisitos
 
 - Windows con Node.js y npm disponibles.
-- Python con pip.
 - Google Chrome, necesario para `ChromeHeadless`.
+- Navegador con `localStorage` habilitado. **Python y Flask ya no son necesarios para React.**
 
-## 2. Iniciar Flask y la API
+## 2. Iniciar React sin Flask
 
-Abre PowerShell en la **raíz** `glowlab-skincare` (no dentro de `frontend`):
-
-```powershell
-py -m pip install -r requirements-react.txt
-py run_react_api.py
-```
-
-La API responde en `http://localhost:5000/api/health`.
-El Flask original sigue ofreciendo sus plantillas en el mismo puerto cuando ejecutas `run_react_api.py`.
-
-Los registros React usan SQLite, creada automáticamente como `glowlab_react.sqlite` en la carpeta del proyecto. Es una base de datos **independiente** de los datos `localStorage` del Flask original. Las imágenes se reutilizan desde `static/img`, sin duplicarlas.
-
-## 3. Iniciar React
-
-En **otra** ventana de PowerShell:
+Abre PowerShell en la **raíz** del proyecto y ejecuta:
 
 ```powershell
 cd frontend
-npm install
-npm run dev
+npm.cmd install
+npm.cmd run dev
 ```
 
-Abre `http://localhost:5173`. Mantén abierta la ventana de Flask.
-Vite redirige `/api` y `/static` a Flask para conservar la comunicación enseñada en el ejemplo 033, sin agregar dependencias de proxy.
+Abre `http://localhost:5173`. Los productos e imágenes estarán disponibles **sin ejecutar Python ni iniciar Flask**. Las imágenes están en `frontend/public/static/img/`, copiadas de los recursos originales para Vite.
+
+## 3. Cómo funciona la persistencia
+
+- **`src/data/datosIniciales.js`:** productos, usuarios de prueba, categorías, regiones, comunas, roles y blog.
+- **`src/storage/persistencia.js`:** crea las colecciones por primera vez y guarda/lee datos JSON en `localStorage`.
+- **`src/storage/productos.js` y `usuarios.js`:** funciones CRUD, validaciones y controles de rol simulados.
+- **`src/storage/carrito.js` y `otros.js`:** carrito, checkout de demostración, blog, catálogos y mensajes.
+- **`src/api/`:** conserva la interfaz utilizada por componentes y páginas; ahora delega a las funciones JS.
+- **Estado React:** `AuthContext` y `CartContext` sincronizan los cambios, incluso con eventos de almacenamiento.
+
+Los datos permanecen en **ese navegador**, incluso después de actualizar la página. No se transfieren ni sincronizan con SQLite o con la versión Flask antigua. Cada navegador/perfil tiene su propia copia. Para reiniciar a los datos originales, deben borrarse las claves `glowlab_react_*_v1` del almacenamiento del sitio, lo cual elimina los cambios locales.
+
+**Seguridad:** almacenamiento, sesión y roles en el cliente son únicamente una simulación educativa. Se usa un hash de demostración en lugar de contraseñas legibles, pero **no es autenticación segura**; no guardar información real ni publicar esta versión como tienda productiva.
 
 ## 4. Ejecutar pruebas según ejemplo 047
 
@@ -56,7 +52,7 @@ Para el modo interactivo:
 npm run test:watch
 ```
 
-Hay **25 casos definidos y 25 aprobados** (ejecución aportada el 18-10-2026) en tres archivos `test/*.spec.js` sobre utilidades, validaciones, componentes, props, stock y carrito.
+Las **25 pruebas originales aprobaron el 18-10-2026**. Se añadieron **10 casos de persistencia/CRUD** en `test/persistencia.spec.js`, por lo que hay **35 casos definidos**. La nueva ejecución de 35 casos aún debe verificarse en Windows.
 
 ### Informe de cobertura (apuntes 037 del profesor)
 
@@ -70,7 +66,7 @@ npm.cmd run test:coverage
 
 Abre `frontend/coverage/html/index.html` para consultar el informe de líneas, ramas, funciones y sentencias; Karma también imprime un resumen en la terminal. La instrumentación se aplica a **módulos de `src/` importados por las pruebas**, no a las bibliotecas de `node_modules` ni a los archivos `test/*.spec.js`. Los módulos no importados por ninguna prueba no figurarán en el porcentaje: no interpretes ese número como cobertura de **toda** la aplicación. El informe se genera localmente y se excluye de Git por `.gitignore`.
 
-**Ejecución comprobada el 18-10-2026:** `npm.cmd run test:coverage` finalizó con **25/25 pruebas exitosas**; cobertura de los módulos instrumentados: **38 % de sentencias (38/100), 71,73 % de ramas (33/46), 42,22 % de funciones (19/45) y 39,53 % de líneas (34/86)**. Esta medición no representa el total de archivos de la aplicación, porque solo instrumenta los módulos alcanzados mediante importaciones de las pruebas. Consulta `docs/Pruebas-GLOWLAB-React.md`.
+**Última medición comprobada (antes de añadir persistencia y sus pruebas):** 25/25 exitosas, con 38 % de sentencias, 71,73 % de ramas, 42,22 % de funciones y 39,53 % de líneas. **Estos porcentajes históricos ya no describen el código actual** y deben medirse otra vez con `npm.cmd run test:coverage`. Ver `docs/Pruebas-GLOWLAB-React.md`.
 
 ## 5. Compilar frontend
 
@@ -87,7 +83,7 @@ Vite genera `frontend/dist` (no subir `dist` ni `node_modules`).
 - Vendedor: `vendedor@gmail.com` / `vend1234`
 - Cliente: `camila@gmail.com` / `cliente1`
 
-Las contraseñas de prueba se guardan **con hash** en SQLite al inicializar la base. No utilices estas credenciales ni la clave secreta de desarrollo en un sistema público.
+Las cuentas de demostración anteriores conservan sus datos de inicio de sesión, pero ahora están simuladas en `localStorage` de React. El hash del navegador no ofrece protección equivalente a una autenticación de servidor. No reutilices credenciales reales.
 
 ## 7. Funcionalidad
 
@@ -99,11 +95,11 @@ Las contraseñas de prueba se guardan **con hash** en SQLite al inicializar la b
 
 ## 8. Alcance y límites
 
-1. Las rutas y plantillas Flask originales permanecen intactas, pero la aplicación React utiliza una base SQLite separada de `localStorage`; **no hay sincronización automática entre ambas bases**.
-2. Checkout es una **simulación académica** sin cobro real ni pasarela de pago, como el ejemplo del profesor.
-3. La base inicial se crea solo cuando las tablas están vacías, para no sobrescribir cambios.
-4. El backend incluye una clave de sesión predeterminada solo para desarrollo; configura `GLOWLAB_SECRET_KEY` antes de cualquier uso fuera del entorno local.
-5. Este código fue revisado estructuralmente, pero debes ejecutar `npm install`, `npm run dev` y `npm test` en Windows para verificar dependencias, interfaz y pruebas.
+1. Flask/SQLite permanecen intactos como respaldo, pero **React usa datos simulados en JavaScript + localStorage**, según el anexo 040. No hay migración automática de registros de SQLite.
+2. El checkout es **simulado**, sin pasarela de pago ni transacciones reales. Vacía el carrito, manteniendo el comportamiento anterior de demostración.
+3. Las colecciones se inicializan solo si aún no existen para preservar las ediciones del estudiante.
+4. La autorización por roles ocurre en JavaScript del navegador: **no constituye protección de datos de un sistema real**.
+5. Las 10 pruebas nuevas y la cobertura actualizada requieren ejecución y validación en Windows.
 
 ## 9. Rutas principales
 
