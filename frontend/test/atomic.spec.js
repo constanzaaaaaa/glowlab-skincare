@@ -49,6 +49,13 @@ describe("GlowLab: Atomic Design, siguiendo 034 React Atomic", () => {
     expect(screen.getByText("No se encontraron productos.")).toBeTruthy();
   });
 
+  it("40 - organismo filtra productos por categoría", () => {
+    mostrarOrganismo();
+    fireEvent.change(screen.getByRole("combobox", { name: "Filtrar por categoría" }), { target: { value: "2" } });
+    expect(screen.getByText("Hydra Glow Serum")).toBeTruthy();
+    expect(screen.queryByText("Pure Clay Cleanser")).toBeNull();
+  });
+
   it("39 - organismo no muestra productos inactivos", () => {
     mostrarOrganismo();
     expect(screen.queryByText("Producto oculto")).toBeNull();
