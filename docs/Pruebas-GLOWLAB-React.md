@@ -116,7 +116,7 @@ En la reorganización basada en los **RAR originales** del profesor, se conserv�
 
 El archivo nuevo `frontend/test/atomic.spec.js` añade los casos **36–40** para verificar los cambios del átomo Buscador, la composición de la molécula FiltrosProductos, el filtrado del organismo ListaProductos y la exclusión de productos inactivos.
 
-**Pendiente:** ejecutar `npm.cmd test` en Windows para confirmar si los 39 casos pasan. Repetir `npm.cmd run test:coverage` después: los porcentajes de la captura anterior (59,61 % sentencias, 53,55 % ramas, 64,80 % funciones, 64,05 % líneas) corresponden a la versión de **35 pruebas previa a esta reorganización** y **todavía no son los del proyecto actual**. La comparación detallada está en `docs/Comparacion-Ejemplos-Profesor.md`.
+**Pendiente:** ejecutar `npm.cmd test` en Windows para confirmar si los 40 casos pasan. Repetir `npm.cmd run test:coverage` después: los porcentajes de la captura anterior (59,61 % sentencias, 53,55 % ramas, 64,80 % funciones, 64,05 % líneas) corresponden a la versión de **35 pruebas previa a esta reorganización** y **todavía no son los del proyecto actual**. La comparación detallada está en `docs/Comparacion-Ejemplos-Profesor.md`.
 
 ## Evidencias sugeridas
 
