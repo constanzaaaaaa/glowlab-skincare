@@ -13,7 +13,8 @@
 | Catálogo y carrito | `test/formato.spec.js` | 9 | Estado, nombre, categoría, stock, precios y totales |
 | Validaciones | `test/validaciones.spec.js` | 10 | Correo, dominios, contraseña, RUN, textos, stock entero |
 | Componentes | `test/componentes.spec.js` | 6 | Props, enlaces, evento de agregar, sin stock, catálogo vacío, ruta inexistente |
-| **Total** | | **25 definidos** | Supera el mínimo de 10 de la pauta; ejecución completa verificada por la estudiante |
+| Persistencia JS y CRUD | `test/persistencia.spec.js` | **10 nuevos** | Datos iniciales, guardar colecciones, CRUD de productos, permisos, carrito y contacto |
+| **Total** | | **35 definidos** | 25 anteriores verificados; 10 agregados pendientes de ejecución |
 
 ## Proceso
 
@@ -28,9 +29,9 @@
 
 | Medida | Estado actual |
 |---|---|
-| Casos unitarios definidos | 25 |
-| Casos aprobados | **25 en la segunda ejecución del 18-10-2026** |
-| Casos fallidos | **0 en la segunda ejecución del 18-10-2026** |
+| Casos unitarios definidos | **35 actuales** |
+| Casos aprobados | **25/25 en la ejecución anterior del 18-10-2026** |
+| Casos fallidos | **0 en esa ejecución anterior; 10 pruebas nuevas pendientes** |
 | Porcentaje de sentencias | **38,00 % (38/100)** |
 | Porcentaje de ramas | **71,73 % (33/46)** |
 | Porcentaje de funciones | **42,22 % (19/45)** |
@@ -69,7 +70,7 @@ npm.cmd run test:coverage
 
 **Alcance importante:** la cobertura se calcula sobre los módulos `src/` que las pruebas alcanzan a importar. Los módulos no importados quedan fuera del denominador. Por eso esta primera medición es una **cobertura de los módulos ejercitados**, no una certificación de cobertura de toda GlowLab.
 
-### Resultado real de cobertura — 18-10-2026, 22:06 (hora indicada por Karma)
+### Resultado histórico de cobertura — 18-10-2026, 22:06 (antes de agregar CRUD JS)
 
 La estudiante ejecutó `npm.cmd run test:coverage` en Windows 10 con ChromeHeadless 155.0.0.0 y compartió una captura del resumen de terminal.
 
@@ -88,7 +89,15 @@ Lines      : 39.53% (34/86)
 
 **Áreas de mejora:** la cobertura de funciones (42,22 %) y líneas (39,53 %) sugiere crear nuevos casos de prueba para las funciones y rutas todavía sin ejercitar. Conviene abrir el informe `coverage/html/index.html` y revisar sus líneas rojas antes de diseñar casos adicionales; estas cifras no permiten por sí solas identificar funciones específicas sin ver el reporte por archivo.
 
-**Estado:** porcentajes registrados tal como aparecen en la captura de la estudiante. El informe HTML permanece en su equipo y no se ha inspeccionado archivo por archivo. No se declara un mínimo de cobertura cumplido sin evidencia de un umbral numérico definido en la rúbrica.
+**Estado:** porcentajes históricos registrados tal como aparecen en la captura aportada por la estudiante. Son válidos para esa ejecución de 25 pruebas, **pero no para la nueva versión de 35 casos y persistencia JavaScript**. Es obligatorio repetir `npm.cmd test` y `npm.cmd run test:coverage` para obtener el resultado actual. El informe HTML histórico no se ha inspeccionado archivo por archivo.
+
+### Nueva capa de persistencia del anexo 040
+
+Desde esta revisión, `src/data/datosIniciales.js` y `src/storage/` implementan la fuente simulada de datos y el CRUD en `localStorage`. Se añadieron diez specs (`26` a `35`) que comprueban persistencia, permisos, catálogo, carrito y contacto.
+
+La autenticación del navegador es **una simulación académica**. Los archivos de Flask/SQLite quedaron intactos, pero no están conectados a la versión React actual.
+
+**Verificación requerida:** `cd frontend; npm.cmd install; npm.cmd test; npm.cmd run test:coverage`. Esperar `Executed 35 of 35 SUCCESS` solo como objetivo, **no como resultado ya confirmado**. Registrar porcentajes nuevos y observar posibles fallos antes de presentar evidencia de cobertura.
 
 ## Evidencias sugeridas
 
