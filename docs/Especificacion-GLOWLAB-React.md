@@ -43,15 +43,15 @@ Migrar las páginas HTML/Jinja a componentes React reutilizables con Bootstrap r
 - **RNF-04:** `localStorage` persiste en el navegador/perfil actual, pero no se sincroniza con SQLite ni otros usuarios/dispositivos.
 - **RNF-05:** Las pruebas automatizadas verifican lógica, componentes y persistencia. La cobertura depende de los archivos realmente instrumentados.
 
-## Criterios de aceptación pendientes de validar en Windows
+## Criterios de aceptación y evidencias en Windows
 
-1. `cd frontend; npm.cmd install; npm.cmd run dev` presenta las páginas sin iniciar Flask.
-2. Imágenes cargadas desde `frontend/public/static/img`.
+1. **Verificado parcialmente:** React se observa funcionando en `localhost:5173` (pantalla inicial).
+2. **Verificado en la portada:** se ven las imágenes de cuatro productos destacados de `frontend/public/static/img`.
 3. El catálogo, detalle, carrito, registro, login y panel administrativo siguen funcionando.
 4. Crear/editar/borrar un producto y un usuario conserva el resultado al recargar.
 5. Una cuenta no administradora no puede realizar CRUD administrativo mediante las funciones JS.
 6. El diseño se adapta a móvil y escritorio.
-7. `npm.cmd test` aprueba los **35 casos definidos** (25 antes aprobados y 10 nuevos aún pendientes de reejecución).
+7. **Verificado:** `npm.cmd test` aprobó **35/35 casos** en ChromeHeadless 155 / Windows 10 (captura de la estudiante, 18-10-2026).
 8. `npm.cmd run test:coverage` genera el informe actualizado; no reutilizar cifras antiguas como cobertura del nuevo código.
 
 ## Fuera de alcance
