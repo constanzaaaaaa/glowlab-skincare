@@ -52,7 +52,7 @@ Para el modo interactivo:
 npm run test:watch
 ```
 
-Las **25 pruebas originales aprobaron el 18-10-2026**. Se añadieron **10 casos de persistencia/CRUD** en `test/persistencia.spec.js`, por lo que hay **35 casos definidos**. La nueva ejecución de 35 casos aún debe verificarse en Windows.
+Las **35 pruebas Jasmine/Karma aprobaron el 18-10-2026**: 25 pruebas originales y 10 pruebas nuevas de persistencia/CRUD en `test/persistencia.spec.js`. La captura aportada por la estudiante confirma `Executed 35 of 35 SUCCESS` y `TOTAL: 35 SUCCESS` en ChromeHeadless 155 y Windows 10. La página inicial de React, el catálogo destacado y sus imágenes también se observaron funcionando en Chrome.
 
 ### Informe de cobertura (apuntes 037 del profesor)
 
@@ -99,7 +99,7 @@ Las cuentas de demostración anteriores conservan sus datos de inicio de sesión
 2. El checkout es **simulado**, sin pasarela de pago ni transacciones reales. Vacía el carrito, manteniendo el comportamiento anterior de demostración.
 3. Las colecciones se inicializan solo si aún no existen para preservar las ediciones del estudiante.
 4. La autorización por roles ocurre en JavaScript del navegador: **no constituye protección de datos de un sistema real**.
-5. Las 10 pruebas nuevas y la cobertura actualizada requieren ejecución y validación en Windows.
+5. Las 35 pruebas ya se ejecutaron satisfactoriamente en Windows (18-10-2026). **La cobertura actualizada todavía debe volver a medirse**, y quedan pendientes verificaciones manuales de CRUD, login y responsividad.
 
 ## 9. Rutas principales
 
