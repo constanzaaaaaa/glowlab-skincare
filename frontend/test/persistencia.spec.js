@@ -1,6 +1,6 @@
 import { CLAVES, inicializarDatos, obtenerColeccion, guardarColeccion, guardarRunSesion } from "../src/storage/persistencia";
 import { listarProductos, obtenerProducto, crearProducto, actualizarProducto, eliminarProducto } from "../src/storage/productos";
-import { listarUsuarios, obtenerSesionActual } from "../src/storage/usuarios";
+import { listarUsuarios, obtenerSesionActual, obtenerUsuario, actualizarUsuario, eliminarUsuario } from "../src/storage/usuarios";
 import { agregarItemCarrito, actualizarItemCarrito, obtenerCarrito, finalizarCompraApi } from "../src/storage/carrito";
 import { enviarMensajeContacto, listarCategorias } from "../src/storage/otros";
 
@@ -54,11 +54,16 @@ describe("GlowLab: persistencia JS y CRUD", () => {
     expect(resultado.total).toBe(31980);
     expect(await obtenerCarrito()).toEqual([]);
   });
-  it("34 - mantiene permisos y oculta hashes de cuentas administrativas", async () => {
+  it("34 - edita y elimina usuarios sin exponer hashes", async () => {
     guardarRunSesion("123456785");
     expect((await obtenerSesionActual()).rolId).toBe(1);
+    const usuario = await obtenerUsuario("112223339");
+    await actualizarUsuario(usuario.run, { ...usuario, nombre: "Nombre editado" });
+    expect((await obtenerUsuario(usuario.run)).nombre).toBe("Nombre editado");
+    await eliminarUsuario(usuario.run);
     const usuarios = await listarUsuarios();
-    expect(usuarios.length).toBe(4);
+    expect(usuarios.length).toBe(3);
+    expect(usuarios.some((u) => u.run === usuario.run)).toBeFalse();
     expect(usuarios[0].claveHash).toBeUndefined();
   });
   it("35 - almacena mensajes de contacto", async () => {
