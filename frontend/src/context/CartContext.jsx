@@ -2,6 +2,7 @@ import { createContext, useCallback, useEffect, useMemo, useState } from "react"
 import { actualizarItemCarrito, agregarItemCarrito, eliminarItemCarrito, finalizarCompraApi, obtenerCarrito, vaciarCarritoApi } from "../api/carritoApi";
 import { confirmarAccion, mostrarExito } from "../utils/swal";
 import { totalCarrito } from "../utils/format";
+import { CLAVES, EVENTO_DATOS } from "../storage/persistencia";
 
 export const CartContext = createContext(null);
 
@@ -16,7 +17,24 @@ export function CartProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    recargar().catch(() => setItems([])).finally(() => setCargando(false));
+    let activo = true;
+    const sincronizar = () => recargar()
+      .catch(() => { if (activo) setItems([]); })
+      .finally(() => { if (activo) setCargando(false); });
+    const eventoDatos = (evento) => {
+      if (evento.detail?.tipo === "carrito" || evento.detail?.tipo === "productos") sincronizar();
+    };
+    const eventoStorage = (evento) => {
+      if (evento.key === CLAVES.carrito || evento.key === CLAVES.productos) sincronizar();
+    };
+    sincronizar();
+    window.addEventListener(EVENTO_DATOS, eventoDatos);
+    window.addEventListener("storage", eventoStorage);
+    return () => {
+      activo = false;
+      window.removeEventListener(EVENTO_DATOS, eventoDatos);
+      window.removeEventListener("storage", eventoStorage);
+    };
   }, [recargar]);
 
   const agregar = useCallback(async (codigo, cantidad, nombreProducto) => {
