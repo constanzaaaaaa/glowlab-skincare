@@ -1,12 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    proxy: {
-      "/api": "http://localhost:5000",
-      "/static": "http://localhost:5000"
-    }
-  }
-});
+// El frontend React usa CRUD JavaScript + localStorage según el documento 040.
+// Las imágenes se sirven desde public/static/img; no hace falta iniciar Flask.
+export default defineConfig({ plugins: [react()] });
