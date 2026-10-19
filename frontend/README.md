@@ -70,7 +70,7 @@ npm.cmd run test:coverage
 
 Abre `frontend/coverage/html/index.html` para consultar el informe de líneas, ramas, funciones y sentencias; Karma también imprime un resumen en la terminal. La instrumentación se aplica a **módulos de `src/` importados por las pruebas**, no a las bibliotecas de `node_modules` ni a los archivos `test/*.spec.js`. Los módulos no importados por ninguna prueba no figurarán en el porcentaje: no interpretes ese número como cobertura de **toda** la aplicación. El informe se genera localmente y se excluye de Git por `.gitignore`.
 
-**No se ha ejecutado todavía `test:coverage` en Windows, por tanto no se informa ningún porcentaje numérico.** Consulta `docs/Pruebas-GLOWLAB-React.md`.
+**Ejecución comprobada el 18-10-2026:** `npm.cmd run test:coverage` finalizó con **25/25 pruebas exitosas**; cobertura de los módulos instrumentados: **38 % de sentencias (38/100), 71,73 % de ramas (33/46), 42,22 % de funciones (19/45) y 39,53 % de líneas (34/86)**. Esta medición no representa el total de archivos de la aplicación, porque solo instrumenta los módulos alcanzados mediante importaciones de las pruebas. Consulta `docs/Pruebas-GLOWLAB-React.md`.
 
 ## 5. Compilar frontend
 

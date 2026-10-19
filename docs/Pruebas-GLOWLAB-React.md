@@ -31,8 +31,10 @@
 | Casos unitarios definidos | 25 |
 | Casos aprobados | **25 en la segunda ejecución del 18-10-2026** |
 | Casos fallidos | **0 en la segunda ejecución del 18-10-2026** |
-| Porcentaje de líneas | No medido |
-| Porcentaje de ramas | No medido |
+| Porcentaje de sentencias | **38,00 % (38/100)** |
+| Porcentaje de ramas | **71,73 % (33/46)** |
+| Porcentaje de funciones | **42,22 % (19/45)** |
+| Porcentaje de líneas | **39,53 % (34/86)** |
 
 ### Evidencia de ejecución del 18-10-2026
 
@@ -67,7 +69,26 @@ npm.cmd run test:coverage
 
 **Alcance importante:** la cobertura se calcula sobre los módulos `src/` que las pruebas alcanzan a importar. Los módulos no importados quedan fuera del denominador. Por eso esta primera medición es una **cobertura de los módulos ejercitados**, no una certificación de cobertura de toda GlowLab.
 
-**Pendiente:** ejecutar `npm.cmd run test:coverage` y registrar los valores exactos que muestre la terminal. **No se ha inventado ningún porcentaje.**
+### Resultado real de cobertura — 18-10-2026, 22:06 (hora indicada por Karma)
+
+La estudiante ejecutó `npm.cmd run test:coverage` en Windows 10 con ChromeHeadless 155.0.0.0 y compartió una captura del resumen de terminal.
+
+```text
+Chrome Headless 155.0.0.0 (Windows 10): Executed 25 of 25 SUCCESS
+TOTAL: 25 SUCCESS
+
+Coverage summary
+Statements : 38%    (38/100)
+Branches   : 71.73% (33/46)
+Functions  : 42.22% (19/45)
+Lines      : 39.53% (34/86)
+```
+
+**Interpretación:** todas las pruebas ejecutadas pasaron (25/25). Los porcentajes representan cuánta parte del código **instrumentado por esta ejecución** se ejercitó, no el porcentaje de pruebas aprobadas ni la cobertura integral del frontend. En particular, esta configuración instrumenta únicamente los módulos de `src/` importados por las pruebas: otros módulos pueden quedar completamente fuera del denominador.
+
+**Áreas de mejora:** la cobertura de funciones (42,22 %) y líneas (39,53 %) sugiere crear nuevos casos de prueba para las funciones y rutas todavía sin ejercitar. Conviene abrir el informe `coverage/html/index.html` y revisar sus líneas rojas antes de diseñar casos adicionales; estas cifras no permiten por sí solas identificar funciones específicas sin ver el reporte por archivo.
+
+**Estado:** porcentajes registrados tal como aparecen en la captura de la estudiante. El informe HTML permanece en su equipo y no se ha inspeccionado archivo por archivo. No se declara un mínimo de cobertura cumplido sin evidencia de un umbral numérico definido en la rúbrica.
 
 ## Evidencias sugeridas
 
