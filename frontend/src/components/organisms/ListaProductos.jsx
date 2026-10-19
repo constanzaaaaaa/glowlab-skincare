@@ -5,7 +5,6 @@ import { Col, Row } from "react-bootstrap";
 import FiltrosProductos from "../molecules/FiltrosProductos.jsx";
 import TarjetaProducto from "../molecules/TarjetaProducto.jsx";
 import { filtrarProductos } from "../../utils/format";
-import "./organisms.css";
 
 export default function ListaProductos({ productos, categorias }) {
   const [busqueda, setBusqueda] = useState("");

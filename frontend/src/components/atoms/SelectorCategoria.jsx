@@ -1,6 +1,5 @@
 // ⚛️ ÁTOMO: solo muestra el selector y avisa al componente padre del cambio.
 import { Form } from "react-bootstrap";
-import "./atoms.css";
 
 export default function SelectorCategoria({ categorias, valor, onCambiar }) {
   return (

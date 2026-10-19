@@ -7,7 +7,6 @@ import { useCart } from "../../hooks/useCart";
 import { formatearPrecio, stockDisponible } from "../../utils/format";
 import { mostrarError } from "../../utils/swal";
 import TituloProducto from "../atoms/TituloProducto.jsx";
-import "./molecules.css";
 
 export default function TarjetaProducto({ producto }) {
   const { agregar } = useCart();

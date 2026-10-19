@@ -1,5 +1,4 @@
 import { Form } from "react-bootstrap";
-import "./atoms.css";
 
 // Átomo: recibe valor y notifica cambios mediante una prop, como 034 React Atomic.
 export default function Buscador({ valor, onBuscar, placeholder = "Buscar…" }) {

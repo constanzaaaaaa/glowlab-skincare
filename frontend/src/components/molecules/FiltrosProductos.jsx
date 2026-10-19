@@ -3,7 +3,6 @@
 import { Col, Row } from "react-bootstrap";
 import Buscador from "../atoms/Buscador.jsx";
 import SelectorCategoria from "../atoms/SelectorCategoria.jsx";
-import "./molecules.css";
 
 export default function FiltrosProductos({ categorias, busqueda, onBuscar, categoriaId, onCategoria }) {
   return (
