@@ -70,7 +70,9 @@ Para el modo interactivo:
 npm run test:watch
 ```
 
-Las **35 pruebas Jasmine/Karma anteriores aprobaron el 18-10-2026**: 25 originales y 10 de persistencia/CRUD. La captura confirma `Executed 35 of 35 SUCCESS` en ChromeHeadless 155 y Windows 10. **Después se incorporaron 5 pruebas nuevas** (`test/atomic.spec.js`) para el catálogo organizado como el ejemplo 034. **Hay 40 pruebas definidas, pendientes de reejecutar juntas**. La página inicial, los productos destacados y sus imágenes sí se observaron funcionando antes de la reorganización.
+Para ajustarse a la rúbrica 049 y a la decisión de la estudiante, la suite se redujo a **exactamente 10 pruebas Jasmine** distribuidas en `test/componentes.spec.js` (5), `test/validaciones.spec.js` (2), `test/atomic.spec.js` (1) y `test/persistencia.spec.js` (2).
+
+Los casos cubren **props, renderizado, eventos con `jasmine.createSpy`, estado, validación y CRUD**; mantienen el procedimiento de Jasmine/Karma del ejemplo 047, adaptado a GlowLab. Se eliminaron 30 casos de pruebas, **no archivos de la aplicación ni funcionalidades**. La ejecución de estas 10 pruebas está pendiente de comprobar en Windows. El detalle está en `docs/Pruebas-GLOWLAB-React.md`.
 
 ### Informe de cobertura (apuntes 037 del profesor)
 
@@ -84,7 +86,7 @@ npm.cmd run test:coverage
 
 Abre `frontend/coverage/html/index.html` para consultar el informe de líneas, ramas, funciones y sentencias; Karma también imprime un resumen en la terminal. La instrumentación se aplica a **módulos de `src/` importados por las pruebas**, no a las bibliotecas de `node_modules` ni a los archivos `test/*.spec.js`. Los módulos no importados por ninguna prueba no figurarán en el porcentaje: no interpretes ese número como cobertura de **toda** la aplicación. El informe se genera localmente y se excluye de Git por `.gitignore`.
 
-**Última medición comprobada (antes de añadir persistencia y sus pruebas):** 25/25 exitosas, con 38 % de sentencias, 71,73 % de ramas, 42,22 % de funciones y 39,53 % de líneas. **Estos porcentajes históricos ya no describen el código actual** y deben medirse otra vez con `npm.cmd run test:coverage`. Ver `docs/Pruebas-GLOWLAB-React.md`.
+**Medición histórica:** con 35 pruebas, la estudiante obtuvo 59,61 % de sentencias, 53,55 % de ramas, 64,80 % de funciones y 64,05 % de líneas (captura del informe HTML). **Estos porcentajes ya no describen la suite actual de diez pruebas**. Repetir `npm.cmd run test:coverage` y registrar el nuevo resultado; ver `docs/Pruebas-GLOWLAB-React.md`.
 
 ## 5. Compilar frontend
 
@@ -117,7 +119,7 @@ Las cuentas de demostración anteriores conservan sus datos de inicio de sesión
 2. El checkout es **simulado**, sin pasarela de pago ni transacciones reales. Vacía el carrito, manteniendo el comportamiento anterior de demostración.
 3. Las colecciones se inicializan solo si aún no existen para preservar las ediciones del estudiante.
 4. La autorización por roles ocurre en JavaScript del navegador: **no constituye protección de datos de un sistema real**.
-5. Las 35 pruebas anteriores se ejecutaron satisfactoriamente en Windows (18-10-2026). **Las 5 pruebas Atomic nuevas y la cobertura actualizada aún requieren una ejecución**, además de verificaciones manuales del CRUD, login y responsividad.
+5. Las 35 pruebas anteriores se ejecutaron satisfactoriamente en Windows (18-10-2026). La suite se redujo a **10 casos actuales**, que deben volver a ejecutarse; también debe actualizarse la cobertura y probarse manualmente CRUD, login y responsividad.
 
 ## 9. Rutas principales
 
