@@ -1,0 +1,5 @@
+/* Estilos de los átomos, siguiendo la organización de 034 React Atomic. */
+.buscador-glow:focus, .selector-categoria-glow:focus {
+  border-color: #0d9da9;
+  box-shadow: 0 0 0 .15rem rgba(13, 157, 169, .15);
+}

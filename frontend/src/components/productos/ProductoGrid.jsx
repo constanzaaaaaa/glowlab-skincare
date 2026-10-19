@@ -1,12 +1,17 @@
-import { Col, Row } from "react-bootstrap";
+// Igual que ProductoGrid del ejemplo 033: un Row que representa tarjetas por props.
+import { Row } from "react-bootstrap";
 import ProductoCard from "./ProductoCard";
-export default function ProductoGrid({ productos }) {
-  if (productos.length === 0) return <p className="text-center py-5 text-muted">No se encontraron productos.</p>;
+
+export default function ProductoGrid({ productos, mensajeVacio = "No se encontraron productos." }) {
+  if (productos.length === 0) {
+    return <p className="text-center py-5 text-muted">{mensajeVacio}</p>;
+  }
+
   return (
     <Row className="g-4">
-      {productos.map((producto) =>
-        <Col key={producto.codigo} sm={6} lg={4} xl={3}><ProductoCard producto={producto} /></Col>
-      )}
+      {productos.map((producto) => (
+        <ProductoCard key={producto.codigo} producto={producto} />
+      ))}
     </Row>
   );
 }
