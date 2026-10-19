@@ -70,7 +70,7 @@ Para el modo interactivo:
 npm run test:watch
 ```
 
-Las **35 pruebas Jasmine/Karma anteriores aprobaron el 18-10-2026**: 25 originales y 10 de persistencia/CRUD. La captura confirma `Executed 35 of 35 SUCCESS` en ChromeHeadless 155 y Windows 10. **Después se incorporaron 4 pruebas nuevas** (`test/atomic.spec.js`) para el catálogo organizado como el ejemplo 034. **Hay 39 pruebas definidas, pendientes de reejecutar juntas**. La página inicial, los productos destacados y sus imágenes sí se observaron funcionando antes de la reorganización.
+Las **35 pruebas Jasmine/Karma anteriores aprobaron el 18-10-2026**: 25 originales y 10 de persistencia/CRUD. La captura confirma `Executed 35 of 35 SUCCESS` en ChromeHeadless 155 y Windows 10. **Después se incorporaron 5 pruebas nuevas** (`test/atomic.spec.js`) para el catálogo organizado como el ejemplo 034. **Hay 40 pruebas definidas, pendientes de reejecutar juntas**. La página inicial, los productos destacados y sus imágenes sí se observaron funcionando antes de la reorganización.
 
 ### Informe de cobertura (apuntes 037 del profesor)
 
@@ -117,7 +117,7 @@ Las cuentas de demostración anteriores conservan sus datos de inicio de sesión
 2. El checkout es **simulado**, sin pasarela de pago ni transacciones reales. Vacía el carrito, manteniendo el comportamiento anterior de demostración.
 3. Las colecciones se inicializan solo si aún no existen para preservar las ediciones del estudiante.
 4. La autorización por roles ocurre en JavaScript del navegador: **no constituye protección de datos de un sistema real**.
-5. Las 35 pruebas anteriores se ejecutaron satisfactoriamente en Windows (18-10-2026). **Las 4 pruebas Atomic nuevas y la cobertura actualizada aún requieren una ejecución**, además de verificaciones manuales del CRUD, login y responsividad.
+5. Las 35 pruebas anteriores se ejecutaron satisfactoriamente en Windows (18-10-2026). **Las 5 pruebas Atomic nuevas y la cobertura actualizada aún requieren una ejecución**, además de verificaciones manuales del CRUD, login y responsividad.
 
 ## 9. Rutas principales
 
