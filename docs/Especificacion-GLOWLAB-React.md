@@ -14,6 +14,7 @@ Migrar las páginas HTML/Jinja a componentes React reutilizables con Bootstrap r
 - **Persistencia CRUD:** `frontend/src/storage/persistencia.js` guarda colecciones como JSON en `localStorage`; `storage/productos.js` y `storage/usuarios.js` implementan alta, consulta, edición y eliminación.
 - **Otras funciones:** `storage/carrito.js` maneja cantidades, stock y checkout simulado; `storage/otros.js` ofrece blog, contacto y catálogos de apoyo.
 - **Componentes React:** `src/api/` expone las mismas funciones usadas por las páginas, ahora conectadas a la capa JavaScript simulada en vez de Axios/Flask. Los contextos se actualizan con los cambios del almacenamiento.
+- **Referencia a los RAR reales 033 y 034:** la estructura general de `src/` permanece equivalente a Nexo Gaming; el catálogo se divide en `atoms/` → `molecules/` → `organisms/`, siguiendo `ListaRecetas` del ejemplo 034. La comparación por carpetas y archivos se documenta en `docs/Comparacion-Ejemplos-Profesor.md`.
 - **Recursos visuales:** `frontend/public/static/img` contiene copias de las imágenes originales. React se inicia solo con Vite, sin ejecutar Python.
 - **Código preservado:** `app.py`, `templates/`, `static/`, `run_react_api.py`, `glowlab_api/` y SQLite se conservan sin borrarlos; **no se utilizan como fuente de datos por defecto del frontend React**.
 - **Pruebas:** Jasmine/Karma + Webpack/Babel/ChromeHeadless. `karma-coverage` procede del material 037.
@@ -51,7 +52,7 @@ Migrar las páginas HTML/Jinja a componentes React reutilizables con Bootstrap r
 4. Crear/editar/borrar un producto y un usuario conserva el resultado al recargar.
 5. Una cuenta no administradora no puede realizar CRUD administrativo mediante las funciones JS.
 6. El diseño se adapta a móvil y escritorio.
-7. **Verificado:** `npm.cmd test` aprobó **35/35 casos** en ChromeHeadless 155 / Windows 10 (captura de la estudiante, 18-10-2026).
+7. **Verificado históricamente:** `npm.cmd test` aprobó **35/35 casos** en ChromeHeadless 155 / Windows 10 (captura del 18-10-2026). **Pendiente:** ejecutar las 4 pruebas Atomic adicionales y confirmar **39/39**.
 8. `npm.cmd run test:coverage` genera el informe actualizado; no reutilizar cifras antiguas como cobertura del nuevo código.
 
 ## Fuera de alcance
