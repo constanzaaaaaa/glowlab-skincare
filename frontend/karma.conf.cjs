@@ -17,7 +17,7 @@ module.exports = function (config) {
           ...webpackConfig.module.rules,
           ...(medirCobertura ? [{
             enforce: "post",
-            test: /\\.jsx?$/,
+            test: /\.jsx?$/,
             include: path.resolve(__dirname, "src"),
             use: [path.resolve(__dirname, "test", "coverage-loader.cjs")]
           }] : [])
