@@ -1,4 +1,4 @@
-# Comparación de GlowLab con los ejemplos 033, 034, 040 y 047 del profesor
+# GlowLab con los ejemplos 033, 034, 040 y 047 
 
 **Rama:** `migracion-react-profesor` (no se cambia `main`).
 
@@ -10,18 +10,18 @@ La metodología **034 Ejemplo React-Atomic.rar** se incorpora en una parte real 
 
 ## 033 – Estructura principal de React
 
-| Archivo/carpeta del 033 | Correspondencia en GlowLab | Estado |
-|---|---|---|
-| `src/main.jsx` | `frontend/src/main.jsx` | Misma estructura React, StrictMode, Router y providers |
-| `src/App.jsx` | `frontend/src/App.jsx` | Mismas rutas de tienda y administración adaptadas a skincare; permisos de editar productos reservados al administrador |
-| `src/api/` | `frontend/src/api/` | Mismos nombres de funciones y módulos públicos, **pero delegan a JS/localStorage**, no a Axios/Flask |
-| `src/components/productos/ProductoCard.jsx` | Igual ruta relativa | Conserva nombre, props, `Col` y tarjeta, delegando el contenido a una molécula Atomic |
-| `src/components/productos/ProductoGrid.jsx` | Igual ruta relativa | Igual patrón `Row` + `.map()` + `ProductoCard` |
-| `src/components/layout/` | Igual ruta relativa | Navbar, Footer, Layout, AdminLayout, AdminSidebar y ProtectedRoute |
-| `src/context/` | Igual ruta relativa | `AuthContext` y `CartContext`, con sincronización adicional de almacenamiento del navegador |
-| `src/hooks/useAuth.js`, `useCart.js` | Igual ruta relativa | Misma comprobación y mensaje de contexto ausente que el 033 |
-| `src/pages/` y `src/pages/admin/` | Igual ruta relativa | Mismos tipos de pantallas y formularios, con textos y productos GlowLab |
-| `src/utils/` | Igual ruta relativa | Precio, validaciones y alertas adaptadas al caso |
+| Archivo/carpeta del 033                       | Correspondencia en GlowLab | Estado                                                                                                                  |
+| --------------------------------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `src/main.jsx`                              | `frontend/src/main.jsx`  | Misma estructura React, StrictMode, Router y providers                                                                  |
+| `src/App.jsx`                               | `frontend/src/App.jsx`   | Mismas rutas de tienda y administración adaptadas a skincare; permisos de editar productos reservados al administrador |
+| `src/api/`                                  | `frontend/src/api/`      | Mismos nombres de funciones y módulos públicos, **pero delegan a JS/localStorage**, no a Axios/Flask            |
+| `src/components/productos/ProductoCard.jsx` | Igual ruta relativa        | Conserva nombre, props, `Col` y tarjeta, delegando el contenido a una molécula Atomic                                |
+| `src/components/productos/ProductoGrid.jsx` | Igual ruta relativa        | Igual patrón `Row` + `.map()` + `ProductoCard`                                                                   |
+| `src/components/layout/`                    | Igual ruta relativa        | Navbar, Footer, Layout, AdminLayout, AdminSidebar y ProtectedRoute                                                      |
+| `src/context/`                              | Igual ruta relativa        | `AuthContext` y `CartContext`, con sincronización adicional de almacenamiento del navegador                        |
+| `src/hooks/useAuth.js`, `useCart.js`      | Igual ruta relativa        | Misma comprobación y mensaje de contexto ausente que el 033                                                            |
+| `src/pages/` y `src/pages/admin/`         | Igual ruta relativa        | Mismos tipos de pantallas y formularios, con textos y productos GlowLab                                                 |
+| `src/utils/`                                | Igual ruta relativa        | Precio, validaciones y alertas adaptadas al caso                                                                        |
 
 **Nota sobre la carpeta `frontend/`:** en el RAR 033 la aplicación tiene su propia raíz `nexo-gaming-react/`; GlowLab la coloca en `frontend/` porque el repositorio contiene además la versión Flask original. La organización **dentro** de `frontend/src/` se mantiene comparable.
 
