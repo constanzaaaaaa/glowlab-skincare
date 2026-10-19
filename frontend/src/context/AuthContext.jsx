@@ -1,5 +1,6 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from "react";
 import { cerrarSesionApi, iniciarSesion, obtenerSesionActual, registrarUsuario } from "../api/authApi";
+import { CLAVES, EVENTO_DATOS } from "../storage/persistencia";
 
 export const AuthContext = createContext(null);
 export const ROLES = { ADMINISTRADOR: 1, VENDEDOR: 2, CLIENTE: 3 };
@@ -9,7 +10,26 @@ export function AuthProvider({ children }) {
   const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
-    obtenerSesionActual().then(setUsuario).catch(() => setUsuario(null)).finally(() => setCargando(false));
+    let activo = true;
+    const sincronizar = () => obtenerSesionActual()
+      .then((actual) => { if (activo) setUsuario(actual); })
+      .catch(() => { if (activo) setUsuario(null); })
+      .finally(() => { if (activo) setCargando(false); });
+
+    const eventoDatos = (evento) => {
+      if (evento.detail?.tipo === "usuarios" || evento.detail?.tipo === "sesion") sincronizar();
+    };
+    const eventoStorage = (evento) => {
+      if (evento.key === CLAVES.usuarios || evento.key === CLAVES.sesion) sincronizar();
+    };
+    sincronizar();
+    window.addEventListener(EVENTO_DATOS, eventoDatos);
+    window.addEventListener("storage", eventoStorage);
+    return () => {
+      activo = false;
+      window.removeEventListener(EVENTO_DATOS, eventoDatos);
+      window.removeEventListener("storage", eventoStorage);
+    };
   }, []);
 
   const login = useCallback(async (correo, password) => {
