@@ -14,7 +14,7 @@
 | Validaciones | `test/validaciones.spec.js` | 10 | Correo, dominios, contraseña, RUN, textos, stock entero |
 | Componentes | `test/componentes.spec.js` | 6 | Props, enlaces, evento de agregar, sin stock, catálogo vacío, ruta inexistente |
 | Persistencia JS y CRUD | `test/persistencia.spec.js` | **10 nuevos** | Datos iniciales, guardar colecciones, CRUD de productos, permisos, carrito y contacto |
-| **Total** | | **35 definidos** | 25 anteriores verificados; 10 agregados pendientes de ejecución |
+| **Total** | | **35 ejecutados y aprobados** | Evidencia aportada el 18-10-2026 |
 
 ## Proceso
 
@@ -30,8 +30,8 @@
 | Medida | Estado actual |
 |---|---|
 | Casos unitarios definidos | **35 actuales** |
-| Casos aprobados | **25/25 en la ejecución anterior del 18-10-2026** |
-| Casos fallidos | **0 en esa ejecución anterior; 10 pruebas nuevas pendientes** |
+| Casos aprobados | **35/35 en la ejecución actual del 18-10-2026** |
+| Casos fallidos | **0 en la ejecución actual** |
 | Porcentaje de sentencias | **38,00 % (38/100)** |
 | Porcentaje de ramas | **71,73 % (33/46)** |
 | Porcentaje de funciones | **42,22 % (19/45)** |
@@ -91,13 +91,23 @@ Lines      : 39.53% (34/86)
 
 **Estado:** porcentajes históricos registrados tal como aparecen en la captura aportada por la estudiante. Son válidos para esa ejecución de 25 pruebas, **pero no para la nueva versión de 35 casos y persistencia JavaScript**. Es obligatorio repetir `npm.cmd test` y `npm.cmd run test:coverage` para obtener el resultado actual. El informe HTML histórico no se ha inspeccionado archivo por archivo.
 
+### Evidencia actual de funcionamiento y pruebas — 18-10-2026
+
+La estudiante presentó **dos capturas** tras actualizar la rama de migración:
+
+- **Vite/React en el navegador:** se observa la página de inicio en `localhost:5173`, el encabezado, el menú y cuatro productos destacados con sus imágenes y precios. Esto confirma que la vista inicial y esos recursos cargaron en su entorno local.
+- **Jasmine/Karma en Windows:** el registro termina con `Chrome Headless 155.0.0.0 (Windows 10): Executed 35 of 35 SUCCESS` y `TOTAL: 35 SUCCESS`. Resultado confirmado: **35 aprobadas, 0 fallidas**.
+- **Advertencia:** aparece `WARN [web-server]: 404: /static/img/productos/hidratante1.webp` durante el test. No hace fallar las specs; la captura independiente de Vite sí muestra las imágenes de los productos. La advertencia pertenece a la forma de servir recursos del runner Karma y no acredita por sí sola un fallo en el catálogo de Vite.
+
+Estas evidencias **no validan todavía todos los flujos manuales** (login, edición de productos y usuarios, carrito en navegador, diseño móvil). La cobertura histórica previa de 25 casos tampoco representa la versión nueva de 35 casos.
+
 ### Nueva capa de persistencia del anexo 040
 
 Desde esta revisión, `src/data/datosIniciales.js` y `src/storage/` implementan la fuente simulada de datos y el CRUD en `localStorage`. Se añadieron diez specs (`26` a `35`) que comprueban persistencia, permisos, catálogo, carrito y contacto.
 
 La autenticación del navegador es **una simulación académica**. Los archivos de Flask/SQLite quedaron intactos, pero no están conectados a la versión React actual.
 
-**Verificación requerida:** `cd frontend; npm.cmd install; npm.cmd test; npm.cmd run test:coverage`. Esperar `Executed 35 of 35 SUCCESS` solo como objetivo, **no como resultado ya confirmado**. Registrar porcentajes nuevos y observar posibles fallos antes de presentar evidencia de cobertura.
+**Verificación realizada:** la estudiante ejecutó `npm.cmd test` y aportó una captura en Windows 10/ChromeHeadless 155.0.0.0 con `Executed 35 of 35 SUCCESS` y `TOTAL: 35 SUCCESS` (18-10-2026 a las 22:56, según la consola). **Los 35 casos pasaron, incluidos los 10 nuevos del CRUD simulado.** Pendiente: volver a ejecutar `npm.cmd run test:coverage` y registrar los nuevos porcentajes; las cifras anteriores corresponden a solo 25 casos.
 
 ## Evidencias sugeridas
 
