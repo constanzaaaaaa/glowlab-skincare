@@ -80,8 +80,8 @@ El RAR del profesor contiene `test/*.spec.js`, `karma.conf.js`, `babel.config.js
 GlowLab conserva el patrón `describe` → `it` → `expect`, ChromeHeadless, recompilación con Webpack+Babel y archivos `test/*.spec.js`. Emplea extensión **`.cjs`** para los archivos de configuración Node, porque el frontend Vite del 033 tiene `"type": "module"`; ello evita un conflicto de módulos, no cambia el método de pruebas.
 
 - **35 pruebas anteriores:** última ejecución con `35/35 SUCCESS` (18-10-2026, captura aportada).
-- **4 pruebas nuevas:** `frontend/test/atomic.spec.js` (componentes Atomic y filtrado), **pendientes de ejecutar**.
-- **Objetivo actual:** ejecutar `npm.cmd test` y `npm.cmd run test:coverage` con **39 tests** y documentar nuevos porcentajes.
+- **5 pruebas nuevas:** `frontend/test/atomic.spec.js` (componentes Atomic y filtrado), **pendientes de ejecutar**.
+- **Objetivo actual:** ejecutar `npm.cmd test` y `npm.cmd run test:coverage` con **40 tests** y documentar nuevos porcentajes.
 - `karma-coverage` se agregó sobre la base de los apuntes 037/045, aunque no figura en el RAR 047.
 
 ## Diferencias que no conviene eliminar
