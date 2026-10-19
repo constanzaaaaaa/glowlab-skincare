@@ -37,6 +37,24 @@ Los datos permanecen en **ese navegador**, incluso después de actualizar la pá
 
 **Seguridad:** almacenamiento, sesión y roles en el cliente son únicamente una simulación educativa. Se usa un hash de demostración en lugar de contraseñas legibles, pero **no es autenticación segura**; no guardar información real ni publicar esta versión como tienda productiva.
 
+## Organización del frontend según el profesor
+
+El **033 Nexo Gaming React** es la plantilla principal: `api/`, `context/`, `hooks/`, `components/productos/`, `components/layout/`, `pages/` y `App.jsx`. `src/main.jsx` conserva el mismo montaje que el RAR 033; `useAuth` y `useCart` siguen la misma comprobación de Context Provider.
+
+Dentro de `components/` se aplicó también el **034 React Atomic**:
+
+```text
+atoms/       Buscador, SelectorCategoria, TituloProducto, atoms.css
+molecules/   FiltrosProductos, TarjetaProducto, molecules.css
+organisms/   ListaProductos, organisms.css
+```
+
+`pages/Productos.jsx` carga los datos y los pasa a `ListaProductos`, que controla la búsqueda con `useState` y compone las moléculas, de forma comparable a `ListaRecetas` del profesor. Se mantienen `ProductoCard` y `ProductoGrid` en la ruta del 033 para la portada.
+
+**Diferencia necesaria:** el documento 040 pide CRUD en JavaScript; por ello `api/` delega en `storage/` y `localStorage` en lugar de utilizar Axios/Flask del 033. Esto no puede ser idéntico línea por línea a ambos ejemplos a la vez.
+
+Mira `docs/Comparacion-Ejemplos-Profesor.md` para la correspondencia real de cada ejemplo y sus diferencias.
+
 ## 4. Ejecutar pruebas según ejemplo 047
 
 En `frontend`:
@@ -52,7 +70,7 @@ Para el modo interactivo:
 npm run test:watch
 ```
 
-Las **35 pruebas Jasmine/Karma aprobaron el 18-10-2026**: 25 pruebas originales y 10 pruebas nuevas de persistencia/CRUD en `test/persistencia.spec.js`. La captura aportada por la estudiante confirma `Executed 35 of 35 SUCCESS` y `TOTAL: 35 SUCCESS` en ChromeHeadless 155 y Windows 10. La página inicial de React, el catálogo destacado y sus imágenes también se observaron funcionando en Chrome.
+Las **35 pruebas Jasmine/Karma anteriores aprobaron el 18-10-2026**: 25 originales y 10 de persistencia/CRUD. La captura confirma `Executed 35 of 35 SUCCESS` en ChromeHeadless 155 y Windows 10. **Después se incorporaron 4 pruebas nuevas** (`test/atomic.spec.js`) para el catálogo organizado como el ejemplo 034. **Hay 39 pruebas definidas, pendientes de reejecutar juntas**. La página inicial, los productos destacados y sus imágenes sí se observaron funcionando antes de la reorganización.
 
 ### Informe de cobertura (apuntes 037 del profesor)
 
@@ -99,7 +117,7 @@ Las cuentas de demostración anteriores conservan sus datos de inicio de sesión
 2. El checkout es **simulado**, sin pasarela de pago ni transacciones reales. Vacía el carrito, manteniendo el comportamiento anterior de demostración.
 3. Las colecciones se inicializan solo si aún no existen para preservar las ediciones del estudiante.
 4. La autorización por roles ocurre en JavaScript del navegador: **no constituye protección de datos de un sistema real**.
-5. Las 35 pruebas ya se ejecutaron satisfactoriamente en Windows (18-10-2026). **La cobertura actualizada todavía debe volver a medirse**, y quedan pendientes verificaciones manuales de CRUD, login y responsividad.
+5. Las 35 pruebas anteriores se ejecutaron satisfactoriamente en Windows (18-10-2026). **Las 4 pruebas Atomic nuevas y la cobertura actualizada aún requieren una ejecución**, además de verificaciones manuales del CRUD, login y responsividad.
 
 ## 9. Rutas principales
 
