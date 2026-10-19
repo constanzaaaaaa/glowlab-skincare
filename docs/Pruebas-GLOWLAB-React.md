@@ -14,8 +14,8 @@
 | Validaciones | `test/validaciones.spec.js` | 10 | Correo, dominios, contraseña, RUN, textos, stock entero |
 | Componentes | `test/componentes.spec.js` | 6 | Props, enlaces, evento de agregar, sin stock, catálogo vacío, ruta inexistente |
 | Persistencia JS y CRUD | `test/persistencia.spec.js` | 10 | Datos iniciales, guardar colecciones, CRUD de productos, permisos, carrito y contacto |
-| Atomic Design | `test/atomic.spec.js` | **4 nuevos** | Átomos, moléculas, organismo y filtrado por estado |
-| **Total** | | **39 definidos** | 35 anteriores verificados; 4 nuevos pendientes de ejecución |
+| Atomic Design | `test/atomic.spec.js` | **5 nuevos** | Átomos, moléculas, organismo, búsqueda y filtro por categoría |
+| **Total** | | **40 definidos** | 35 anteriores verificados; 5 nuevos pendientes de ejecución |
 
 ## Proceso
 
@@ -30,9 +30,9 @@
 
 | Medida | Estado actual |
 |---|---|
-| Casos unitarios definidos | **39 actuales** (35 verificados anteriormente) |
+| Casos unitarios definidos | **40 actuales** (35 verificados anteriormente) |
 | Casos aprobados | **35/35 en la ejecución del 18-10-2026**, previa a los 4 casos Atomic |
-| Casos fallidos | **0 en esa ejecución; pendientes los 4 casos nuevos** |
+| Casos fallidos | **0 en esa ejecución; pendientes los 5 casos nuevos** |
 | Porcentaje de sentencias | **38,00 % (38/100)** |
 | Porcentaje de ramas | **71,73 % (33/46)** |
 | Porcentaje de funciones | **42,22 % (19/45)** |
@@ -114,7 +114,7 @@ La autenticación del navegador es **una simulación académica**. Los archivos 
 
 En la reorganización basada en los **RAR originales** del profesor, se conservó la estructura `src/components/productos/` del 033 y se aplicó `atoms/` → `molecules/` → `organisms/` del 034 al catálogo GlowLab.
 
-El archivo nuevo `frontend/test/atomic.spec.js` añade los casos **36–39** para verificar los cambios del átomo Buscador, la composición de la molécula FiltrosProductos, el filtrado del organismo ListaProductos y la exclusión de productos inactivos.
+El archivo nuevo `frontend/test/atomic.spec.js` añade los casos **36–40** para verificar los cambios del átomo Buscador, la composición de la molécula FiltrosProductos, el filtrado del organismo ListaProductos y la exclusión de productos inactivos.
 
 **Pendiente:** ejecutar `npm.cmd test` en Windows para confirmar si los 39 casos pasan. Repetir `npm.cmd run test:coverage` después: los porcentajes de la captura anterior (59,61 % sentencias, 53,55 % ramas, 64,80 % funciones, 64,05 % líneas) corresponden a la versión de **35 pruebas previa a esta reorganización** y **todavía no son los del proyecto actual**. La comparación detallada está en `docs/Comparacion-Ejemplos-Profesor.md`.
 
