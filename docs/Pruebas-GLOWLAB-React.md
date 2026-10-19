@@ -13,8 +13,9 @@
 | Catálogo y carrito | `test/formato.spec.js` | 9 | Estado, nombre, categoría, stock, precios y totales |
 | Validaciones | `test/validaciones.spec.js` | 10 | Correo, dominios, contraseña, RUN, textos, stock entero |
 | Componentes | `test/componentes.spec.js` | 6 | Props, enlaces, evento de agregar, sin stock, catálogo vacío, ruta inexistente |
-| Persistencia JS y CRUD | `test/persistencia.spec.js` | **10 nuevos** | Datos iniciales, guardar colecciones, CRUD de productos, permisos, carrito y contacto |
-| **Total** | | **35 ejecutados y aprobados** | Evidencia aportada el 18-10-2026 |
+| Persistencia JS y CRUD | `test/persistencia.spec.js` | 10 | Datos iniciales, guardar colecciones, CRUD de productos, permisos, carrito y contacto |
+| Atomic Design | `test/atomic.spec.js` | **4 nuevos** | Átomos, moléculas, organismo y filtrado por estado |
+| **Total** | | **39 definidos** | 35 anteriores verificados; 4 nuevos pendientes de ejecución |
 
 ## Proceso
 
@@ -29,9 +30,9 @@
 
 | Medida | Estado actual |
 |---|---|
-| Casos unitarios definidos | **35 actuales** |
-| Casos aprobados | **35/35 en la ejecución actual del 18-10-2026** |
-| Casos fallidos | **0 en la ejecución actual** |
+| Casos unitarios definidos | **39 actuales** (35 verificados anteriormente) |
+| Casos aprobados | **35/35 en la ejecución del 18-10-2026**, previa a los 4 casos Atomic |
+| Casos fallidos | **0 en esa ejecución; pendientes los 4 casos nuevos** |
 | Porcentaje de sentencias | **38,00 % (38/100)** |
 | Porcentaje de ramas | **71,73 % (33/46)** |
 | Porcentaje de funciones | **42,22 % (19/45)** |
@@ -108,6 +109,14 @@ Desde esta revisión, `src/data/datosIniciales.js` y `src/storage/` implementan 
 La autenticación del navegador es **una simulación académica**. Los archivos de Flask/SQLite quedaron intactos, pero no están conectados a la versión React actual.
 
 **Verificación realizada:** la estudiante ejecutó `npm.cmd test` y aportó una captura en Windows 10/ChromeHeadless 155.0.0.0 con `Executed 35 of 35 SUCCESS` y `TOTAL: 35 SUCCESS` (18-10-2026 a las 22:56, según la consola). **Los 35 casos pasaron, incluidos los 10 nuevos del CRUD simulado.** Pendiente: volver a ejecutar `npm.cmd run test:coverage` y registrar los nuevos porcentajes; las cifras anteriores corresponden a solo 25 casos.
+
+### Fidelidad a ejemplos 033, 034 y 047 — pruebas Atomic añadidas
+
+En la reorganización basada en los **RAR originales** del profesor, se conservó la estructura `src/components/productos/` del 033 y se aplicó `atoms/` → `molecules/` → `organisms/` del 034 al catálogo GlowLab.
+
+El archivo nuevo `frontend/test/atomic.spec.js` añade los casos **36–39** para verificar los cambios del átomo Buscador, la composición de la molécula FiltrosProductos, el filtrado del organismo ListaProductos y la exclusión de productos inactivos.
+
+**Pendiente:** ejecutar `npm.cmd test` en Windows para confirmar si los 39 casos pasan. Repetir `npm.cmd run test:coverage` después: los porcentajes de la captura anterior (59,61 % sentencias, 53,55 % ramas, 64,80 % funciones, 64,05 % líneas) corresponden a la versión de **35 pruebas previa a esta reorganización** y **todavía no son los del proyecto actual**. La comparación detallada está en `docs/Comparacion-Ejemplos-Profesor.md`.
 
 ## Evidencias sugeridas
 
