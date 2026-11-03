@@ -1,15 +1,27 @@
 import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { rutaImagen } from "../api/axiosClient";
 import { useCart } from "../hooks/useCart";
+import { useAuth } from "../hooks/useAuth";
 import { formatearPrecio } from "../utils/format";
 import { mostrarError } from "../utils/swal";
 
 export default function Carrito() {
   const { items, cargando, total, cambiarCantidad, eliminar, vaciar, finalizarCompra } = useCart();
+  const { usuario } = useAuth();
+  const navigate = useNavigate();
 
   async function ejecutar(accion) {
     try { await accion(); } catch (e) { mostrarError(e.message); }
+  }
+
+  async function confirmarCompra() {
+    try {
+      const pedido = await finalizarCompra();
+      if (pedido?.ok) navigate("/mis-compras");
+    } catch (e) {
+      mostrarError(e.message);
+    }
   }
 
   return (
@@ -35,7 +47,12 @@ export default function Carrito() {
       {items.length > 0 && <div className="text-end">
         <h2 className="h4">Total: {formatearPrecio(total)}</h2>
         <Button variant="outline-secondary" className="me-2" onClick={() => ejecutar(vaciar)}>Vaciar</Button>
-        <Button className="btn-glow" onClick={() => ejecutar(finalizarCompra)}>Confirmar compra</Button>
+        {!usuario && (
+          <p className="text-info">
+            <Link to="/login">Inicia sesión</Link> o <Link to="/registro">regístrate</Link> para guardar tu compra y verla en tu historial.
+          </p>
+        )}
+        <Button className="btn-glow" onClick={confirmarCompra} disabled={!usuario}>Confirmar compra</Button>
         <p className="small text-muted mt-2">Compra simulada para evaluación académica.</p>
       </div>}
     </Container>
