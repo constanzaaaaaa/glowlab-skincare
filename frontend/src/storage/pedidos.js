@@ -30,8 +30,9 @@ export async function listarPedidosAdmin() {
 }
 
 // Calcula indicadores desde pedidos reales de la demostración, sin cifras inventadas.
-export async function obtenerInformeVentas() {
-  const pedidos = await listarPedidosAdmin();
+export async function obtenerInformeVentas({ desde } = {}) {
+  const todos = await listarPedidosAdmin();
+  const pedidos = desde ? todos.filter((pedido) => pedido.fecha.slice(0, 10) >= desde) : todos;
   const productos = new Map();
   const dias = new Map();
   let totalVentas = 0;
