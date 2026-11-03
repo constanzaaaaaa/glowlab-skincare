@@ -11,13 +11,14 @@ export const CLAVES = Object.freeze({
   usuarios: "glowlab_react_usuarios_v1",
   blog: "glowlab_react_blog_v1",
   carrito: "glowlab_react_carrito_v1",
+  pedidos: "glowlab_react_pedidos_v1",
   contactos: "glowlab_react_contactos_v1",
   sesion: "glowlab_react_sesion_v1"
 });
 
 const SEMILLAS = {
   roles: ROLES, categorias: CATEGORIAS, regiones: REGIONES, comunas: COMUNAS,
-  productos: PRODUCTOS, usuarios: USUARIOS, blog: NOTICIAS, carrito: [], contactos: []
+  productos: PRODUCTOS, usuarios: USUARIOS, blog: NOTICIAS, carrito: [], pedidos: [], contactos: []
 };
 export const EVENTO_DATOS = "glowlab:datos";
 
