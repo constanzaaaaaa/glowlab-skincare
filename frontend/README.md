@@ -30,6 +30,9 @@ Abre `http://localhost:5173`. Los productos e imágenes estarán disponibles **s
 - **`src/storage/persistencia.js`:** crea las colecciones por primera vez y guarda/lee datos JSON en `localStorage`.
 - **`src/storage/productos.js` y `usuarios.js`:** funciones CRUD, validaciones y controles de rol simulados.
 - **`src/storage/carrito.js` y `otros.js`:** carrito, checkout de demostración, blog, catálogos y mensajes.
+- **`src/storage/pedidos.js`:** consulta del historial personal, estadísticas de ventas y filtros de fechas.
+- **`src/pages/MisCompras.jsx`:** historial de compras del usuario que ha iniciado sesión.
+- **`src/pages/admin/AdminPanel.jsx`:** dashboard con ventas, indicadores, ranking de productos, ventas diarias y exportación CSV.
 - **`src/api/`:** conserva la interfaz utilizada por componentes y páginas; ahora delega a las funciones JS.
 - **Estado React:** `AuthContext` y `CartContext` sincronizan los cambios, incluso con eventos de almacenamiento.
 
@@ -107,7 +110,9 @@ Las cuentas de demostración anteriores conservan sus datos de inicio de sesión
 
 ## 7. Funcionalidad
 
-- Catálogo activo, búsqueda local, filtro por categoría, detalle con stock, carrito y confirmación de compra simulada.
+- Catálogo activo, búsqueda local, filtro por categoría, detalle con stock, carrito y confirmación de compra simulada. **Para confirmar una compra, el cliente debe iniciar sesión; el sistema guarda el pedido y descuenta stock.**
+- Cada cuenta dispone de **Mis compras** (`/mis-compras`), con fecha, productos, cantidades y totales de sus propios pedidos.
+- Dashboard de administrador/vendedor: ventas por período, total de pedidos, unidades, ticket promedio, productos más vendidos y descarga de informe CSV.
 - Registro, inicio/cierre de sesión; vistas protegidas por roles.
 - Administrador: panel, crear/editar/eliminar productos y usuarios.
 - Vendedor: panel y consulta del catálogo administrativo, sin mantenimiento de usuarios.
@@ -116,11 +121,24 @@ Las cuentas de demostración anteriores conservan sus datos de inicio de sesión
 ## 8. Alcance y límites
 
 1. Flask/SQLite permanecen intactos como respaldo, pero **React usa datos simulados en JavaScript + localStorage**, según el anexo 040. No hay migración automática de registros de SQLite.
-2. El checkout es **simulado**, sin pasarela de pago ni transacciones reales. Vacía el carrito, manteniendo el comportamiento anterior de demostración.
+2. El checkout es **simulado**, sin pasarela de pago ni transacciones reales. Ahora crea una orden vinculada a la cuenta, descuenta stock y vacía el carrito. El dashboard se inicia en **cero ventas** hasta registrar compras de demostración.
 3. Las colecciones se inicializan solo si aún no existen para preservar las ediciones del estudiante.
 4. La autorización por roles ocurre en JavaScript del navegador: **no constituye protección de datos de un sistema real**.
 5. Las 35 pruebas anteriores se ejecutaron satisfactoriamente en Windows (18-10-2026). La suite se redujo a **10 casos actuales**, que deben volver a ejecutarse; también debe actualizarse la cobertura y probarse manualmente CRUD, login y responsividad.
 
 ## 9. Rutas principales
 
-`/`, `/productos`, `/productos/:codigo`, `/carrito`, `/login`, `/registro`, `/nosotros`, `/blog`, `/blog/:id`, `/contacto`, `/admin`, `/admin/productos`, `/admin/usuarios`.
+`/`, `/productos`, `/productos/:codigo`, `/carrito`, `/mis-compras`, `/login`, `/registro`, `/nosotros`, `/blog`, `/blog/:id`, `/contacto`, `/admin`, `/admin/productos`, `/admin/usuarios`.
+
+## 10. Recorrido de demostración para el profesor
+
+1. Ejecutar `npm.cmd run dev` desde `frontend` y recorrer inicio, catálogo y detalle.
+2. En `/registro`, probar RUN inválido o correo no admitido y registrar una cuenta válida. Después iniciar sesión en `/login`.
+3. Agregar productos al carrito. La compra **solo se confirma con sesión iniciada**: queda registrada en `pedidos`, se reduce el stock y se navega a **Mis compras**.
+4. Abrir `/mis-compras`, recargar el navegador y comprobar que la orden conserva fecha, productos y total. Iniciar sesión con otra cuenta y verificar que no aparece la orden de la primera.
+5. Entrar con cuenta de administrador o vendedor, abrir `/admin` y revisar los indicadores, las ventas diarias y el ranking; exportar el CSV desde **Descargar informe CSV**. El botón se desactiva cuando no existen ventas en el período seleccionado.
+6. Explicar `frontend/test/*.spec.js` (exactamente **10 casos**) y `frontend/karma.conf.cjs`. Ejecutar `npm.cmd test` y `npm.cmd run test:coverage`.
+
+**Comprobación pendiente:** los cambios del historial/dashboard se han revisado a nivel de código, pero todavía deben probarse **en el navegador del estudiante**. La suite de 10 casos no incluye pruebas automáticas para estas nuevas vistas; no afirmar cobertura completa. No se han agregado bibliotecas de gráficos ni más casos de prueba.
+
+**Limitación académica:** todas las órdenes están en `localStorage`, disponible solo en ese navegador/perfil. Esto **no es un backend en AWS ni una base de datos multiusuario compartida**. La autorización en JavaScript del navegador no es segura para una tienda real. No ingresar datos personales auténticos en esta demostración.
