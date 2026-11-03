@@ -126,6 +126,7 @@ a {
 }
 
 .carousel-caption {
+    z-index: 2;
     text-align: left;
     left: 5%;
     right: auto;
