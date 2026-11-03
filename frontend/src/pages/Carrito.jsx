@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { rutaImagen } from "../api/axiosClient";
@@ -10,17 +11,22 @@ export default function Carrito() {
   const { items, cargando, total, cambiarCantidad, eliminar, vaciar, finalizarCompra } = useCart();
   const { usuario } = useAuth();
   const navigate = useNavigate();
+  const [confirmando, setConfirmando] = useState(false);
 
   async function ejecutar(accion) {
     try { await accion(); } catch (e) { mostrarError(e.message); }
   }
 
   async function confirmarCompra() {
+    if (confirmando) return;
+    setConfirmando(true);
     try {
       const pedido = await finalizarCompra();
       if (pedido?.ok) navigate("/mis-compras");
     } catch (e) {
       mostrarError(e.message);
+    } finally {
+      setConfirmando(false);
     }
   }
 
@@ -52,7 +58,7 @@ export default function Carrito() {
             <Link to="/login">Inicia sesión</Link> o <Link to="/registro">regístrate</Link> para guardar tu compra y verla en tu historial.
           </p>
         )}
-        <Button className="btn-glow" onClick={confirmarCompra} disabled={!usuario}>Confirmar compra</Button>
+        <Button className="btn-glow" onClick={confirmarCompra} disabled={!usuario || confirmando}>{confirmando ? "Confirmando…" : "Confirmar compra"}</Button>
         <p className="small text-muted mt-2">Compra simulada para evaluación académica.</p>
       </div>}
     </Container>
