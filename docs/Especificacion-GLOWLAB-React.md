@@ -12,7 +12,7 @@ Migrar las páginas HTML/Jinja a componentes React reutilizables con Bootstrap r
 - **Frontend:** Vite + React + React Router + React-Bootstrap, contextos Auth/Cart y páginas públicas/administrativas.
 - **Datos simulados:** `frontend/src/data/datosIniciales.js` representa la fuente inicial de datos del anexo 040.
 - **Persistencia CRUD:** `frontend/src/storage/persistencia.js` guarda colecciones como JSON en `localStorage`; `storage/productos.js` y `storage/usuarios.js` implementan alta, consulta, edición y eliminación.
-- **Otras funciones:** `storage/carrito.js` maneja cantidades, stock y checkout simulado; `storage/otros.js` ofrece blog, contacto y catálogos de apoyo.
+- **Otras funciones:** `storage/carrito.js` registra pedidos de demostración, descuenta stock y vacía carrito; `storage/pedidos.js` calcula estadísticas y filtra el historial por RUN. `storage/otros.js` ofrece blog, contacto y catálogos.
 - **Componentes React:** `src/api/` expone las mismas funciones usadas por las páginas, ahora conectadas a la capa JavaScript simulada en vez de Axios/Flask. Los contextos se actualizan con los cambios del almacenamiento.
 - **Referencia a los RAR reales 033 y 034:** la estructura general de `src/` permanece equivalente a Nexo Gaming; el catálogo se divide en `atoms/` → `molecules/` → `organisms/`, siguiendo `ListaRecetas` del ejemplo 034. La comparación por carpetas y archivos se documenta en `docs/Comparacion-Ejemplos-Profesor.md`.
 - **Recursos visuales:** `frontend/public/static/img` contiene copias de las imágenes originales. React se inicia solo con Vite, sin ejecutar Python.
@@ -35,13 +35,16 @@ Migrar las páginas HTML/Jinja a componentes React reutilizables con Bootstrap r
 | RF-10 | Contacto con persistencia local | `pages/Contacto.jsx`, `storage/otros.js` |
 | RF-11 | Navegación y visualización responsiva | `NavBar.jsx`, componentes React-Bootstrap |
 | RF-12 | Conservación de datos al recargar | `storage/persistencia.js` y `localStorage` |
+| RF-13 | Registrar una compra vinculada al usuario, con fecha, ítems, total y descuento de stock | `storage/carrito.js`, `storage/persistencia.js` |
+| RF-14 | Consultar únicamente el historial de compras del usuario autenticado | `pages/MisCompras.jsx`, `storage/pedidos.js`, `ProtectedRoute.jsx` |
+| RF-15 | Generar indicadores y reporte CSV de ventas simuladas por período | `pages/admin/AdminPanel.jsx`, `storage/pedidos.js` |
 
 ## Requisitos no funcionales y límites
 
 - **RNF-01:** Interfaz responsiva mediante componentes Bootstrap y clases `Row`/`Col`/`Container`.
 - **RNF-02:** Componentes con responsabilidad clara, `props` y estado React; evitar manipulación manual del DOM.
 - **RNF-03:** Operaciones CRUD y sesión simuladas en el cliente para fines académicos; **no usar para datos personales reales, autenticación segura ni producción**. Los hashes en navegador no equivalen a seguridad de servidor.
-- **RNF-04:** `localStorage` persiste en el navegador/perfil actual, pero no se sincroniza con SQLite ni otros usuarios/dispositivos.
+- **RNF-04:** `localStorage` persiste en el navegador/perfil actual, pero no se sincroniza con SQLite ni otros usuarios/dispositivos. Los informes y el historial reflejan únicamente ventas simuladas de ese navegador; no es un servicio backend.
 - **RNF-05:** Las pruebas automatizadas verifican lógica, componentes y persistencia. La cobertura depende de los archivos realmente instrumentados.
 
 ## Criterios de aceptación y evidencias en Windows
@@ -54,6 +57,16 @@ Migrar las páginas HTML/Jinja a componentes React reutilizables con Bootstrap r
 6. El diseño se adapta a móvil y escritorio.
 7. **Verificado históricamente:** `npm.cmd test` aprobó **35/35 casos** en ChromeHeadless 155 / Windows 10 (captura del 18-10-2026). La suite actual se redujo a **10 casos** según la rúbrica 049. **Pendiente:** ejecutar esos diez y documentar el resultado actual.
 8. `npm.cmd run test:coverage` debe generar una medición nueva para las **10 pruebas**, sin reutilizar los porcentajes históricos de 35 casos.
+
+## Validación manual adicional pendiente
+
+- Iniciar sesión y realizar una compra: confirmar que aparece una orden `PED-...` en `/mis-compras` y que el stock disminuye.
+- Cambiar a una segunda cuenta: comprobar que solo se visualiza su propio historial.
+- Iniciar sesión como administrador: revisar dashboard, filtro de períodos, venta acumulada, ranking y descarga CSV; con cero pedidos debe mostrar cero y no inventar ventas.
+- Probar registro con datos inválidos, correo duplicado, RUN inválido y cuenta válida.
+- Ejecutar exactamente **10 pruebas Jasmine** sin aumentar la cantidad acordada, y generar una nueva cobertura.
+
+**Estado:** funcionalidades implementadas a nivel de código en la rama de migración; todavía no se han ejecutado manualmente en Windows después de estos cambios. No declarar como verificados los criterios que no se han observado.
 
 ## Fuera de alcance
 
