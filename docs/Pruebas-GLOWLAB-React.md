@@ -55,3 +55,15 @@ Estas evidencias **no son una ejecución confirmada de la suite actual de diez p
 - La persistencia CRUD se prueba en `localStorage` con inicialización y limpieza de las colecciones para evitar contaminación entre casos.
 - `karma-coverage` instrumenta los módulos importados por las pruebas, **no todo el frontend**. El número resultante debe interpretarse como cobertura de archivos alcanzados, no como cobertura total de GlowLab.
 - La selección de diez pruebas responde expresamente a la rúbrica y a la preferencia de la estudiante. Las pruebas de desarrollo eliminadas no implican que sus funcionalidades se hayan borrado.
+
+## Validación del historial y dashboard añadidos después
+
+La suite **permanece en exactamente 10 casos**, por decisión de la estudiante. Tras construir el historial de compras y el dashboard de ventas, se necesita una **verificación funcional manual** adicional:
+
+1. Iniciar sesión con una cuenta cliente, agregar productos y finalizar una compra de demostración.
+2. Ver que el pedido aparezca en `/mis-compras` y persista tras recargar.
+3. Iniciar sesión con otra cuenta y comprobar que no muestra compras de la primera.
+4. Abrir `/admin` como administrador o vendedor; comprobar montos, pedidos, unidades, ranking y exportación CSV.
+5. Probar el registro con RUN inválido y correo duplicado, además de un registro exitoso.
+
+El guion detallado está en `docs/Guion-Presentacion-GLOWLAB.md`. **No afirmar que esos recorridos han sido probados en Windows ni que los diez casos actuales aprobaron hasta ejecutar las comprobaciones en el equipo.** Los porcentajes históricos de cobertura no deben reutilizarse.
