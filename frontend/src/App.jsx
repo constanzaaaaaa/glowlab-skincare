@@ -14,6 +14,7 @@ import NotFound from "./pages/NotFound";
 import ProductoDetalle from "./pages/ProductoDetalle";
 import Productos from "./pages/Productos";
 import Registro from "./pages/Registro";
+import MisCompras from "./pages/MisCompras";
 import AdminPanel from "./pages/admin/AdminPanel";
 import AdminProductoForm from "./pages/admin/AdminProductoForm";
 import AdminProductos from "./pages/admin/AdminProductos";
@@ -34,6 +35,10 @@ export default function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:id" element={<BlogDetalle />} />
         <Route path="/contacto" element={<Contacto />} />
+
+        <Route element={<ProtectedRoute rolesPermitidos={[ROLES.ADMINISTRADOR, ROLES.VENDEDOR, ROLES.CLIENTE]} />}>
+          <Route path="/mis-compras" element={<MisCompras />} />
+        </Route>
 
         <Route element={<ProtectedRoute rolesPermitidos={[ROLES.ADMINISTRADOR, ROLES.VENDEDOR]} />}>
           <Route element={<AdminLayout />}>
