@@ -60,16 +60,17 @@ export function CartProvider({ children }) {
   }, [recargar]);
 
   const finalizarCompra = useCallback(async () => {
-    if (items.length === 0) return;
+    if (items.length === 0) return null;
     if (!await confirmarAccion({
       titulo: "Confirmar compra",
       texto: "Total a pagar: $" + totalCarrito(items).toLocaleString("es-CL"),
       confirmButtonText: "Confirmar",
       icon: "question"
-    })) return;
-    await finalizarCompraApi();
+    })) return null;
+    const pedido = await finalizarCompraApi();
     await recargar();
-    await mostrarExito("Gracias por tu compra", "Tu pedido fue registrado correctamente (simulación académica).");
+    await mostrarExito("Compra registrada", "Pedido " + pedido.id + " guardado en tu historial (simulación académica).");
+    return pedido;
   }, [items, recargar]);
 
   const totalItems = useMemo(() => items.reduce((suma, item) => suma + item.cantidad, 0), [items]);
