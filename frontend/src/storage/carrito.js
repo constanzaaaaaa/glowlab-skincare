@@ -1,6 +1,6 @@
 // Carrito persistente en localStorage; conserva los contratos de carritoApi.
 import { obtenerColeccion, guardarColeccion } from "./persistencia";
-import { fallar, numeroEntero } from "./helpers";
+import { fallar, numeroEntero, sesionInterna } from "./helpers";
 import { obtenerProducto } from "./productos";
 
 function itemsConProducto() {
@@ -49,14 +49,48 @@ export async function eliminarItemCarrito(codigo) {
 
 export async function vaciarCarritoApi() { guardarColeccion("carrito", []); }
 
+// Registra una orden con el precio y nombre de cada producto al momento de comprar.
 export async function finalizarCompraApi() {
-  const items = itemsConProducto();
-  if (items.length === 0) fallar("El carrito está vacío.");
-  for (const item of items) {
-    if (item.producto.estado !== "Activo") fallar("Producto no disponible: " + item.producto.nombre);
-    if (item.cantidad > item.producto.stock) fallar("Stock insuficiente para " + item.producto.nombre);
-  }
-  const total = items.reduce((suma, item) => suma + item.cantidad * item.producto.precio, 0);
+  const usuario = sesionInterna();
+  if (!usuario) fallar("Inicia sesión para confirmar la compra y guardar tu historial.");
+
+  const carrito = obtenerColeccion("carrito");
+  if (carrito.length === 0) fallar("El carrito está vacío.");
+  const productos = obtenerColeccion("productos");
+  const detalles = carrito.map(({ codigo, cantidad }) => {
+    const producto = productos.find((p) => p.codigo === codigo);
+    if (!producto || producto.estado !== "Activo") fallar("Producto no disponible: " + codigo);
+    if (!numeroEntero(cantidad, 1) || Number(cantidad) > producto.stock) {
+      fallar("Stock insuficiente para " + producto.nombre);
+    }
+    return {
+      codigo, nombre: producto.nombre, cantidad: Number(cantidad),
+      precioUnitario: producto.precio, subtotal: Number(cantidad) * producto.precio
+    };
+  });
+
+  const pedidos = obtenerColeccion("pedidos");
+  const numero = pedidos.reduce((mayor, p) => {
+    const n = Number(String(p.id).replace(/^PED-/, ""));
+    return Number.isInteger(n) ? Math.max(mayor, n) : mayor;
+  }, 0) + 1;
+  const pedido = {
+    id: "PED-" + String(numero).padStart(5, "0"),
+    fecha: new Date().toISOString(),
+    clienteRun: usuario.run,
+    clienteNombre: usuario.nombre + " " + usuario.apellidos,
+    items: detalles,
+    unidades: detalles.reduce((suma, item) => suma + item.cantidad, 0),
+    total: detalles.reduce((suma, item) => suma + item.subtotal, 0),
+    estado: "Confirmado (simulado)"
+  };
+
+  // localStorage solo simula persistencia: no hay cobro ni transacción bancaria.
+  guardarColeccion("pedidos", [...pedidos, pedido]);
+  guardarColeccion("productos", productos.map((producto) => {
+    const comprado = detalles.find((item) => item.codigo === producto.codigo);
+    return comprado ? { ...producto, stock: producto.stock - comprado.cantidad } : producto;
+  }));
   guardarColeccion("carrito", []);
-  return { ok: true, total, simulada: true };
+  return { ...pedido, ok: true, simulada: true };
 }
