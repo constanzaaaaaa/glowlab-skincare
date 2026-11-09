@@ -142,3 +142,13 @@ Las cuentas de demostración anteriores conservan sus datos de inicio de sesión
 **Comprobación pendiente:** los cambios del historial/dashboard se han revisado a nivel de código, pero todavía deben probarse **en el navegador del estudiante**. La suite de 10 casos no incluye pruebas automáticas para estas nuevas vistas; no afirmar cobertura completa. No se han agregado bibliotecas de gráficos ni más casos de prueba.
 
 **Limitación académica:** todas las órdenes están en `localStorage`, disponible solo en ese navegador/perfil. Esto **no es un backend en AWS ni una base de datos multiusuario compartida**. La autorización en JavaScript del navegador no es segura para una tienda real. No ingresar datos personales auténticos en esta demostración.
+
+## 11. Ofertas: 2x1 y descuentos porcentuales
+
+- **Tienda:** `/ofertas` muestra productos activos con promoción; también se señalan en catálogo, detalle y carrito. El segundo botón del carrusel original apunta a Ofertas.
+- **Administración:** `/admin/productos` → **Editar** → **Promoción del producto**. El administrador puede elegir **Sin oferta**, **2x1** o **Descuento porcentual** (entre 1 % y 90 %).
+- **Ejemplos iniciales:** `GL-002` tiene **2x1** y `GL-008` tiene **20 %**. Al entrar desde un navegador que ya tenía datos, la migración agrega solo los campos ausentes a los productos existentes, sin borrar stock, usuarios ni pedidos.
+- **Cálculo real:** `src/utils/format.js`, funciones `calcularTotalProducto` y `totalCarrito`. El **2x1 se aplica por pares del mismo código de producto**: 1 unidad paga 1, 2 pagan 1, 3 pagan 2, 4 pagan 2. El porcentaje se redondea a pesos chilenos por unidad.
+- **Checkout:** `src/storage/carrito.js` registra el total con descuento y la cantidad realmente entregada para descontar stock. `/mis-compras` muestra la oferta y el ahorro; el dashboard suma los subtotales descontados.
+- **Persistencia:** solo `localStorage` del navegador, como en la evaluación académica. Las promociones se pueden cambiar y desactivar desde la administración; las ventas históricas conservan sus precios al momento de la compra.
+- **Pruebas:** se mantienen **exactamente las 10 pruebas Jasmine** existentes sin alterar sus archivos; es necesario ejecutar `npm.cmd test` y probar manualmente 2x1 y porcentaje desde Chrome antes de la presentación.

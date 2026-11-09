@@ -6,7 +6,7 @@ import { listarCategorias } from "../../api/masterDataApi";
 import { mostrarError, mostrarExito } from "../../utils/swal";
 import { enteroEnRango, textoRequerido } from "../../utils/validaciones";
 
-const INICIAL = { codigo: "", nombre: "", descripcion: "", precio: "", stock: "", stockCritico: "", categoriaId: "", imagen: "", estado: "Activo" };
+const INICIAL = { codigo: "", nombre: "", descripcion: "", precio: "", stock: "", stockCritico: "", categoriaId: "", imagen: "", estado: "Activo", ofertaTipo: "ninguna", descuentoPorcentaje: 0 };
 export default function AdminProductoForm() {
   const { codigo } = useParams();
   const [datos, setDatos] = useState(INICIAL);
@@ -43,6 +43,27 @@ export default function AdminProductoForm() {
         <option value="">Seleccionar</option>{categorias.map((c) => <option key={c.id} value={c.id}>{c.nombre}</option>)}
       </Form.Select></Col>
       <Col md={6}><Form.Label>Estado</Form.Label><Form.Select aria-label="Estado" value={datos.estado} onChange={cambiar("estado")}><option>Activo</option><option>Inactivo</option></Form.Select></Col>
+      <Col md={6}>
+        <Form.Label>Promoción del producto</Form.Label>
+        <Form.Select aria-label="Tipo de oferta" value={datos.ofertaTipo || "ninguna"} onChange={(e) =>
+          setDatos((anterior) => ({
+            ...anterior,
+            ofertaTipo: e.target.value,
+            descuentoPorcentaje: e.target.value === "porcentaje" ? (Number(anterior.descuentoPorcentaje) || 20) : 0
+          }))
+        }>
+          <option value="ninguna">Sin oferta</option>
+          <option value="2x1">2x1 (lleva dos y paga uno)</option>
+          <option value="porcentaje">Descuento porcentual</option>
+        </Form.Select>
+      </Col>
+      {datos.ofertaTipo === "porcentaje" && (
+        <Col md={6}>
+          <Form.Label>Descuento (%)</Form.Label>
+          <Form.Control aria-label="Porcentaje de descuento" type="number" min={1} max={90} required
+            value={datos.descuentoPorcentaje} onChange={cambiar("descuentoPorcentaje")} />
+        </Col>
+      )}
     </Row><Button className="btn-glow mt-4" type="submit">Guardar producto</Button></Form>
   </>;
 }

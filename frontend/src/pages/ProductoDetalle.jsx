@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { obtenerProducto } from "../api/productosApi";
 import { rutaImagen } from "../api/axiosClient";
 import { useCart } from "../hooks/useCart";
-import { formatearPrecio, stockDisponible } from "../utils/format";
+import { calcularTotalProducto, etiquetaOferta, formatearPrecio, stockDisponible } from "../utils/format";
 import { mostrarError } from "../utils/swal";
 
 export default function ProductoDetalle() {
@@ -33,7 +33,20 @@ export default function ProductoDetalle() {
         <Col md={6}><img className="w-100 rounded preview-img" src={rutaImagen(producto.imagen)} alt={producto.nombre} /></Col>
         <Col md={6}>
           <h1>{producto.nombre}</h1>
-          <p className="display-6 text-info fw-bold">{formatearPrecio(producto.precio)}</p>
+          {etiquetaOferta(producto) && <p className="fw-bold text-success">Oferta especial: {etiquetaOferta(producto)}{producto.ofertaTipo === "2x1" ? " · Lleva 2 y paga 1" : ""}</p>}
+          {producto.ofertaTipo === "porcentaje" && etiquetaOferta(producto) && (
+            <p className="text-muted text-decoration-line-through mb-0">{formatearPrecio(producto.precio)}</p>
+          )}
+          <p className="display-6 text-info fw-bold">
+            {formatearPrecio(calcularTotalProducto(producto, 1).subtotal)}
+          </p>
+          {etiquetaOferta(producto) && (
+            <p className="small">Total por {cantidad} unidad(es): <strong>{formatearPrecio(calcularTotalProducto(producto, cantidad).subtotal)}</strong>
+              {calcularTotalProducto(producto, cantidad).ahorro > 0 && (
+                <span className="text-success"> · Ahorras {formatearPrecio(calcularTotalProducto(producto, cantidad).ahorro)}</span>
+              )}
+            </p>
+          )}
           <p>{producto.descripcion}</p>
           <p>Stock disponible: {producto.stock}</p>
           <Form.Label htmlFor="detalle-cantidad">Cantidad</Form.Label>

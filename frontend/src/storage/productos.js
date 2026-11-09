@@ -14,6 +14,12 @@ function validar(datos, codigoEdicion) {
     fallar("La categoría no existe.");
   }
   if (!["Activo", "Inactivo"].includes(datos.estado || "Activo")) fallar("Estado de producto inválido.");
+  const tipo = datos.ofertaTipo || "ninguna";
+  if (!["ninguna", "2x1", "porcentaje"].includes(tipo)) fallar("Tipo de oferta inválido.");
+  if (tipo === "porcentaje" &&
+      (!numeroEntero(datos.descuentoPorcentaje, 1) || Number(datos.descuentoPorcentaje) > 90)) {
+    fallar("El descuento debe estar entre 1 % y 90 %.");
+  }
 }
 
 function normalizar(datos) {
@@ -21,7 +27,9 @@ function normalizar(datos) {
     codigo: datos.codigo.trim(), nombre: datos.nombre.trim(), descripcion: datos.descripcion.trim(),
     precio: Number(datos.precio), stock: Number(datos.stock), stockCritico: Number(datos.stockCritico),
     categoriaId: Number(datos.categoriaId), imagen: String(datos.imagen || "").trim(),
-    estado: datos.estado || "Activo"
+    estado: datos.estado || "Activo",
+    ofertaTipo: datos.ofertaTipo || "ninguna",
+    descuentoPorcentaje: datos.ofertaTipo === "porcentaje" ? Number(datos.descuentoPorcentaje) : 0
   };
 }
 

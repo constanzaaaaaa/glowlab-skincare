@@ -61,11 +61,11 @@ export default function AdminPanel() {
 
   function descargarInforme() {
     if (!informe) return;
-    const filas = [["Pedido", "Fecha", "Cliente", "Código", "Producto", "Cantidad", "Precio unitario", "Subtotal"]];
+    const filas = [["Pedido", "Fecha", "Cliente", "Código", "Producto", "Cantidad", "Precio normal", "Oferta", "Ahorro", "Subtotal"]];
     for (const pedido of informe.pedidos) {
       for (const item of pedido.items) {
         filas.push([pedido.id, pedido.fecha.slice(0, 10), pedido.clienteNombre,
-          item.codigo, item.nombre, item.cantidad, item.precioUnitario, item.subtotal]);
+          item.codigo, item.nombre, item.cantidad, item.precioUnitario, item.oferta || "", item.descuento || 0, item.subtotal]);
       }
     }
     const csv = filas.map((fila) => fila.map(celdaCsv).join(";")).join("\r\n");

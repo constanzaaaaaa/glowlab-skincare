@@ -2,6 +2,7 @@
 import { obtenerColeccion, guardarColeccion } from "./persistencia";
 import { fallar, numeroEntero, sesionInterna } from "./helpers";
 import { obtenerProducto } from "./productos";
+import { calcularTotalProducto, etiquetaOferta } from "../utils/format";
 
 function itemsConProducto() {
   const productos = obtenerColeccion("productos");
@@ -63,9 +64,11 @@ export async function finalizarCompraApi() {
     if (!numeroEntero(cantidad, 1) || Number(cantidad) > producto.stock) {
       fallar("Stock insuficiente para " + producto.nombre);
     }
+    const calculo = calcularTotalProducto(producto, cantidad);
     return {
       codigo, nombre: producto.nombre, cantidad: Number(cantidad),
-      precioUnitario: producto.precio, subtotal: Number(cantidad) * producto.precio
+      precioUnitario: producto.precio, subtotal: calculo.subtotal,
+      oferta: etiquetaOferta(producto), descuento: calculo.ahorro
     };
   });
 

@@ -35,6 +35,22 @@ export function inicializarDatos() {
       storage().setItem(CLAVES[tipo], JSON.stringify(valores));
     }
   }
+
+  // Migración de datos antiguos: conserva precios, stock, usuarios y pedidos existentes.
+  // Solo completa los campos de ofertas que todavía no existían.
+  const productos = JSON.parse(storage().getItem(CLAVES.productos));
+  if (Array.isArray(productos) && productos.some((p) => p.ofertaTipo === undefined)) {
+    const actualizados = productos.map((p) => {
+      if (p.ofertaTipo !== undefined) return p;
+      const ejemplo = PRODUCTOS.find((semilla) => semilla.codigo === p.codigo && semilla.nombre === p.nombre);
+      return {
+        ...p,
+        ofertaTipo: ejemplo?.ofertaTipo || "ninguna",
+        descuentoPorcentaje: ejemplo?.descuentoPorcentaje || 0
+      };
+    });
+    storage().setItem(CLAVES.productos, JSON.stringify(actualizados));
+  }
 }
 
 export function obtenerColeccion(tipo) {

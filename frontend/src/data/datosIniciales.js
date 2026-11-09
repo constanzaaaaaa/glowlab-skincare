@@ -15,7 +15,12 @@ export const PRODUCTOS = [
   ["GL-007", "Bright Eye Contour", "Contorno de ojos con cafeína y vitamina E.", 14990, 3, 4, 7, "productos/contorno1.webp"],
   ["GL-008", "Vitamin C Radiance Serum", "Sérum antioxidante con vitamina C.", 16990, 9, 3, 2, "productos/suero1.webp"]
 ].map(([codigo, nombre, descripcion, precio, stock, stockCritico, categoriaId, imagen]) =>
-  ({ codigo, nombre, descripcion, precio, stock, stockCritico, categoriaId, imagen, estado: "Activo" })
+  ({
+    codigo, nombre, descripcion, precio, stock, stockCritico, categoriaId, imagen, estado: "Activo",
+    // Promociones de ejemplo para la demo: pueden modificarse desde Administración.
+    ofertaTipo: codigo === "GL-002" ? "2x1" : codigo === "GL-008" ? "porcentaje" : "ninguna",
+    descuentoPorcentaje: codigo === "GL-008" ? 20 : 0
+  })
 );
 
 export const USUARIOS = [

@@ -36,7 +36,7 @@ export default function Home() {
             <Carousel.Caption className="glow-hero-caption">
               <h1 className="display-6">Ofertas de lanzamiento</h1>
               <p className="d-none d-md-block">Precios especiales en nuestros últimos lanzamientos.</p>
-              <Button as={Link} to="/productos" className="glow-carousel-btn">Ver ofertas</Button>
+              <Button as={Link} to="/ofertas" className="glow-carousel-btn">Ver ofertas</Button>
             </Carousel.Caption>
           </Carousel.Item>
 

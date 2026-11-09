@@ -45,13 +45,14 @@ export default function MisCompras() {
           </Card.Header>
           <Card.Body>
             <Table responsive size="sm" className="align-middle">
-              <thead><tr><th>Producto</th><th>Cantidad</th><th>Precio unitario</th><th>Subtotal</th></tr></thead>
+              <thead><tr><th>Producto</th><th>Cantidad</th><th>Precio original</th><th>Oferta</th><th>Subtotal</th></tr></thead>
               <tbody>
                 {pedido.items.map((item) => (
                   <tr key={item.codigo}>
                     <td>{item.nombre}</td>
                     <td>{item.cantidad}</td>
                     <td>{formatearPrecio(item.precioUnitario)}</td>
+                    <td>{item.oferta || "—"}{item.descuento > 0 ? " · Ahorras " + formatearPrecio(item.descuento) : ""}</td>
                     <td>{formatearPrecio(item.subtotal)}</td>
                   </tr>
                 ))}

@@ -13,6 +13,7 @@ import Nosotros from "./pages/Nosotros";
 import NotFound from "./pages/NotFound";
 import ProductoDetalle from "./pages/ProductoDetalle";
 import Productos from "./pages/Productos";
+import Ofertas from "./pages/Ofertas";
 import Registro from "./pages/Registro";
 import MisCompras from "./pages/MisCompras";
 import AdminPanel from "./pages/admin/AdminPanel";
@@ -27,6 +28,7 @@ export default function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/productos" element={<Productos />} />
+        <Route path="/ofertas" element={<Ofertas />} />
         <Route path="/productos/:codigo" element={<ProductoDetalle />} />
         <Route path="/carrito" element={<Carrito />} />
         <Route path="/login" element={<Login />} />

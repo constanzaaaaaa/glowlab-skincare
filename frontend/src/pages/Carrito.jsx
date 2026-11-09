@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { rutaImagen } from "../api/axiosClient";
 import { useCart } from "../hooks/useCart";
 import { useAuth } from "../hooks/useAuth";
-import { formatearPrecio } from "../utils/format";
+import { calcularTotalProducto, etiquetaOferta, formatearPrecio } from "../utils/format";
 import { mostrarError } from "../utils/swal";
 
 export default function Carrito() {
@@ -35,23 +35,36 @@ export default function Carrito() {
       <h1 className="section-title">Mi carrito</h1>
       {cargando && <Spinner animation="border" />}
       {!cargando && items.length === 0 && <p>Tu carrito está vacío. <Link to="/productos">Ver productos</Link></p>}
-      {items.map((item) => (
+      {items.map((item) => {
+        const precio = calcularTotalProducto(item.producto, item.cantidad);
+        const oferta = etiquetaOferta(item.producto);
+        return (
         <Row className="align-items-center border rounded p-3 g-3 my-3" key={item.codigo}>
           <Col xs={3} md={2}><img src={rutaImagen(item.producto.imagen)} className="img-fluid" alt={item.producto.nombre} /></Col>
-          <Col xs={9} md={4}><strong>{item.producto.nombre}</strong><p className="mb-0">{formatearPrecio(item.producto.precio)} por unidad</p></Col>
+          <Col xs={9} md={4}>
+            <strong>{item.producto.nombre}</strong>
+            <p className="mb-0">{formatearPrecio(item.producto.precio)} precio normal por unidad</p>
+            {oferta && <span className="text-success small fw-bold">{oferta}{oferta === "2x1" ? " · lleva 2 y paga 1" : ""}</span>}
+          </Col>
           <Col xs={6} md={3} className="d-flex align-items-center gap-2">
             <Button variant="outline-info" size="sm" aria-label={"Quitar uno de " + item.producto.nombre} onClick={() => ejecutar(() => cambiarCantidad(item.codigo, item.cantidad - 1))} disabled={item.cantidad <= 1}>−</Button>
             <span>{item.cantidad}</span>
             <Button variant="outline-info" size="sm" aria-label={"Agregar uno de " + item.producto.nombre} onClick={() => ejecutar(() => cambiarCantidad(item.codigo, item.cantidad + 1))} disabled={item.cantidad >= item.producto.stock}>+</Button>
           </Col>
           <Col xs={6} md={3} className="text-end">
-            <p className="fw-bold">{formatearPrecio(item.cantidad * item.producto.precio)}</p>
+            {precio.ahorro > 0 && <p className="text-muted text-decoration-line-through mb-1">{formatearPrecio(precio.original)}</p>}
+            <p className="fw-bold mb-1">{formatearPrecio(precio.subtotal)}</p>
+            {precio.ahorro > 0 && <p className="text-success small">Ahorras {formatearPrecio(precio.ahorro)}</p>}
             <Button variant="outline-danger" size="sm" onClick={() => ejecutar(() => eliminar(item.codigo))}>Eliminar</Button>
           </Col>
         </Row>
-      ))}
+        );
+      })}
       {items.length > 0 && <div className="text-end">
-        <h2 className="h4">Total: {formatearPrecio(total)}</h2>
+        {items.reduce((suma, item) => suma + calcularTotalProducto(item.producto, item.cantidad).ahorro, 0) > 0 && (
+          <p className="text-success fw-bold">Ahorro por ofertas: {formatearPrecio(items.reduce((suma, item) => suma + calcularTotalProducto(item.producto, item.cantidad).ahorro, 0))}</p>
+        )}
+        <h2 className="h4">Total con ofertas: {formatearPrecio(total)}</h2>
         <Button variant="outline-secondary" className="me-2" onClick={() => ejecutar(vaciar)}>Vaciar</Button>
         {!usuario && (
           <p className="text-info">
