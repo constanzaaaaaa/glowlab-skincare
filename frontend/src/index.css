@@ -61,3 +61,81 @@ a { text-decoration: none; }
   }
   .glow-hero-caption h1 { font-size: 1.35rem; }
 }
+
+/* Pie de página GlowLab: navegación real, ayuda y contacto. */
+.glow-footer {
+  background: #f1fbfc;
+  border-top: 1px solid #d2eff1;
+  color: #233942;
+}
+.glow-footer-brand {
+  color: #12343a;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: .025em;
+}
+.glow-footer-brand span { color: #0d9da9; }
+.glow-footer-brand small {
+  font-size: .56rem;
+  letter-spacing: .14em;
+  vertical-align: middle;
+}
+.glow-footer-brand:hover { color: #12343a; }
+.glow-footer-description {
+  max-width: 310px;
+  line-height: 1.7;
+  color: #4d6d70;
+}
+.glow-footer-small { color: #087f8c; font-weight: 600; }
+.glow-footer-heading {
+  color: #163b41;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: .95rem;
+}
+.glow-footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+.glow-footer-links a,
+.glow-footer-contact a {
+  color: #4d6d70;
+  transition: color .15s ease;
+}
+.glow-footer-links a:hover,
+.glow-footer-links a:focus,
+.glow-footer-contact a:hover,
+.glow-footer-contact a:focus {
+  color: #087f8c;
+  text-decoration: underline;
+}
+.glow-footer-contact p { color: #4d6d70; }
+.glow-footer-contact i { color: #0d9da9; }
+.glow-footer-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem;
+}
+.glow-social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #c3e7eb;
+  border-radius: 50%;
+  background: #fff;
+  color: #0c8792;
+  font-size: 1.1rem;
+}
+.glow-footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .7rem;
+  border-top: 1px solid #cde7e9;
+  color: #58777a;
+  font-size: .84rem;
+}

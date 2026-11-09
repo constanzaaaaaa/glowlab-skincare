@@ -8,6 +8,7 @@ import BlogDetalle from "./pages/BlogDetalle";
 import Carrito from "./pages/Carrito";
 import Contacto from "./pages/Contacto";
 import Home from "./pages/Home";
+import Ayuda from "./pages/Ayuda";
 import Login from "./pages/Login";
 import Nosotros from "./pages/Nosotros";
 import NotFound from "./pages/NotFound";
@@ -37,6 +38,7 @@ export default function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:id" element={<BlogDetalle />} />
         <Route path="/contacto" element={<Contacto />} />
+        <Route path="/ayuda" element={<Ayuda />} />
 
         <Route element={<ProtectedRoute rolesPermitidos={[ROLES.ADMINISTRADOR, ROLES.VENDEDOR, ROLES.CLIENTE]} />}>
           <Route path="/mis-compras" element={<MisCompras />} />
