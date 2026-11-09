@@ -15,3 +15,49 @@ a { text-decoration: none; }
 .glow-footer { background: #f1fbfc; border-top: 1px solid #e0eff0; }
 .preview-img { max-height: 450px; object-fit: contain; }
 .admin-sidebar { background: #f5fbfc; min-height: 65vh; }
+
+/* Carrusel original Flask: fotos carusel1/2/3 y captions restauradas en React. */
+.hero-section {
+  background:
+    radial-gradient(circle at top right, rgba(31, 194, 209, .22), transparent 55%),
+    radial-gradient(circle at bottom left, rgba(79, 209, 217, .2), transparent 50%),
+    #eafbfc;
+  border-bottom: 1px solid #d2f1f3;
+}
+.glow-hero-image {
+  height: 380px;
+  object-fit: cover;
+  filter: brightness(.95);
+}
+.glow-hero-caption {
+  z-index: 2;
+  text-align: left;
+  left: 5%;
+  right: auto;
+  bottom: 20%;
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, .35);
+}
+.glow-carousel-btn {
+  background: #0f1f21;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 50px;
+  text-shadow: none;
+}
+.glow-carousel-btn:hover,
+.glow-carousel-btn:focus {
+  background: #000;
+  color: #fff;
+}
+@media (max-width: 575.98px) {
+  .glow-hero-image { height: 300px; }
+  .glow-hero-caption {
+    left: 15%;
+    right: 15%;
+    bottom: 13%;
+    text-align: center;
+  }
+  .glow-hero-caption h1 { font-size: 1.35rem; }
+}
