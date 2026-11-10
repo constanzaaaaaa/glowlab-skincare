@@ -52,6 +52,26 @@ export function inicializarDatos() {
     storage().setItem(CLAVES.productos, JSON.stringify(actualizados));
   }
 
+  // Completa los artículos de demostración existentes sin borrar datos personalizados.
+  // Los textos nuevos se agregan solo cuando el artículo aún no tiene esa sección.
+  const noticias = JSON.parse(storage().getItem(CLAVES.blog));
+  if (Array.isArray(noticias)) {
+    let cambioNoticias = false;
+    const noticiasActualizadas = noticias.map((noticia) => {
+      const plantilla = NOTICIAS.find((semilla) => semilla.id === noticia.id);
+      if (!plantilla) return noticia;
+      const copia = { ...noticia };
+      ["categoria", "lecturaMinutos", "secciones", "consejos", "conclusion"].forEach((campo) => {
+        if (copia[campo] === undefined && plantilla[campo] !== undefined) {
+          copia[campo] = plantilla[campo];
+          cambioNoticias = true;
+        }
+      });
+      return copia;
+    });
+    if (cambioNoticias) storage().setItem(CLAVES.blog, JSON.stringify(noticiasActualizadas));
+  }
+
   // Actualiza únicamente el correo de demostración antiguo de Diego.
   // No cambia contraseñas, RUN ni los correos que haya creado el usuario.
   const usuarios = JSON.parse(storage().getItem(CLAVES.usuarios));
