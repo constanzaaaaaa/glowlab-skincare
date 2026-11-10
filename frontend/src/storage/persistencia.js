@@ -36,6 +36,16 @@ export function inicializarDatos() {
     }
   }
 
+  // Amplía solo los catálogos territoriales ya guardados en el navegador.
+  // Conserva los identificadores previos y no modifica usuarios, compras ni productos.
+  for (const [tipo, catalogo] of [["regiones", REGIONES], ["comunas", COMUNAS]]) {
+    const guardados = JSON.parse(storage().getItem(CLAVES[tipo]));
+    if (!Array.isArray(guardados)) continue;
+    const ids = new Set(guardados.map((item) => item.id));
+    const faltantes = catalogo.filter((item) => !ids.has(item.id));
+    if (faltantes.length) storage().setItem(CLAVES[tipo], JSON.stringify([...guardados, ...faltantes]));
+  }
+
   // Migración de datos antiguos: conserva precios, stock, usuarios y pedidos existentes.
   // Solo completa los campos de ofertas que todavía no existían.
   const productos = JSON.parse(storage().getItem(CLAVES.productos));
