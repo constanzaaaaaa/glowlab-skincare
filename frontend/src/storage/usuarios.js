@@ -4,7 +4,7 @@ import { exigirAdmin, fallar, hashClave, sesionInterna, usuarioPublico } from ".
 import { validarDatosUsuario, validarDatosLogin } from "../utils/validaciones";
 
 function validar(datos, runAnterior, esRegistro = false) {
-  const errores = validarDatosUsuario(datos, { edicion: Boolean(runAnterior), administrador: !esRegistro });
+  const errores = validarDatosUsuario(datos, { edicion: Boolean(runAnterior), administrador: !esRegistro, omitirPassword: !esRegistro });
   if (runAnterior && datos?.run?.toUpperCase().trim() !== runAnterior) errores.push("No puedes cambiar el RUN de una cuenta existente.");
   const region = Number(datos?.regionId), comuna = Number(datos?.comunaId);
   if (datos?.regionId && !obtenerColeccion("regiones").some((r) => r.id === region)) {
@@ -21,7 +21,7 @@ async function normalizar(datos, anterior, esRegistro) {
   return {
     run, nombre: datos.nombre.trim(), apellidos: datos.apellidos.trim(),
     correo: datos.correo.trim().toLowerCase(),
-    claveHash: datos.password ? await hashClave(run, datos.password) : anterior?.claveHash,
+    claveHash: datos.password ? await hashClave(run, datos.password) : (anterior?.claveHash ?? null),
     fechaNacimiento: datos.fechaNacimiento || "",
     rolId: esRegistro ? 3 : Number(datos.rolId ?? 3),
     regionId: Number(datos.regionId), comunaId: Number(datos.comunaId),
@@ -56,6 +56,9 @@ export async function iniciarSesion(correo, password) {
   if (errores.length) fallar(errores.join("\n"));
   const usuario = obtenerColeccion("usuarios").find((u) =>
     u.correo.toLowerCase() === String(correo || "").trim().toLowerCase());
+  if (usuario && !usuario.claveHash) {
+    fallar("Esta cuenta todavía no tiene una contraseña configurada. La recuperación mediante código de correo aún no está habilitada.");
+  }
   if (!usuario || usuario.claveHash !== await hashClave(usuario.run, password)) {
     fallar("El correo o la contraseña no coinciden.");
   }

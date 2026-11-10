@@ -163,3 +163,11 @@ Las cuentas de demostración anteriores conservan sus datos de inicio de sesión
 - La fecha de nacimiento es opcional, pero si se completa debe ser una fecha real y no futura. Se comprueban región, comuna, campos obligatorios, límites de longitud, precio/stock enteros, ofertas, porcentaje y ruta local de imagen.
 - En el detalle de producto, una cantidad inválida informa la causa con SweetAlert en vez de limitarse a bloquear el botón.
 - Las **10 pruebas Jasmine** siguen siendo diez. La prueba de correo `06` se actualizó a `@duocuc.cl` y comprueba adicionalmente dominios incorrectos; la prueba `07` comprueba también la ausencia de dígito verificador. Ejecutar `npm.cmd test` y `npm.cmd run dev` desde `frontend`.
+
+## 13. Historial completo del dashboard y gestión de contraseñas
+
+- El dashboard ahora consulta dos informes independientes: el informe por período elegido y el historial completo de todos los pedidos. El apartado **Historial completo de ventas** muestra total acumulado, número de pedidos, unidades y **todas** las ventas sin aplicar filtros ni limitar filas; también permite descargar el CSV histórico completo.
+- Las tarjetas superiores **Pedidos históricos** y **Ventas acumuladas** siempre representan todo el historial, aunque se cambie el selector de períodos del informe.
+- El formulario administrativo de usuarios ya no incluye campo de contraseña. El administrador conserva la posibilidad de crear/editar datos personales, rol y estado, pero no puede definir ni cambiar claves.
+- El botón **Simular envío de código de recuperación** solo muestra un aviso que indica a qué correo se enviaría el código. No envía correos, no genera códigos y no cambia contraseñas.
+- Los usuarios creados por el administrador sin contraseña quedan con `claveHash: null`; no podrán iniciar sesión hasta que se implemente el flujo real de recuperación/configuración de contraseña. El registro público mantiene su propio campo de contraseña y su validación.

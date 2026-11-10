@@ -28,6 +28,7 @@ export default function AdminPanel() {
   const { usuario } = useAuth();
   const [productos, setProductos] = useState([]);
   const [informe, setInforme] = useState(null);
+  const [informeHistorico, setInformeHistorico] = useState(null);
   const [periodo, setPeriodo] = useState("todo");
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
@@ -35,9 +36,18 @@ export default function AdminPanel() {
   useEffect(() => {
     let activo = true;
     const recargar = () => {
-      Promise.all([listarProductos(), obtenerInformeVentas({ desde: inicioPeriodo(periodo) })])
-        .then(([catalogo, ventas]) => {
-          if (activo) { setProductos(catalogo); setInforme(ventas); setError(""); }
+      Promise.all([
+        listarProductos(),
+        obtenerInformeVentas({ desde: inicioPeriodo(periodo) }),
+        obtenerInformeVentas()
+      ])
+        .then(([catalogo, ventas, historico]) => {
+          if (activo) {
+            setProductos(catalogo);
+            setInforme(ventas);
+            setInformeHistorico(historico);
+            setError("");
+          }
         })
         .catch((e) => { if (activo) setError(e.message); })
         .finally(() => { if (activo) setCargando(false); });
@@ -59,10 +69,10 @@ export default function AdminPanel() {
     };
   }, [periodo]);
 
-  function descargarInforme() {
-    if (!informe) return;
+  function descargarInforme(informeDescarga, nombreArchivo) {
+    if (!informeDescarga) return;
     const filas = [["Pedido", "Fecha", "Cliente", "Código", "Producto", "Cantidad", "Precio normal", "Oferta", "Ahorro", "Subtotal"]];
-    for (const pedido of informe.pedidos) {
+    for (const pedido of informeDescarga.pedidos) {
       for (const item of pedido.items) {
         filas.push([pedido.id, pedido.fecha.slice(0, 10), pedido.clienteNombre,
           item.codigo, item.nombre, item.cantidad, item.precioUnitario, item.oferta || "", item.descuento || 0, item.subtotal]);
@@ -72,7 +82,7 @@ export default function AdminPanel() {
     const url = URL.createObjectURL(new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" }));
     const enlace = document.createElement("a");
     enlace.href = url;
-    enlace.download = "glowlab-informe-ventas-" + periodo + ".csv";
+    enlace.download = nombreArchivo;
     document.body.appendChild(enlace);
     enlace.click();
     enlace.remove();
@@ -90,9 +100,65 @@ export default function AdminPanel() {
       <Row className="g-3 mb-4">
         <Col sm={6} lg={3}><Card body className="h-100"><h2 className="h6">Productos registrados</h2><strong className="display-6">{productos.length}</strong></Card></Col>
         <Col sm={6} lg={3}><Card body className="h-100"><h2 className="h6">Stock crítico</h2><strong className="display-6">{productos.filter((p) => p.stock <= p.stockCritico).length}</strong></Card></Col>
-        <Col sm={6} lg={3}><Card body className="h-100"><h2 className="h6">Pedidos confirmados</h2><strong className="display-6">{informe?.cantidadPedidos ?? 0}</strong></Card></Col>
-        <Col sm={6} lg={3}><Card body className="h-100"><h2 className="h6">Ventas simuladas</h2><strong className="h3">{formatearPrecio(informe?.totalVentas || 0)}</strong></Card></Col>
+        <Col sm={6} lg={3}><Card body className="h-100"><h2 className="h6">Pedidos históricos</h2><strong className="display-6">{informeHistorico?.cantidadPedidos ?? 0}</strong></Card></Col>
+        <Col sm={6} lg={3}><Card body className="h-100"><h2 className="h6">Ventas acumuladas</h2><strong className="h3">{formatearPrecio(informeHistorico?.totalVentas || 0)}</strong></Card></Col>
       </Row>
+
+      <section className="mb-5" aria-labelledby="ventas-historicas-titulo">
+        <div className="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+          <div>
+            <h2 id="ventas-historicas-titulo" className="h4 mb-1">Historial completo de ventas</h2>
+            <p className="text-muted small mb-0">Incluye todos los pedidos registrados desde el inicio. No depende del filtro por período.</p>
+          </div>
+          <Button
+            variant="outline-info"
+            disabled={!informeHistorico || informeHistorico.cantidadPedidos === 0}
+            onClick={() => descargarInforme(informeHistorico, "glowlab-historial-completo-ventas.csv")}
+          >
+            <i className="bi bi-download me-2" />Descargar todas las ventas
+          </Button>
+        </div>
+        <Row className="g-3 mb-3">
+          <Col sm={6} lg={4}>
+            <Card body className="h-100">
+              <h3 className="h6">Total vendido históricamente</h3>
+              <strong className="h2">{formatearPrecio(informeHistorico?.totalVentas || 0)}</strong>
+            </Card>
+          </Col>
+          <Col sm={6} lg={4}>
+            <Card body className="h-100">
+              <h3 className="h6">Pedidos registrados</h3>
+              <strong className="h2">{informeHistorico?.cantidadPedidos ?? 0}</strong>
+            </Card>
+          </Col>
+          <Col sm={6} lg={4}>
+            <Card body className="h-100">
+              <h3 className="h6">Unidades vendidas</h3>
+              <strong className="h2">{informeHistorico?.unidadesVendidas ?? 0}</strong>
+            </Card>
+          </Col>
+        </Row>
+        {!informeHistorico || informeHistorico.cantidadPedidos === 0 ? (
+          <Card body>Aún no hay ventas registradas en el historial.</Card>
+        ) : (
+          <Table striped bordered hover responsive size="sm">
+            <thead>
+              <tr><th>Pedido</th><th>Fecha</th><th>Cliente</th><th>Unidades</th><th>Total de la venta</th></tr>
+            </thead>
+            <tbody>
+              {informeHistorico.pedidos.map((pedido) => (
+                <tr key={pedido.id}>
+                  <td>{pedido.id}</td>
+                  <td>{new Date(pedido.fecha).toLocaleDateString("es-CL")}</td>
+                  <td>{pedido.clienteNombre}</td>
+                  <td>{pedido.unidades ?? pedido.items.reduce((suma, item) => suma + item.cantidad, 0)}</td>
+                  <td className="fw-semibold">{formatearPrecio(pedido.total)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
+      </section>
 
       <div className="d-flex flex-wrap align-items-end justify-content-between gap-3 my-4">
         <div>
@@ -108,7 +174,8 @@ export default function AdminPanel() {
               <option value="30">Últimos 30 días</option>
             </Form.Select>
           </Form.Group>
-          <Button variant="outline-info" disabled={!informe || informe.cantidadPedidos === 0} onClick={descargarInforme}>
+          <Button variant="outline-info" disabled={!informe || informe.cantidadPedidos === 0}
+            onClick={() => descargarInforme(informe, "glowlab-informe-ventas-" + periodo + ".csv")}>
             <i className="bi bi-download me-2" />Descargar informe CSV
           </Button>
         </div>

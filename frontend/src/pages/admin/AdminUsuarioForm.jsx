@@ -3,10 +3,10 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { listarRegiones, listarComunas, listarRoles } from "../../api/masterDataApi";
 import { actualizarUsuario, crearUsuario, obtenerUsuario } from "../../api/usuariosApi";
-import { mostrarError, mostrarErrores, mostrarExito } from "../../utils/swal";
-import { validarDatosUsuario } from "../../utils/validaciones";
+import { mostrarError, mostrarErrores, mostrarExito, mostrarInfo } from "../../utils/swal";
+import { validarCorreo, validarDatosUsuario } from "../../utils/validaciones";
 
-const INICIAL = { run: "", nombre: "", apellidos: "", correo: "", password: "", fechaNacimiento: "", rolId: 3, regionId: "", comunaId: "", direccion: "", estado: "Activo" };
+const INICIAL = { run: "", nombre: "", apellidos: "", correo: "", fechaNacimiento: "", rolId: 3, regionId: "", comunaId: "", direccion: "", estado: "Activo" };
 export default function AdminUsuarioForm() {
   const { run } = useParams();
   const [datos, setDatos] = useState(INICIAL);
@@ -18,22 +18,32 @@ export default function AdminUsuarioForm() {
     listarRegiones().then(setRegiones).catch(() => {});
     listarRoles().then(setRoles).catch(() => {});
   }, []);
-  useEffect(() => { if (run) obtenerUsuario(run).then((u) => setDatos({ ...u, password: "" })).catch((e) => mostrarError(e.message)); }, [run]);
+  useEffect(() => { if (run) obtenerUsuario(run).then(setDatos).catch((e) => mostrarError(e.message)); }, [run]);
   useEffect(() => {
     if (datos.regionId) listarComunas(datos.regionId).then(setComunas).catch(() => setComunas([]));
     else setComunas([]);
   }, [datos.regionId]);
   const cambiar = (campo) => (e) => setDatos((antes) => ({ ...antes, [campo]: e.target.value }));
 
+  async function simularEnvioCodigo() {
+    const errorCorreo = !datos.correo?.trim()
+      ? "Primero ingresa el correo electrónico del usuario."
+      : (!validarCorreo(datos.correo) ? "El correo debe terminar exactamente en @gmail.com o @duocuc.cl." : null);
+    if (errorCorreo) { await mostrarError(errorCorreo); return; }
+    await mostrarInfo(
+      "Simulación de recuperación",
+      "Se enviaría un código de recuperación a " + datos.correo + ". Esta función es solo visual: todavía no se envía ningún correo ni se genera un código real."
+    );
+  }
+
   async function guardar(e) {
     e.preventDefault();
-    const errores = validarDatosUsuario(datos, { edicion: Boolean(run), administrador: true });
+    const errores = validarDatosUsuario(datos, { edicion: Boolean(run), administrador: true, omitirPassword: true });
     if (errores.length) { await mostrarErrores(errores); return; }
     if (!comunas.some((c) => c.id === Number(datos.comunaId))) {
       await mostrarError("La comuna elegida no corresponde a la región seleccionada."); return;
     }
     const usuario = { ...datos, rolId: Number(datos.rolId), regionId: Number(datos.regionId), comunaId: Number(datos.comunaId) };
-    if (run && !usuario.password) delete usuario.password;
     try {
       if (run) await actualizarUsuario(run, usuario);
       else await crearUsuario(usuario);
@@ -45,12 +55,11 @@ export default function AdminUsuarioForm() {
   return <><h1 className="h3 mb-4">{run ? "Editar usuario" : "Crear usuario"}</h1>
     <Form onSubmit={guardar} noValidate><Row className="g-3">
       {[["run", "RUN con dígito verificador (sin puntos ni guion)"], ["nombre", "Nombre"], ["apellidos", "Apellidos"], ["correo", "Correo"],
-        ["password", run ? "Nueva contraseña (opcional, 4 a 10 caracteres)" : "Contraseña (4 a 10 caracteres)"], ["fechaNacimiento", "Fecha nacimiento"],
-        ["direccion", "Dirección"]].map(([campo, etiqueta]) =>
+        ["fechaNacimiento", "Fecha nacimiento"], ["direccion", "Dirección"]].map(([campo, etiqueta]) =>
         <Col md={6} key={campo}><Form.Label htmlFor={"usuario-" + campo}>{etiqueta}</Form.Label>
           <Form.Control id={"usuario-" + campo} value={datos[campo] || ""} onChange={cambiar(campo)}
-            type={campo === "password" ? "password" : campo === "correo" ? "email" : campo === "fechaNacimiento" ? "date" : "text"}
-            disabled={campo === "run" && Boolean(run)} required={!["fechaNacimiento"].includes(campo) && (campo !== "password" || !run)} />
+            type={campo === "correo" ? "email" : campo === "fechaNacimiento" ? "date" : "text"}
+            disabled={campo === "run" && Boolean(run)} required={!["fechaNacimiento"].includes(campo)} />
         </Col>)}
       <Col md={6}><Form.Label>Región</Form.Label><Form.Select aria-label="Región" value={datos.regionId} onChange={(e) => setDatos((antes) => ({ ...antes, regionId: e.target.value, comunaId: "" }))} required>
         <option value="">Seleccionar</option>{regiones.map((r) => <option key={r.id} value={r.id}>{r.nombre}</option>)}
@@ -60,6 +69,16 @@ export default function AdminUsuarioForm() {
       </Form.Select></Col>
       <Col md={6}><Form.Label>Rol</Form.Label><Form.Select aria-label="Rol" value={datos.rolId} onChange={cambiar("rolId")}>{roles.map((r) => <option key={r.id} value={r.id}>{r.nombre}</option>)}</Form.Select></Col>
       <Col md={6}><Form.Label>Estado</Form.Label><Form.Select aria-label="Estado" value={datos.estado} onChange={cambiar("estado")}><option>Activo</option><option>Inactivo</option></Form.Select></Col>
-    </Row><Button type="submit" className="btn-glow mt-4">Guardar usuario</Button></Form>
+    </Row>
+    <div className="d-flex flex-wrap gap-2 mt-4">
+      <Button type="submit" className="btn-glow">Guardar usuario</Button>
+      <Button type="button" variant="outline-info" onClick={simularEnvioCodigo}>
+        <i className="bi bi-envelope-lock me-2" />Simular envío de código de recuperación
+      </Button>
+    </div>
+    <Form.Text className="d-block mt-2">
+      El administrador no define contraseñas. El envío y el cambio mediante código todavía no están implementados.
+    </Form.Text>
+    </Form>
   </>;
 }

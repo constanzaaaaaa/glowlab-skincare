@@ -25,6 +25,14 @@ export function mostrarError(texto) { return mostrarErrores([texto]); }
 export function mostrarExito(titulo, texto) {
   return Swal.fire(titulo, texto, "success");
 }
+export function mostrarInfo(titulo, texto) {
+  return Swal.fire({
+    title: titulo,
+    text: texto,
+    icon: "info",
+    confirmButtonText: "Entendido"
+  });
+}
 export async function confirmarAccion({ titulo, texto, confirmButtonText = "Confirmar", icon = "warning" }) {
   const resultado = await Swal.fire({
     title: titulo, text: texto, icon,

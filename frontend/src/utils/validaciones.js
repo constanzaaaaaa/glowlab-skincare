@@ -100,13 +100,13 @@ function errorFecha(fecha) {
   return null;
 }
 
-export function validarDatosUsuario(datos, { edicion = false, administrador = false } = {}) {
+export function validarDatosUsuario(datos, { edicion = false, administrador = false, omitirPassword = false } = {}) {
   const errores = [];
   agregar(errores, obtenerErrorRun(datos?.run));
   agregar(errores, errorTexto(datos?.nombre, "Nombre", 50));
   agregar(errores, errorTexto(datos?.apellidos, "Apellidos", 100));
   agregar(errores, obtenerErrorCorreo(datos?.correo));
-  agregar(errores, obtenerErrorPassword(datos?.password, edicion));
+  if (!omitirPassword) agregar(errores, obtenerErrorPassword(datos?.password, edicion));
   agregar(errores, errorFecha(datos?.fechaNacimiento));
   agregar(errores, errorTexto(datos?.direccion, "Dirección", 300));
   if (!datos?.regionId || !/^\d+$/.test(String(datos.regionId))) {
