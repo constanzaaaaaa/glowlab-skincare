@@ -27,7 +27,7 @@ export const USUARIOS = [
   ["123456785", "Admin", "Glowlab", "admin@gmail.com", "64b0a321b02670fea07b462dd501b4ddbf6e5c6ee267b6bb2c215db99c83eb05", 1, 1, 1, "Av. Principal 123"],
   ["987654325", "Vendedor", "Glowlab", "vendedor@gmail.com", "ab4b6e5e2773dec4102756cdd2b682fb937e1537c07f3cf7d768411b0b75a638", 2, 1, 2, "Calle Venta 456"],
   ["112223339", "Camila", "Soto Perez", "camila@gmail.com", "2f35efddce00511b6e1ba5b4875601fbebd0616002c8b3382c704f7de2ebc13c", 3, 2, 4, "Los Aromos 789"],
-  ["201113334", "Diego", "Fernandez Rojas", "diego@duoc.cl", "d663f952a85991ff6c9540be310147f829e798ede49131cd0c5ef847d171d310", 3, 3, 6, "Las Rosas 321"]
+  ["201113334", "Diego", "Fernandez Rojas", "diego@duocuc.cl", "d663f952a85991ff6c9540be310147f829e798ede49131cd0c5ef847d171d310", 3, 3, 6, "Las Rosas 321"]
 ].map(([run, nombre, apellidos, correo, claveHash, rolId, regionId, comunaId, direccion]) =>
   ({ run, nombre, apellidos, correo, claveHash, fechaNacimiento: "", rolId, regionId, comunaId, direccion, estado: "Activo" })
 );

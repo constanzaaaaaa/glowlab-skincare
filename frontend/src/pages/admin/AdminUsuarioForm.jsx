@@ -3,8 +3,8 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { listarRegiones, listarComunas, listarRoles } from "../../api/masterDataApi";
 import { actualizarUsuario, crearUsuario, obtenerUsuario } from "../../api/usuariosApi";
-import { mostrarError, mostrarExito } from "../../utils/swal";
-import { textoRequerido, validarCorreo, validarPassword, validarRun } from "../../utils/validaciones";
+import { mostrarError, mostrarErrores, mostrarExito } from "../../utils/swal";
+import { validarDatosUsuario } from "../../utils/validaciones";
 
 const INICIAL = { run: "", nombre: "", apellidos: "", correo: "", password: "", fechaNacimiento: "", rolId: 3, regionId: "", comunaId: "", direccion: "", estado: "Activo" };
 export default function AdminUsuarioForm() {
@@ -27,11 +27,10 @@ export default function AdminUsuarioForm() {
 
   async function guardar(e) {
     e.preventDefault();
-    if (!validarRun(datos.run) || !textoRequerido(datos.nombre, 50) || !textoRequerido(datos.apellidos, 100) ||
-      !validarCorreo(datos.correo) || (!run && !validarPassword(datos.password)) ||
-      (run && datos.password && !validarPassword(datos.password)) ||
-      !datos.regionId || !datos.comunaId || !textoRequerido(datos.direccion, 300)) {
-      mostrarError("Revisa los campos obligatorios."); return;
+    const errores = validarDatosUsuario(datos, { edicion: Boolean(run), administrador: true });
+    if (errores.length) { await mostrarErrores(errores); return; }
+    if (!comunas.some((c) => c.id === Number(datos.comunaId))) {
+      await mostrarError("La comuna elegida no corresponde a la región seleccionada."); return;
     }
     const usuario = { ...datos, rolId: Number(datos.rolId), regionId: Number(datos.regionId), comunaId: Number(datos.comunaId) };
     if (run && !usuario.password) delete usuario.password;
@@ -44,9 +43,9 @@ export default function AdminUsuarioForm() {
   }
 
   return <><h1 className="h3 mb-4">{run ? "Editar usuario" : "Crear usuario"}</h1>
-    <Form onSubmit={guardar}><Row className="g-3">
-      {[["run", "RUN"], ["nombre", "Nombre"], ["apellidos", "Apellidos"], ["correo", "Correo"],
-        ["password", run ? "Nueva contraseña (opcional)" : "Contraseña"], ["fechaNacimiento", "Fecha nacimiento"],
+    <Form onSubmit={guardar} noValidate><Row className="g-3">
+      {[["run", "RUN con dígito verificador (sin puntos ni guion)"], ["nombre", "Nombre"], ["apellidos", "Apellidos"], ["correo", "Correo"],
+        ["password", run ? "Nueva contraseña (opcional, 4 a 10 caracteres)" : "Contraseña (4 a 10 caracteres)"], ["fechaNacimiento", "Fecha nacimiento"],
         ["direccion", "Dirección"]].map(([campo, etiqueta]) =>
         <Col md={6} key={campo}><Form.Label htmlFor={"usuario-" + campo}>{etiqueta}</Form.Label>
           <Form.Control id={"usuario-" + campo} value={datos[campo] || ""} onChange={cambiar(campo)}

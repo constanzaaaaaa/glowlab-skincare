@@ -152,3 +152,14 @@ Las cuentas de demostración anteriores conservan sus datos de inicio de sesión
 - **Checkout:** `src/storage/carrito.js` registra el total con descuento y la cantidad realmente entregada para descontar stock. `/mis-compras` muestra la oferta y el ahorro; el dashboard suma los subtotales descontados.
 - **Persistencia:** solo `localStorage` del navegador, como en la evaluación académica. Las promociones se pueden cambiar y desactivar desde la administración; las ventas históricas conservan sus precios al momento de la compra.
 - **Pruebas:** se mantienen **exactamente las 10 pruebas Jasmine** existentes sin alterar sus archivos; es necesario ejecutar `npm.cmd test` y probar manualmente 2x1 y porcentaje desde Chrome antes de la presentación.
+
+## 12. Validaciones detalladas (RUT y correo)
+
+- Los formularios de **registro**, **inicio de sesión**, **contacto**, **crear/editar usuarios** y **crear/editar productos** usan `noValidate` para evitar el aviso pequeño nativo del navegador. Se muestra un cuadro grande de SweetAlert2 con **cada error concreto** y una lista cuando hay varios.
+- Las validaciones reutilizables están en `src/utils/validaciones.js`; los mismos validadores se ejecutan también en `src/storage/` antes de guardar datos.
+- El **RUN** debe tener 6–8 dígitos más su dígito verificador (0-9 o K), sin puntos ni guion. Se calcula mediante módulo 11. Si falla, se informa cuál es el dígito correcto.
+- El correo exige nombre de usuario válido y dominio **exactamente `@gmail.com` o `@duocuc.cl`**, según el requerimiento actualizado. Los dominios anteriores dejan de admitirse para nuevas operaciones; se actualiza solo el correo inicial antiguo de Diego, si aún está intacto.
+- La contraseña mantiene el rango de **4 a 10 caracteres** de la evaluación. Para editar una cuenta, dejarla en blanco conserva la contraseña anterior.
+- La fecha de nacimiento es opcional, pero si se completa debe ser una fecha real y no futura. Se comprueban región, comuna, campos obligatorios, límites de longitud, precio/stock enteros, ofertas, porcentaje y ruta local de imagen.
+- En el detalle de producto, una cantidad inválida informa la causa con SweetAlert en vez de limitarse a bloquear el botón.
+- Las **10 pruebas Jasmine** siguen siendo diez. La prueba de correo `06` se actualizó a `@duocuc.cl` y comprueba adicionalmente dominios incorrectos; la prueba `07` comprueba también la ausencia de dígito verificador. Ejecutar `npm.cmd test` y `npm.cmd run dev` desde `frontend`.

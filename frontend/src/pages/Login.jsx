@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Button, Card, Container, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { mostrarError, mostrarExito } from "../utils/swal";
-import { validarCorreo, validarPassword } from "../utils/validaciones";
+import { mostrarError, mostrarErrores, mostrarExito } from "../utils/swal";
+import { validarDatosLogin } from "../utils/validaciones";
 
 export default function Login() {
   const [correo, setCorreo] = useState("");
@@ -14,10 +14,8 @@ export default function Login() {
 
   async function enviar(e) {
     e.preventDefault();
-    if (!validarCorreo(correo) || !validarPassword(password)) {
-      mostrarError("Revisa el correo y la contraseña.");
-      return;
-    }
+    const errores = validarDatosLogin(correo, password);
+    if (errores.length) { await mostrarErrores(errores); return; }
     setOcupado(true);
     try {
       const usuario = await login(correo, password);
@@ -30,7 +28,7 @@ export default function Login() {
   return (
     <Container className="py-5" style={{ maxWidth: 540 }}>
       <Card className="p-4"><h1 className="h3">Iniciar sesión</h1>
-        <Form onSubmit={enviar}>
+        <Form onSubmit={enviar} noValidate>
           <Form.Group className="my-3"><Form.Label>Correo</Form.Label><Form.Control aria-label="Correo" type="email" value={correo} onChange={(e) => setCorreo(e.target.value)} required /></Form.Group>
           <Form.Group className="my-3"><Form.Label>Contraseña</Form.Label><Form.Control aria-label="Contraseña" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required /></Form.Group>
           <Button disabled={ocupado} type="submit" className="btn-glow">Ingresar</Button>

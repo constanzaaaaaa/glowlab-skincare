@@ -19,6 +19,12 @@ export default function ProductoDetalle() {
   }, [codigo]);
 
   async function agregarSeleccionado() {
+    if (!Number.isInteger(cantidad) || cantidad < 1) {
+      await mostrarError("La cantidad debe ser un número entero mayor que cero."); return;
+    }
+    if (cantidad > producto.stock) {
+      await mostrarError("No hay stock suficiente: quedan " + producto.stock + " unidades."); return;
+    }
     try { await agregar(producto.codigo, cantidad, producto.nombre); }
     catch (e) { mostrarError(e.message); }
   }
@@ -51,7 +57,7 @@ export default function ProductoDetalle() {
           <p>Stock disponible: {producto.stock}</p>
           <Form.Label htmlFor="detalle-cantidad">Cantidad</Form.Label>
           <Form.Control id="detalle-cantidad" className="mb-3" type="number" min={1} max={Math.max(1, producto.stock)} value={cantidad} onChange={(e) => setCantidad(Number(e.target.value))} />
-          <Button className="btn-glow" disabled={!stockDisponible(producto) || !Number.isInteger(cantidad) || cantidad < 1 || cantidad > producto.stock} onClick={agregarSeleccionado}>Agregar al carrito</Button>
+          <Button className="btn-glow" disabled={!stockDisponible(producto)} onClick={agregarSeleccionado}>Agregar al carrito</Button>
         </Col>
       </Row>
     </Container>

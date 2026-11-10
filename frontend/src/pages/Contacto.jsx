@@ -1,22 +1,25 @@
 import { useState } from "react";
 import { Button, Card, Container, Form } from "react-bootstrap";
 import { enviarMensajeContacto } from "../api/contactoApi";
-import { mostrarError, mostrarExito } from "../utils/swal";
+import { mostrarError, mostrarErrores, mostrarExito } from "../utils/swal";
+import { validarDatosContacto } from "../utils/validaciones";
 
 export default function Contacto() {
   const [datos, setDatos] = useState({ nombre: "", correo: "", mensaje: "" });
   const cambiar = (campo) => (e) => setDatos((anterior) => ({ ...anterior, [campo]: e.target.value }));
   async function enviar(e) {
     e.preventDefault();
+    const errores = validarDatosContacto(datos);
+    if (errores.length) { await mostrarErrores(errores); return; }
     try {
       await enviarMensajeContacto(datos);
-      await mostrarExito("Mensaje enviado", "Gracias por contactarnos.");
+      await mostrarExito("Mensaje registrado", "Tu mensaje quedó guardado en este navegador (simulación de contacto).");
       setDatos({ nombre: "", correo: "", mensaje: "" });
     } catch (error) { mostrarError(error.message); }
   }
   return <Container className="py-5" style={{ maxWidth: 680 }}>
     <Card className="p-4"><h1 className="h3">Contacto</h1>
-      <Form onSubmit={enviar}>
+      <Form onSubmit={enviar} noValidate>
         <Form.Label>Nombre</Form.Label><Form.Control required value={datos.nombre} onChange={cambiar("nombre")} />
         <Form.Label className="mt-3">Correo</Form.Label><Form.Control required type="email" value={datos.correo} onChange={cambiar("correo")} />
         <Form.Label className="mt-3">Mensaje</Form.Label><Form.Control required as="textarea" rows={5} value={datos.mensaje} onChange={cambiar("mensaje")} />

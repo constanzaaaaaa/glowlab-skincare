@@ -3,8 +3,8 @@ import { Button, Card, Container, Form, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { listarComunas, listarRegiones } from "../api/masterDataApi";
 import { useAuth } from "../hooks/useAuth";
-import { mostrarError, mostrarExito } from "../utils/swal";
-import { textoRequerido, validarCorreo, validarPassword, validarRun } from "../utils/validaciones";
+import { mostrarError, mostrarErrores, mostrarExito } from "../utils/swal";
+import { validarDatosUsuario } from "../utils/validaciones";
 
 const INICIAL = { run: "", nombre: "", apellidos: "", correo: "", password: "", fechaNacimiento: "", regionId: "", comunaId: "", direccion: "" };
 export default function Registro() {
@@ -22,10 +22,10 @@ export default function Registro() {
 
   async function enviar(e) {
     e.preventDefault();
-    if (!validarRun(datos.run) || !textoRequerido(datos.nombre, 50) || !textoRequerido(datos.apellidos, 100) ||
-      !validarCorreo(datos.correo) || !validarPassword(datos.password) || !datos.regionId || !datos.comunaId || !textoRequerido(datos.direccion, 300)) {
-      mostrarError("Revisa los campos del formulario (RUN sin puntos ni guion).");
-      return;
+    const errores = validarDatosUsuario(datos);
+    if (errores.length) { await mostrarErrores(errores); return; }
+    if (!comunas.some((c) => c.id === Number(datos.comunaId))) {
+      await mostrarError("La comuna elegida no pertenece a la región seleccionada."); return;
     }
     try {
       await registro({ ...datos, regionId: Number(datos.regionId), comunaId: Number(datos.comunaId) });
@@ -36,11 +36,11 @@ export default function Registro() {
   return (
     <Container className="py-5" style={{ maxWidth: 820 }}>
       <Card className="p-4"><h1 className="h3">Crear cuenta GlowLab</h1>
-        <Form onSubmit={enviar}>
+        <Form onSubmit={enviar} noValidate>
           <Row className="g-3">
             {[
-              ["run", "RUN (sin puntos ni guion)"], ["nombre", "Nombre"], ["apellidos", "Apellidos"],
-              ["correo", "Correo electrónico"], ["password", "Contraseña (4 a 10 caracteres)"],
+              ["run", "RUN con dígito verificador (sin puntos ni guion)"], ["nombre", "Nombre"], ["apellidos", "Apellidos"],
+              ["correo", "Correo electrónico (@gmail.com o @duocuc.cl)"], ["password", "Contraseña (4 a 10 caracteres)"],
               ["fechaNacimiento", "Fecha de nacimiento"]
             ].map(([campo, etiqueta]) =>
               <Col md={6} key={campo}><Form.Label htmlFor={"registro-" + campo}>{etiqueta}</Form.Label>

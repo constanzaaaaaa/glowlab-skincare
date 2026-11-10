@@ -3,8 +3,8 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { actualizarProducto, crearProducto, obtenerProducto } from "../../api/productosApi";
 import { listarCategorias } from "../../api/masterDataApi";
-import { mostrarError, mostrarExito } from "../../utils/swal";
-import { enteroEnRango, textoRequerido } from "../../utils/validaciones";
+import { mostrarError, mostrarErrores, mostrarExito } from "../../utils/swal";
+import { validarDatosProducto } from "../../utils/validaciones";
 
 const INICIAL = { codigo: "", nombre: "", descripcion: "", precio: "", stock: "", stockCritico: "", categoriaId: "", imagen: "", estado: "Activo", ofertaTipo: "ninguna", descuentoPorcentaje: 0 };
 export default function AdminProductoForm() {
@@ -18,21 +18,22 @@ export default function AdminProductoForm() {
 
   async function guardar(e) {
     e.preventDefault();
-    if (!textoRequerido(datos.codigo, 20) || !textoRequerido(datos.nombre, 100) || !textoRequerido(datos.descripcion, 800) ||
-      !enteroEnRango(datos.precio, 0) || !enteroEnRango(datos.stock, 0) || !enteroEnRango(datos.stockCritico, 0) || !datos.categoriaId) {
-      mostrarError("Revisa los campos obligatorios del producto."); return;
+    const errores = validarDatosProducto(datos);
+    if (errores.length) { await mostrarErrores(errores); return; }
+    if (!categorias.some((c) => c.id === Number(datos.categoriaId))) {
+      await mostrarError("La categoría seleccionada no existe."); return;
     }
     const producto = { ...datos, precio: Number(datos.precio), stock: Number(datos.stock), stockCritico: Number(datos.stockCritico), categoriaId: Number(datos.categoriaId) };
     try {
       if (codigo) await actualizarProducto(codigo, producto);
       else await crearProducto(producto);
-      await mostrarExito("Guardado", "Producto actualizado correctamente.");
+      await mostrarExito("Guardado", codigo ? "Producto actualizado correctamente." : "Producto creado correctamente.");
       navigate("/admin/productos");
     } catch (error) { mostrarError(error.message); }
   }
 
   return <><h1 className="h3 mb-4">{codigo ? "Editar producto" : "Crear producto"}</h1>
-    <Form onSubmit={guardar}><Row className="g-3">
+    <Form onSubmit={guardar} noValidate><Row className="g-3">
       {[["codigo", "Código"], ["nombre", "Nombre"], ["descripcion", "Descripción"], ["precio", "Precio"], ["stock", "Stock"], ["stockCritico", "Stock crítico"], ["imagen", "Imagen (ruta desde static/img)"]].map(([campo, etiqueta]) =>
         <Col md={campo === "descripcion" ? 12 : 6} key={campo}>
           <Form.Label htmlFor={"producto-" + campo}>{etiqueta}</Form.Label>

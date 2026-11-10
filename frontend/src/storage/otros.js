@@ -1,7 +1,7 @@
 // Catálogos, blog y contacto: datos simulados para los componentes React.
 import { obtenerColeccion, guardarColeccion } from "./persistencia";
 import { fallar } from "./helpers";
-import { textoRequerido, validarCorreo } from "../utils/validaciones";
+import { validarDatosContacto } from "../utils/validaciones";
 
 export async function listarCategorias() { return obtenerColeccion("categorias"); }
 export async function listarRegiones() { return obtenerColeccion("regiones"); }
@@ -19,8 +19,8 @@ export async function obtenerNoticia(id) {
 }
 
 export async function enviarMensajeContacto(datos) {
-  if (!textoRequerido(datos?.nombre, 100) || !validarCorreo(datos?.correo) ||
-      !textoRequerido(datos?.mensaje, 3000)) fallar("Revisa los campos obligatorios del mensaje.");
+  const errores = validarDatosContacto(datos);
+  if (errores.length) fallar(errores.join("\n"));
   const contactos = obtenerColeccion("contactos");
   const mensaje = {
     id: contactos.reduce((maximo, c) => Math.max(maximo, c.id || 0), 0) + 1,

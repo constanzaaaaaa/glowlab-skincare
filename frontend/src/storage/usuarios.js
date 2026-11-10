@@ -1,21 +1,19 @@
 // CRUD de usuarios y sesión simulada para React (no hay servidor de autenticación).
 import { obtenerColeccion, guardarColeccion, obtenerRunSesion, guardarRunSesion } from "./persistencia";
 import { exigirAdmin, fallar, hashClave, sesionInterna, usuarioPublico } from "./helpers";
-import { validarCorreo, validarPassword, validarRun, textoRequerido } from "../utils/validaciones";
+import { validarDatosUsuario, validarDatosLogin } from "../utils/validaciones";
 
-function validar(datos, runAnterior) {
-  if (!validarRun(datos?.run) || !textoRequerido(datos?.nombre, 50) ||
-      !textoRequerido(datos?.apellidos, 100) || !validarCorreo(datos?.correo) ||
-      !textoRequerido(datos?.direccion, 300)) fallar("Revisa los datos obligatorios del usuario.");
-  if (runAnterior && datos.run.toUpperCase().trim() !== runAnterior) fallar("No puedes cambiar el RUN.");
-  if ((!runAnterior || datos.password) && !validarPassword(datos.password)) {
-    fallar("La contraseña debe tener entre 4 y 10 caracteres.");
+function validar(datos, runAnterior, esRegistro = false) {
+  const errores = validarDatosUsuario(datos, { edicion: Boolean(runAnterior), administrador: !esRegistro });
+  if (runAnterior && datos?.run?.toUpperCase().trim() !== runAnterior) errores.push("No puedes cambiar el RUN de una cuenta existente.");
+  const region = Number(datos?.regionId), comuna = Number(datos?.comunaId);
+  if (datos?.regionId && !obtenerColeccion("regiones").some((r) => r.id === region)) {
+    errores.push("La región seleccionada no existe.");
   }
-  const region = Number(datos.regionId), comuna = Number(datos.comunaId);
-  if (!obtenerColeccion("regiones").some((r) => r.id === region)) fallar("La región no existe.");
-  if (!obtenerColeccion("comunas").some((c) => c.id === comuna && c.regionId === region)) {
-    fallar("La comuna no pertenece a la región.");
+  if (datos?.comunaId && !obtenerColeccion("comunas").some((c) => c.id === comuna && c.regionId === region)) {
+    errores.push("La comuna no pertenece a la región seleccionada.");
   }
+  if (errores.length) fallar(errores.join("\n"));
 }
 
 async function normalizar(datos, anterior, esRegistro) {
@@ -42,7 +40,7 @@ function verificarDuplicados(datos, usuarios, runAnterior) {
 }
 
 async function crear(datos, esRegistro) {
-  validar(datos);
+  validar(datos, undefined, esRegistro);
   const usuarios = obtenerColeccion("usuarios");
   verificarDuplicados(datos, usuarios);
   const usuario = await normalizar(datos, null, esRegistro);
@@ -54,6 +52,8 @@ async function crear(datos, esRegistro) {
 export async function obtenerSesionActual() { return usuarioPublico(sesionInterna()); }
 
 export async function iniciarSesion(correo, password) {
+  const errores = validarDatosLogin(correo, password);
+  if (errores.length) fallar(errores.join("\n"));
   const usuario = obtenerColeccion("usuarios").find((u) =>
     u.correo.toLowerCase() === String(correo || "").trim().toLowerCase());
   if (!usuario || usuario.claveHash !== await hashClave(usuario.run, password)) {

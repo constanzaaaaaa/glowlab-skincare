@@ -1,25 +1,15 @@
 // CRUD del catálogo sobre localStorage: documento 040 de la evaluación.
 import { obtenerColeccion, guardarColeccion } from "./persistencia";
-import { exigirAdmin, fallar, numeroEntero } from "./helpers";
-import { textoRequerido } from "../utils/validaciones";
+import { exigirAdmin, fallar } from "./helpers";
+import { validarDatosProducto } from "../utils/validaciones";
 
 function validar(datos, codigoEdicion) {
-  if (!textoRequerido(datos?.codigo, 20) || !textoRequerido(datos?.nombre, 100) ||
-      !textoRequerido(datos?.descripcion, 800)) fallar("Completa los datos obligatorios del producto.");
-  if (codigoEdicion && datos.codigo !== codigoEdicion) fallar("No puedes cambiar el código del producto.");
-  if (!["precio", "stock", "stockCritico"].every((campo) => numeroEntero(datos[campo]))) {
-    fallar("Precio, stock y stock crítico deben ser enteros no negativos.");
+  const errores = validarDatosProducto(datos);
+  if (codigoEdicion && datos?.codigo !== codigoEdicion) errores.push("No puedes cambiar el código de un producto existente.");
+  if (datos?.categoriaId && !obtenerColeccion("categorias").some((c) => c.id === Number(datos.categoriaId))) {
+    errores.push("La categoría seleccionada no existe.");
   }
-  if (!obtenerColeccion("categorias").some((c) => c.id === Number(datos.categoriaId))) {
-    fallar("La categoría no existe.");
-  }
-  if (!["Activo", "Inactivo"].includes(datos.estado || "Activo")) fallar("Estado de producto inválido.");
-  const tipo = datos.ofertaTipo || "ninguna";
-  if (!["ninguna", "2x1", "porcentaje"].includes(tipo)) fallar("Tipo de oferta inválido.");
-  if (tipo === "porcentaje" &&
-      (!numeroEntero(datos.descuentoPorcentaje, 1) || Number(datos.descuentoPorcentaje) > 90)) {
-    fallar("El descuento debe estar entre 1 % y 90 %.");
-  }
+  if (errores.length) fallar(errores.join("\n"));
 }
 
 function normalizar(datos) {

@@ -51,6 +51,16 @@ export function inicializarDatos() {
     });
     storage().setItem(CLAVES.productos, JSON.stringify(actualizados));
   }
+
+  // Actualiza únicamente el correo de demostración antiguo de Diego.
+  // No cambia contraseñas, RUN ni los correos que haya creado el usuario.
+  const usuarios = JSON.parse(storage().getItem(CLAVES.usuarios));
+  if (Array.isArray(usuarios) &&
+      usuarios.some((u) => u.run === "201113334" && u.correo === "diego@duoc.cl")) {
+    storage().setItem(CLAVES.usuarios, JSON.stringify(usuarios.map((u) =>
+      u.run === "201113334" && u.correo === "diego@duoc.cl"
+        ? { ...u, correo: "diego@duocuc.cl" } : u)));
+  }
 }
 
 export function obtenerColeccion(tipo) {
