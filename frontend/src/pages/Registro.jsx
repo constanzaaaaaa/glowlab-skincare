@@ -19,6 +19,25 @@ export default function Registro() {
     listarComunas(datos.regionId).then(setComunas).catch(() => setComunas([]));
   }, [datos.regionId]);
   const cambiar = (campo) => (e) => setDatos((anterior) => ({ ...anterior, [campo]: e.target.value }));
+  //esto limita la entrada de rut caracter unico k y resto de numeros para dv
+  //y run solo numeros
+  const cambiarRun = (e) => {
+  const entrada = e.target.value.toUpperCase();
+
+  const numeros = entrada.replace(/\D/g, "").slice(0, 9);
+
+  const permitirK =
+    entrada.endsWith("K") &&
+    numeros.length >= 6 &&
+    numeros.length <= 8;
+
+  const run = numeros + (permitirK ? "K" : "");
+
+  setDatos((anterior) => ({
+    ...anterior,
+    run: run
+  }));
+};
 
   async function enviar(e) {
     e.preventDefault();
@@ -44,7 +63,7 @@ export default function Registro() {
               ["fechaNacimiento", "Fecha de nacimiento"]
             ].map(([campo, etiqueta]) =>
               <Col md={6} key={campo}><Form.Label htmlFor={"registro-" + campo}>{etiqueta}</Form.Label>
-                <Form.Control id={"registro-" + campo} type={campo === "password" ? "password" : campo === "correo" ? "email" : campo === "fechaNacimiento" ? "date" : "text"} required={campo !== "fechaNacimiento"} value={datos[campo]} onChange={cambiar(campo)} />
+                <Form.Control id={"registro-" + campo} type={campo === "password" ? "password" : campo === "correo" ? "email" : campo === "fechaNacimiento" ? "date" : "text"} required={campo !== "fechaNacimiento"} value={datos[campo]} maxLength={campo === "run" ? 9 : undefined} onChange={campo === "run" ? cambiarRun : cambiar(campo)} />
               </Col>
             )}
             <Col md={6}><Form.Label>Región</Form.Label><Form.Select aria-label="Región" value={datos.regionId} onChange={(e) => setDatos((anterior) => ({ ...anterior, regionId: e.target.value, comunaId: "" }))} required>
