@@ -135,7 +135,9 @@ export function validarDatosProducto(datos) {
   agregar(errores, errorTexto(datos?.codigo, "Código", 20));
   agregar(errores, errorTexto(datos?.nombre, "Nombre del producto", 100));
   agregar(errores, errorTexto(datos?.descripcion, "Descripción", 800));
-  agregar(errores, errorEntero(datos?.precio, "El precio", 0));
+  agregar(errores, datos?.precio === "" || datos?.precio === null || datos?.precio === undefined
+    ? "Debes ingresar el precio del producto."
+    : (!enteroEnRango(datos.precio, 1) ? "El precio debe ser un número entero mayor que 0." : null));
   agregar(errores, errorEntero(datos?.stock, "El stock", 0));
   agregar(errores, errorEntero(datos?.stockCritico, "El stock crítico", 0));
   if (!datos?.categoriaId || !/^\d+$/.test(String(datos.categoriaId))) {
@@ -152,6 +154,31 @@ export function validarDatosProducto(datos) {
   const imagen = String(datos?.imagen || "").trim();
   if (imagen && (!/^[a-z\d_-]+(?:\/[a-z\d_-]+)*\.(png|jpe?g|webp|avif|jfif)$/i.test(imagen))) {
     errores.push("La imagen debe ser una ruta local de static/img, por ejemplo: productos/crema.webp.");
+  }
+  return errores;
+}
+
+export function validarDatosEntrega(datos) {
+  const errores = [];
+  agregar(errores, errorTexto(datos?.nombre, "Nombre de quien recibe", 50));
+  agregar(errores, errorTexto(datos?.apellidos, "Apellidos de quien recibe", 100));
+  agregar(errores, obtenerErrorCorreo(datos?.correo));
+
+  const telefono = String(datos?.telefono || "").replace(/[\s().-]/g, "");
+  if (!telefono) errores.push("Debes ingresar un teléfono de contacto.");
+  else if (!/^(?:\+?56)?9\d{8}$/.test(telefono)) {
+    errores.push("Ingresa un teléfono móvil chileno válido, con 9 dígitos y opcionalmente el código +56.");
+  }
+
+  agregar(errores, errorTexto(datos?.direccion, "Dirección y número", 200));
+  agregar(errores, errorTexto(datos?.departamento || "", "Departamento o casa", 50, false));
+  agregar(errores, errorTexto(datos?.referencia || "", "Referencia de despacho", 300, false));
+
+  if (!datos?.regionId || !/^\d+$/.test(String(datos.regionId))) {
+    errores.push("Debes seleccionar la región de despacho.");
+  }
+  if (!datos?.comunaId || !/^\d+$/.test(String(datos.comunaId))) {
+    errores.push("Debes seleccionar la comuna de despacho.");
   }
   return errores;
 }

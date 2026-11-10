@@ -59,23 +59,25 @@ export function CartProvider({ children }) {
     await recargar();
   }, [recargar]);
 
-  const finalizarCompra = useCallback(async () => {
+  const finalizarCompra = useCallback(async (datosEntrega) => {
     if (items.length === 0) return null;
     if (!await confirmarAccion({
-      titulo: "Confirmar compra",
-      texto: "Total a pagar: $" + totalCarrito(items).toLocaleString("es-CL"),
-      confirmButtonText: "Confirmar",
+      titulo: "¿Confirmar pedido?",
+      texto: "Se registrará el pedido con los datos de despacho indicados. Total: $" + totalCarrito(items).toLocaleString("es-CL"),
+      confirmButtonText: "Confirmar pedido",
       icon: "question"
     })) return null;
-    const pedido = await finalizarCompraApi();
+    const pedido = await finalizarCompraApi(datosEntrega);
     await recargar();
-    await mostrarExito("Compra registrada", "Pedido " + pedido.id + " guardado en tu historial (simulación académica).");
+    await mostrarExito("Pedido confirmado", "Tu pedido " + pedido.id + " quedó registrado correctamente.");
     return pedido;
   }, [items, recargar]);
 
   const totalItems = useMemo(() => items.reduce((suma, item) => suma + item.cantidad, 0), [items]);
   const total = useMemo(() => totalCarrito(items), [items]);
-  const valor = useMemo(() => ({ items, cargando, totalItems, total, agregar, cambiarCantidad, eliminar, vaciar, finalizarCompra, recargar }), [items, cargando, totalItems, total, agregar, cambiarCantidad, eliminar, vaciar, finalizarCompra, recargar]);
+  const valor = useMemo(() => ({
+    items, cargando, totalItems, total, agregar, cambiarCantidad, eliminar, vaciar, finalizarCompra, recargar
+  }), [items, cargando, totalItems, total, agregar, cambiarCantidad, eliminar, vaciar, finalizarCompra, recargar]);
 
   return <CartContext.Provider value={valor}>{children}</CartContext.Provider>;
 }

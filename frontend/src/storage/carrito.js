@@ -3,6 +3,7 @@ import { obtenerColeccion, guardarColeccion } from "./persistencia";
 import { fallar, numeroEntero, sesionInterna } from "./helpers";
 import { obtenerProducto } from "./productos";
 import { calcularTotalProducto, etiquetaOferta } from "../utils/format";
+import { validarDatosEntrega } from "../utils/validaciones";
 
 function itemsConProducto() {
   const productos = obtenerColeccion("productos");
@@ -50,10 +51,22 @@ export async function eliminarItemCarrito(codigo) {
 
 export async function vaciarCarritoApi() { guardarColeccion("carrito", []); }
 
-// Registra una orden con el precio y nombre de cada producto al momento de comprar.
-export async function finalizarCompraApi() {
+// Registra el pedido y conserva una copia de los datos de despacho al momento de confirmar.
+export async function finalizarCompraApi(datosEntrega) {
   const usuario = sesionInterna();
   if (!usuario) fallar("Inicia sesión para confirmar la compra y guardar tu historial.");
+
+  const erroresEntrega = validarDatosEntrega(datosEntrega);
+  if (erroresEntrega.length) fallar(erroresEntrega.join("\n"));
+
+  const regiones = obtenerColeccion("regiones");
+  const comunas = obtenerColeccion("comunas");
+  const regionId = Number(datosEntrega.regionId);
+  const comunaId = Number(datosEntrega.comunaId);
+  const region = regiones.find((item) => item.id === regionId);
+  const comuna = comunas.find((item) => item.id === comunaId && item.regionId === regionId);
+  if (!region) fallar("La región de despacho seleccionada no existe.");
+  if (!comuna) fallar("La comuna de despacho no corresponde a la región seleccionada.");
 
   const carrito = obtenerColeccion("carrito");
   if (carrito.length === 0) fallar("El carrito está vacío.");
@@ -73,27 +86,42 @@ export async function finalizarCompraApi() {
   });
 
   const pedidos = obtenerColeccion("pedidos");
-  const numero = pedidos.reduce((mayor, p) => {
-    const n = Number(String(p.id).replace(/^PED-/, ""));
+  const numero = pedidos.reduce((mayor, pedido) => {
+    const n = Number(String(pedido.id).replace(/^PED-/, ""));
     return Number.isInteger(n) ? Math.max(mayor, n) : mayor;
   }, 0) + 1;
+
+  const entrega = {
+    nombre: datosEntrega.nombre.trim(),
+    apellidos: datosEntrega.apellidos.trim(),
+    correo: datosEntrega.correo.trim().toLowerCase(),
+    telefono: datosEntrega.telefono.trim(),
+    direccion: datosEntrega.direccion.trim(),
+    departamento: String(datosEntrega.departamento || "").trim(),
+    referencia: String(datosEntrega.referencia || "").trim(),
+    regionId,
+    region: region.nombre,
+    comunaId,
+    comuna: comuna.nombre
+  };
+
   const pedido = {
     id: "PED-" + String(numero).padStart(5, "0"),
     fecha: new Date().toISOString(),
     clienteRun: usuario.run,
     clienteNombre: usuario.nombre + " " + usuario.apellidos,
+    entrega,
     items: detalles,
     unidades: detalles.reduce((suma, item) => suma + item.cantidad, 0),
     total: detalles.reduce((suma, item) => suma + item.subtotal, 0),
-    estado: "Confirmado (simulado)"
+    estado: "Pedido registrado"
   };
 
-  // localStorage solo simula persistencia: no hay cobro ni transacción bancaria.
   guardarColeccion("pedidos", [...pedidos, pedido]);
   guardarColeccion("productos", productos.map((producto) => {
     const comprado = detalles.find((item) => item.codigo === producto.codigo);
     return comprado ? { ...producto, stock: producto.stock - comprado.cantidad } : producto;
   }));
   guardarColeccion("carrito", []);
-  return { ...pedido, ok: true, simulada: true };
+  return { ...pedido, ok: true };
 }

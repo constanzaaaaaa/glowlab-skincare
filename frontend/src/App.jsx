@@ -17,6 +17,7 @@ import Productos from "./pages/Productos";
 import Ofertas from "./pages/Ofertas";
 import Registro from "./pages/Registro";
 import MisCompras from "./pages/MisCompras";
+import Checkout from "./pages/Checkout";
 import AdminPanel from "./pages/admin/AdminPanel";
 import AdminProductoForm from "./pages/admin/AdminProductoForm";
 import AdminProductos from "./pages/admin/AdminProductos";
@@ -42,6 +43,7 @@ export default function App() {
 
         <Route element={<ProtectedRoute rolesPermitidos={[ROLES.ADMINISTRADOR, ROLES.VENDEDOR, ROLES.CLIENTE]} />}>
           <Route path="/mis-compras" element={<MisCompras />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Route>
 
         <Route element={<ProtectedRoute rolesPermitidos={[ROLES.ADMINISTRADOR, ROLES.VENDEDOR]} />}>

@@ -1,1 +1,1 @@
-export { listarCategorias, listarRegiones, listarComunas, listarRoles } from "../storage/otros";
+export { listarCategorias, crearCategoria, listarRegiones, listarComunas, listarRoles } from "../storage/otros";

@@ -1,4 +1,4 @@
-// Historial de compras del usuario autenticado (persistencia JS del documento 040).
+// Historial de pedidos del usuario autenticado.
 import { useEffect, useState } from "react";
 import { Badge, Card, Container, Spinner, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -15,6 +15,7 @@ export default function MisCompras() {
   useEffect(() => {
     let activo = true;
     setCargando(true);
+    setError("");
     listarMisPedidos()
       .then((datos) => { if (activo) setPedidos(datos); })
       .catch((e) => { if (activo) setError(e.message); })
@@ -29,13 +30,11 @@ export default function MisCompras() {
   return (
     <Container className="py-5">
       <h1 className="section-title">Mi historial de compras</h1>
-      <p className="text-muted">Pedidos simulados de {usuario?.nombre}. Solo se muestran las compras de tu cuenta en este navegador.</p>
+      <p className="text-muted">Aquí puedes revisar tus pedidos, productos y datos de despacho.</p>
       {cargando && <Spinner animation="border" role="status" />}
       {error && <p role="alert" className="text-danger">{error}</p>}
       {!cargando && !error && pedidos.length === 0 && (
-        <Card body>
-          Todavía no tienes compras registradas. <Link to="/productos">Explorar productos</Link>
-        </Card>
+        <Card body>Todavía no tienes compras registradas. <Link to="/productos">Explorar productos</Link></Card>
       )}
       {!cargando && pedidos.map((pedido) => (
         <Card className="mb-4" key={pedido.id}>
@@ -59,6 +58,17 @@ export default function MisCompras() {
               </tbody>
             </Table>
             <p className="text-end fw-bold mb-0">Total: {formatearPrecio(pedido.total)}</p>
+            {pedido.entrega && (
+              <div className="border-top mt-3 pt-3">
+                <h2 className="h6">Datos de despacho</h2>
+                <p className="mb-1"><strong>Recibe:</strong> {pedido.entrega.nombre} {pedido.entrega.apellidos}</p>
+                <p className="mb-1"><strong>Dirección:</strong> {pedido.entrega.direccion}{pedido.entrega.departamento ? ", " + pedido.entrega.departamento : ""}</p>
+                <p className="mb-1"><strong>Comuna:</strong> {pedido.entrega.comuna}, {pedido.entrega.region}</p>
+                <p className="mb-1"><strong>Teléfono:</strong> {pedido.entrega.telefono}</p>
+                <p className="mb-1"><strong>Correo:</strong> {pedido.entrega.correo}</p>
+                {pedido.entrega.referencia && <p className="mb-0"><strong>Referencia:</strong> {pedido.entrega.referencia}</p>}
+              </div>
+            )}
           </Card.Body>
         </Card>
       ))}

@@ -1,9 +1,24 @@
 // Catálogos, blog y contacto: datos simulados para los componentes React.
 import { obtenerColeccion, guardarColeccion } from "./persistencia";
-import { fallar } from "./helpers";
+import { exigirAdmin, fallar } from "./helpers";
 import { validarDatosContacto } from "../utils/validaciones";
 
 export async function listarCategorias() { return obtenerColeccion("categorias"); }
+
+export async function crearCategoria(nombre) {
+  exigirAdmin();
+  if (typeof nombre !== "string" || !nombre.trim()) fallar("Debes ingresar el nombre de la categoría.");
+  const limpio = nombre.trim();
+  if (limpio.length > 50) fallar("El nombre de la categoría no puede superar los 50 caracteres.");
+  const categorias = obtenerColeccion("categorias");
+  if (categorias.some((categoria) => categoria.nombre.trim().toLowerCase() === limpio.toLowerCase())) {
+    fallar("Ya existe una categoría con ese nombre.");
+  }
+  const id = categorias.reduce((mayor, categoria) => Math.max(mayor, Number(categoria.id) || 0), 0) + 1;
+  const nueva = { id, nombre: limpio };
+  guardarColeccion("categorias", [...categorias, nueva]);
+  return nueva;
+}
 export async function listarRegiones() { return obtenerColeccion("regiones"); }
 export async function listarComunas(regionId) {
   return obtenerColeccion("comunas").filter((c) => !regionId || c.regionId === Number(regionId));
