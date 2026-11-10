@@ -70,6 +70,53 @@ export async function iniciarSesion(correo, password) {
 export async function cerrarSesionApi() { guardarRunSesion(null); }
 export async function registrarUsuario(datos) { return crear(datos, true); }
 
+export async function actualizarMiPerfil({ nombre, apellidos, direccion }) {
+
+  // 1. Identificar al usuario que inició sesión
+  const actual = sesionInterna();
+
+  if (!actual) {
+    fallar("Debes iniciar sesión.");
+  }
+
+  // 2. Validar los datos nuevos
+  const cambios = { nombre, apellidos, direccion };
+
+  const errores = validarDatosUsuario(
+    { ...actual, ...cambios },
+    { edicion: true, omitirPassword: true }
+  );
+
+  if (errores.length) {
+    fallar(errores.join("\n"));
+  }
+
+  // 3. Buscar al usuario en la lista
+  const usuarios = obtenerColeccion("usuarios");
+
+  const indice = usuarios.findIndex(
+    (u) => u.run === actual.run
+  );
+
+  if (indice === -1) {
+    fallar("Usuario no encontrado.");
+  }
+
+  // 4. Actualizar solamente los campos permitidos
+  usuarios[indice] = {
+    ...usuarios[indice],
+    nombre: nombre.trim(),
+    apellidos: apellidos.trim(),
+    direccion: direccion.trim()
+  };
+
+  // 5. Guardar los cambios
+  guardarColeccion("usuarios", usuarios);
+
+  return usuarioPublico(usuarios[indice]);
+}
+
+
 export async function listarUsuarios() {
   exigirAdmin();
   return obtenerColeccion("usuarios").map(usuarioPublico).sort((a, b) => a.nombre.localeCompare(b.nombre));

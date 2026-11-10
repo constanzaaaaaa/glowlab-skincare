@@ -35,9 +35,21 @@ export default function NavBar() {
             </Nav.Link>
             {usuario && <Nav.Link as={NavLink} to="/mis-compras">Mis compras</Nav.Link>}
             {usuario ? (
-              <NavDropdown title={usuario.nombre} align="end">
-                <NavDropdown.Item onClick={salir}>Cerrar sesión</NavDropdown.Item>
-              </NavDropdown>
+              
+            <NavDropdown title={usuario.nombre} align="end">
+
+              <NavDropdown.Item as={NavLink} to="/mi-perfil">
+                Mi perfil
+              </NavDropdown.Item>
+
+              <NavDropdown.Divider />
+
+              <NavDropdown.Item onClick={salir}>
+                Cerrar sesión
+              </NavDropdown.Item>
+
+            </NavDropdown>
+
             ) : (
               <>
                 <Nav.Link as={NavLink} to="/login">Iniciar sesión</Nav.Link>

@@ -54,7 +54,7 @@ export function obtenerErrorRun(valor) {
   if (/[.\-]/.test(run)) {
     return "El RUN está incompleto o tiene un formato incorrecto. Escríbelo sin puntos ni guion.";
   }
-  if (/^\d{1,8}$/.test(run)) {
+  if (/^\d{1,6}$/.test(run)) {
     return "El RUN está incompleto: debe incluir todos sus números y el dígito verificador.";
   }
   if (!/^\d{6,8}[0-9K]$/.test(run)) {
