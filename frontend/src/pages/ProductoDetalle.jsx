@@ -52,7 +52,6 @@ export default function ProductoDetalle() {
           <Form.Control id="detalle-cantidad" className="mb-3" type="number" min={1} max={Math.max(1, producto.stock)} value={cantidad} onChange={(e) => setCantidad(Number(e.target.value))} />
           {etiquetaOferta(producto) && <Alert variant="light" className="border">Total por {cantidad} unidad(es): <strong>{formatearPrecio(calculo.subtotal)}</strong>{calculo.ahorro > 0 && <span className="text-success"> · Ahorras {formatearPrecio(calculo.ahorro)}</span>}</Alert>}
           <Button className="btn-glow w-100" disabled={!stockDisponible(producto)} onClick={agregarSeleccionado}><i className="bi bi-bag-plus me-2" />Agregar al carrito</Button>
-          <p className="small text-muted mt-3 mb-0">La compra se registra como una operación de demostración dentro de este proyecto.</p>
         </Col>
       </Row>
       <section className="mt-5">
