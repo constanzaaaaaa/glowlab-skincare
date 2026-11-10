@@ -2,8 +2,495 @@
 // NO utilizar estas credenciales de prueba en un sistema real.
 export const ROLES = [{ id: 1, nombre: "Administrador" }, { id: 2, nombre: "Vendedor" }, { id: 3, nombre: "Cliente" }];
 export const CATEGORIAS = ["Limpiadores", "Sueros", "Hidratantes", "Protector Solar", "Exfoliantes", "Mascarillas", "Contorno de Ojos"].map((nombre, i) => ({ id: i + 1, nombre }));
-export const REGIONES = ["Región Metropolitana", "Valparaíso", "Biobío"].map((nombre, i) => ({ id: i + 1, nombre }));
-export const COMUNAS = [{ id: 1, regionId: 1, nombre: "Santiago" }, { id: 2, regionId: 1, nombre: "Providencia" }, { id: 3, regionId: 1, nombre: "Maipú" }, { id: 4, regionId: 2, nombre: "Valparaíso" }, { id: 5, regionId: 2, nombre: "Viña del Mar" }, { id: 6, regionId: 3, nombre: "Concepción" }, { id: 7, regionId: 3, nombre: "Talcahuano" }];
+// Catálogo territorial de Chile: 16 regiones y 346 comunas.
+// Se conservan los ID originales para no alterar las cuentas de demostración existentes.
+export const REGIONES = [
+  {
+    "id": 1,
+    "nombre": "Región Metropolitana"
+  },
+  {
+    "id": 2,
+    "nombre": "Valparaíso"
+  },
+  {
+    "id": 3,
+    "nombre": "Biobío"
+  },
+  {
+    "id": 4,
+    "nombre": "Arica y Parinacota"
+  },
+  {
+    "id": 5,
+    "nombre": "Tarapacá"
+  },
+  {
+    "id": 6,
+    "nombre": "Antofagasta"
+  },
+  {
+    "id": 7,
+    "nombre": "Atacama"
+  },
+  {
+    "id": 8,
+    "nombre": "Coquimbo"
+  },
+  {
+    "id": 9,
+    "nombre": "O'Higgins"
+  },
+  {
+    "id": 10,
+    "nombre": "Maule"
+  },
+  {
+    "id": 11,
+    "nombre": "Ñuble"
+  },
+  {
+    "id": 12,
+    "nombre": "La Araucanía"
+  },
+  {
+    "id": 13,
+    "nombre": "Los Lagos"
+  },
+  {
+    "id": 14,
+    "nombre": "Los Ríos"
+  },
+  {
+    "id": 15,
+    "nombre": "Aysén"
+  },
+  {
+    "id": 16,
+    "nombre": "Magallanes y de la Antártica Chilena"
+  }
+];
+const COMUNAS_ORIGINALES = [
+  {
+    "id": 1,
+    "regionId": 1,
+    "nombre": "Santiago"
+  },
+  {
+    "id": 2,
+    "regionId": 1,
+    "nombre": "Providencia"
+  },
+  {
+    "id": 3,
+    "regionId": 1,
+    "nombre": "Maipú"
+  },
+  {
+    "id": 4,
+    "regionId": 2,
+    "nombre": "Valparaíso"
+  },
+  {
+    "id": 5,
+    "regionId": 2,
+    "nombre": "Viña del Mar"
+  },
+  {
+    "id": 6,
+    "regionId": 3,
+    "nombre": "Concepción"
+  },
+  {
+    "id": 7,
+    "regionId": 3,
+    "nombre": "Talcahuano"
+  }
+];
+const COMUNAS_ADICIONALES_POR_REGION = {
+  "1": [
+    "Alhué",
+    "Buin",
+    "Calera de Tango",
+    "Cerrillos",
+    "Cerro Navia",
+    "Colina",
+    "Conchalí",
+    "Curacaví",
+    "El Bosque",
+    "El Monte",
+    "Estación Central",
+    "Huechuraba",
+    "Independencia",
+    "Isla de Maipo",
+    "La Cisterna",
+    "La Florida",
+    "La Granja",
+    "La Pintana",
+    "La Reina",
+    "Lampa",
+    "Las Condes",
+    "Lo Barnechea",
+    "Lo Espejo",
+    "Lo Prado",
+    "Macul",
+    "María Pinto",
+    "Melipilla",
+    "Ñuñoa",
+    "Padre Hurtado",
+    "Paine",
+    "Pedro Aguirre Cerda",
+    "Peñaflor",
+    "Peñalolén",
+    "Pirque",
+    "Pudahuel",
+    "Puente Alto",
+    "Quilicura",
+    "Quinta Normal",
+    "Recoleta",
+    "Renca",
+    "San Bernardo",
+    "San Joaquín",
+    "San José de Maipo",
+    "San Miguel",
+    "San Pedro",
+    "San Ramón",
+    "Talagante",
+    "Tiltil",
+    "Vitacura"
+  ],
+  "2": [
+    "Algarrobo",
+    "Cabildo",
+    "Calera",
+    "Calle Larga",
+    "Cartagena",
+    "Casablanca",
+    "Catemu",
+    "Concón",
+    "El Quisco",
+    "El Tabo",
+    "Hijuelas",
+    "Isla de Pascua",
+    "Juan Fernández",
+    "La Cruz",
+    "La Ligua",
+    "Limache",
+    "Llaillay",
+    "Los Andes",
+    "Nogales",
+    "Olmué",
+    "Panquehue",
+    "Papudo",
+    "Petorca",
+    "Puchuncaví",
+    "Putaendo",
+    "Quillota",
+    "Quilpué",
+    "Quintero",
+    "Rinconada",
+    "San Antonio",
+    "San Esteban",
+    "San Felipe",
+    "Santa María",
+    "Santo Domingo",
+    "Villa Alemana",
+    "Zapallar"
+  ],
+  "3": [
+    "Alto Biobío",
+    "Antuco",
+    "Arauco",
+    "Cabrero",
+    "Cañete",
+    "Chiguayante",
+    "Contulmo",
+    "Coronel",
+    "Curanilahue",
+    "Florida",
+    "Hualpén",
+    "Hualqui",
+    "Laja",
+    "Lebu",
+    "Los Alamos",
+    "Los Ángeles",
+    "Lota",
+    "Mulchén",
+    "Nacimiento",
+    "Negrete",
+    "Penco",
+    "Quilaco",
+    "Quilleco",
+    "San Pedro de la Paz",
+    "San Rosendo",
+    "Santa Bárbara",
+    "Santa Juana",
+    "Tirúa",
+    "Tomé",
+    "Tucapel",
+    "Yumbel"
+  ],
+  "4": [
+    "Arica",
+    "Camarones",
+    "General Lagos",
+    "Putre"
+  ],
+  "5": [
+    "Alto Hospicio",
+    "Camiña",
+    "Colchane",
+    "Huara",
+    "Iquique",
+    "Pica",
+    "Pozo Almonte"
+  ],
+  "6": [
+    "Antofagasta",
+    "Calama",
+    "María Elena",
+    "Mejillones",
+    "Ollagüe",
+    "San Pedro de Atacama",
+    "Sierra Gorda",
+    "Taltal",
+    "Tocopilla"
+  ],
+  "7": [
+    "Alto del Carmen",
+    "Caldera",
+    "Chañaral",
+    "Copiapó",
+    "Diego de Almagro",
+    "Freirina",
+    "Huasco",
+    "Tierra Amarilla",
+    "Vallenar"
+  ],
+  "8": [
+    "Andacollo",
+    "Canela",
+    "Combarbalá",
+    "Coquimbo",
+    "Illapel",
+    "La Higuera",
+    "La Serena",
+    "Los Vilos",
+    "Monte Patria",
+    "Ovalle",
+    "Paihuano",
+    "Punitaqui",
+    "Río Hurtado",
+    "Salamanca",
+    "Vicuña"
+  ],
+  "9": [
+    "Chépica",
+    "Chimbarongo",
+    "Codegua",
+    "Coinco",
+    "Coltauco",
+    "Doñihue",
+    "Graneros",
+    "La Estrella",
+    "Las Cabras",
+    "Litueche",
+    "Lolol",
+    "Machalí",
+    "Malloa",
+    "Marchigüe",
+    "Mostazal",
+    "Nancagua",
+    "Navidad",
+    "Olivar",
+    "Palmilla",
+    "Paredones",
+    "Peralillo",
+    "Peumo",
+    "Pichidegua",
+    "Pichilemu",
+    "Placilla",
+    "Pumanque",
+    "Quinta de Tilcoco",
+    "Rancagua",
+    "Rengo",
+    "Requínoa",
+    "San Fernando",
+    "San Vicente",
+    "Santa Cruz"
+  ],
+  "10": [
+    "Cauquenes",
+    "Chanco",
+    "Colbún",
+    "Constitución",
+    "Curepto",
+    "Curicó",
+    "Empedrado",
+    "Hualañé",
+    "Licantén",
+    "Linares",
+    "Longaví",
+    "Maule",
+    "Molina",
+    "Parral",
+    "Pelarco",
+    "Pelluhue",
+    "Pencahue",
+    "Rauco",
+    "Retiro",
+    "Río Claro",
+    "Romeral",
+    "Sagrada Familia",
+    "San Clemente",
+    "San Javier",
+    "San Rafael",
+    "Talca",
+    "Teno",
+    "Vichuquén",
+    "Villa Alegre",
+    "Yerbas Buenas"
+  ],
+  "11": [
+    "Bulnes",
+    "Chillán",
+    "Chillán Viejo",
+    "Cobquecura",
+    "Coelemu",
+    "Coihueco",
+    "El Carmen",
+    "Ninhue",
+    "Ñiquén",
+    "Pemuco",
+    "Pinto",
+    "Portezuelo",
+    "Quillón",
+    "Quirihue",
+    "Ranquil",
+    "San Carlos",
+    "San Fabián",
+    "San Ignacio",
+    "San Nicolás",
+    "Treguaco",
+    "Yungay"
+  ],
+  "12": [
+    "Angol",
+    "Carahue",
+    "Cholchol",
+    "Collipulli",
+    "Cunco",
+    "Curacautín",
+    "Curarrehue",
+    "Ercilla",
+    "Freire",
+    "Galvarino",
+    "Gorbea",
+    "Lautaro",
+    "Loncoche",
+    "Lonquimay",
+    "Los Sauces",
+    "Lumaco",
+    "Melipeuco",
+    "Nueva Imperial",
+    "Padre Las Casas",
+    "Perquenco",
+    "Pitrufquén",
+    "Pucón",
+    "Purén",
+    "Renaico",
+    "Saavedra",
+    "Temuco",
+    "Teodoro Schmidt",
+    "Toltén",
+    "Traiguén",
+    "Victoria",
+    "Vilcún",
+    "Villarrica"
+  ],
+  "13": [
+    "Ancud",
+    "Calbuco",
+    "Castro",
+    "Chaitén",
+    "Chonchi",
+    "Cochamó",
+    "Curaco de Vélez",
+    "Dalcahue",
+    "Fresia",
+    "Frutillar",
+    "Futaleufú",
+    "Hualaihué",
+    "Llanquihue",
+    "Los Muermos",
+    "Maullín",
+    "Osorno",
+    "Palena",
+    "Puerto Montt",
+    "Puerto Octay",
+    "Puerto Varas",
+    "Puqueldón",
+    "Purranque",
+    "Puyehue",
+    "Queilén",
+    "Quellón",
+    "Quemchi",
+    "Quinchao",
+    "Río Negro",
+    "San Juan de la Costa",
+    "San Pablo"
+  ],
+  "14": [
+    "Corral",
+    "Futrono",
+    "La Unión",
+    "Lago Ranco",
+    "Lanco",
+    "Los Lagos",
+    "Máfil",
+    "Mariquina",
+    "Paillaco",
+    "Panguipulli",
+    "Río Bueno",
+    "Valdivia"
+  ],
+  "15": [
+    "Aysén",
+    "Chile Chico",
+    "Cisnes",
+    "Cochrane",
+    "Coyhaique",
+    "Guaitecas",
+    "Lago Verde",
+    "O'Higgins",
+    "Río Ibáñez",
+    "Tortel"
+  ],
+  "16": [
+    "Antártica",
+    "Cabo de Hornos",
+    "Laguna Blanca",
+    "Natales",
+    "Porvenir",
+    "Primavera",
+    "Punta Arenas",
+    "Río Verde",
+    "San Gregorio",
+    "Timaukel",
+    "Torres del Paine"
+  ]
+};
+export const COMUNAS = [
+  ...COMUNAS_ORIGINALES,
+  ...Object.entries(COMUNAS_ADICIONALES_POR_REGION).flatMap(([regionId, nombres]) =>
+    nombres.map((nombre, indice) => ({
+      id: 8 + Object.entries(COMUNAS_ADICIONALES_POR_REGION)
+        .filter(([id]) => Number(id) < Number(regionId))
+        .reduce((total, [, lista]) => total + lista.length, 0) + indice,
+      regionId: Number(regionId), nombre
+    }))
+  )
+];
 
 export const PRODUCTOS = [
   ["GL-001", "Hydra Glow Serum", "Sérum concentrado en ácido hialurónico para hidratar la piel.", 15990, 18, 4, 2, "productos/hidratante1.webp"],
