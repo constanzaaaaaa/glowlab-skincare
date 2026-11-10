@@ -47,15 +47,22 @@ export function calcularDigitoVerificador(cuerpo) {
 }
 
 export function obtenerErrorRun(valor) {
-  if (typeof valor !== "string" || !valor.trim()) return "Debes ingresar el RUN (RUT) con su dígito verificador.";
+  if (typeof valor !== "string" || !valor.trim()) {
+    return "Debes ingresar el RUN completo, incluidos todos sus números y el dígito verificador.";
+  }
   const run = valor.trim().toUpperCase();
-  if (/[.\-]/.test(run)) return "Escribe el RUN sin puntos ni guion y con dígito verificador. Ejemplo: 123456785.";
+  if (/[.\-]/.test(run)) {
+    return "El RUN está incompleto o tiene un formato incorrecto. Escríbelo sin puntos ni guion.";
+  }
+  if (/^\d{1,8}$/.test(run)) {
+    return "El RUN está incompleto: debe incluir todos sus números y el dígito verificador.";
+  }
   if (!/^\d{6,8}[0-9K]$/.test(run)) {
-    return "El RUN debe incluir entre 6 y 8 dígitos y al final su dígito verificador (0-9 o K).";
+    return "El formato del RUN no es válido. Debe contener entre 6 y 8 números y un dígito verificador (0-9 o K).";
   }
   const esperado = calcularDigitoVerificador(run.slice(0, -1));
   if (run.at(-1) !== esperado) {
-    return "El dígito verificador del RUN es incorrecto: para " + run.slice(0, -1) + " corresponde " + esperado + ".";
+    return "El RUN ingresado no es válido. Revisa que el número y el dígito verificador estén correctos.";
   }
   return null;
 }

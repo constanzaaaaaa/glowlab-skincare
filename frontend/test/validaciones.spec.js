@@ -1,4 +1,4 @@
-import { validarCorreo, validarRun } from "../src/utils/validaciones";
+import { obtenerErrorRun, validarCorreo, validarRun } from "../src/utils/validaciones";
 
 describe("GlowLab: validaciones de formularios", () => {
   it("06 - acepta correo de dominio DUOC", () => {
@@ -11,5 +11,10 @@ describe("GlowLab: validaciones de formularios", () => {
     expect(validarRun("123456785")).toBeTrue();
     expect(validarRun("123456781")).toBeFalse();
     expect(validarRun("12345678")).toBeFalse();
+    expect(obtenerErrorRun("12345678")).toContain("incompleto");
+    expect(obtenerErrorRun("12345")).toContain("incompleto");
+    expect(obtenerErrorRun("123456781")).toContain("no es válido");
+    expect(obtenerErrorRun("123456781")).not.toContain("corresponde");
+    expect(obtenerErrorRun("123456781")).not.toContain("5");
   });
 });
