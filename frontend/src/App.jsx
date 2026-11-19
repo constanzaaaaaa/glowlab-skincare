@@ -23,6 +23,7 @@ import AdminProductoForm from "./pages/admin/AdminProductoForm";
 import AdminProductos from "./pages/admin/AdminProductos";
 import AdminUsuarioForm from "./pages/admin/AdminUsuarioForm";
 import AdminUsuarios from "./pages/admin/AdminUsuarios";
+import AdminOrdenes from "./pages/admin/AdminOrdenes";
 import MiPerfil from "./pages/MiPerfil";
 
 export default function App() {
@@ -50,13 +51,14 @@ export default function App() {
 
         <Route element={<ProtectedRoute rolesPermitidos={[ROLES.ADMINISTRADOR, ROLES.VENDEDOR]} />}>
           <Route element={<AdminLayout />}>
-            <Route path="/admin" element={<AdminPanel />} />
             <Route path="/admin/productos" element={<AdminProductos />} />
+            <Route path="/admin/ordenes" element={<AdminOrdenes />} />
           </Route>
         </Route>
 
         <Route element={<ProtectedRoute rolesPermitidos={[ROLES.ADMINISTRADOR]} />}>
           <Route element={<AdminLayout />}>
+            <Route path="/admin" element={<AdminPanel />} />
             <Route path="/admin/productos/nuevo" element={<AdminProductoForm />} />
             <Route path="/admin/productos/editar/:codigo" element={<AdminProductoForm />} />
             <Route path="/admin/usuarios" element={<AdminUsuarios />} />

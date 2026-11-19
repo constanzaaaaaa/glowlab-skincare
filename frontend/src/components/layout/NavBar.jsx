@@ -27,7 +27,7 @@ export default function NavBar() {
             <Nav.Link as={NavLink} to="/nosotros">Nosotros</Nav.Link>
             <Nav.Link as={NavLink} to="/blog">Blog</Nav.Link>
             <Nav.Link as={NavLink} to="/contacto">Contacto</Nav.Link>
-            {(esAdmin || esVendedor) && <Nav.Link as={NavLink} to="/admin">Administración</Nav.Link>}
+            {(esAdmin || esVendedor) && <Nav.Link as={NavLink} to={esAdmin ? "/admin" : "/admin/productos"}>Administración</Nav.Link>}
           </Nav>
           <Nav>
             <Nav.Link as={NavLink} to="/carrito" aria-label="Ver carrito">
