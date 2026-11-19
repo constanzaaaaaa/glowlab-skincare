@@ -1,0 +1,83 @@
+import { createContext, useCallback, useEffect, useMemo, useState } from "react";
+import { actualizarItemCarrito, agregarItemCarrito, eliminarItemCarrito, finalizarCompraApi, obtenerCarrito, vaciarCarritoApi } from "../api/carritoApi";
+import { confirmarAccion, mostrarExito } from "../utils/swal";
+import { totalCarrito } from "../utils/format";
+import { CLAVES, EVENTO_DATOS } from "../storage/persistencia";
+
+export const CartContext = createContext(null);
+
+export function CartProvider({ children }) {
+  const [items, setItems] = useState([]);
+  const [cargando, setCargando] = useState(true);
+
+  const recargar = useCallback(async () => {
+    const datos = await obtenerCarrito();
+    setItems(datos);
+    return datos;
+  }, []);
+
+  useEffect(() => {
+    let activo = true;
+    const sincronizar = () => recargar()
+      .catch(() => { if (activo) setItems([]); })
+      .finally(() => { if (activo) setCargando(false); });
+    const eventoDatos = (evento) => {
+      if (evento.detail?.tipo === "carrito" || evento.detail?.tipo === "productos") sincronizar();
+    };
+    const eventoStorage = (evento) => {
+      if (evento.key === CLAVES.carrito || evento.key === CLAVES.productos) sincronizar();
+    };
+    sincronizar();
+    window.addEventListener(EVENTO_DATOS, eventoDatos);
+    window.addEventListener("storage", eventoStorage);
+    return () => {
+      activo = false;
+      window.removeEventListener(EVENTO_DATOS, eventoDatos);
+      window.removeEventListener("storage", eventoStorage);
+    };
+  }, [recargar]);
+
+  const agregar = useCallback(async (codigo, cantidad, nombreProducto) => {
+    await agregarItemCarrito(codigo, cantidad);
+    await recargar();
+    await mostrarExito("Agregado", nombreProducto + " se añadió al carrito.");
+  }, [recargar]);
+
+  const cambiarCantidad = useCallback(async (codigo, cantidad) => {
+    await actualizarItemCarrito(codigo, cantidad);
+    await recargar();
+  }, [recargar]);
+
+  const eliminar = useCallback(async (codigo) => {
+    if (!await confirmarAccion({ titulo: "¿Eliminar producto?", texto: "Se quitará del carrito.", confirmButtonText: "Eliminar" })) return;
+    await eliminarItemCarrito(codigo);
+    await recargar();
+  }, [recargar]);
+
+  const vaciar = useCallback(async () => {
+    await vaciarCarritoApi();
+    await recargar();
+  }, [recargar]);
+
+  const finalizarCompra = useCallback(async (datosEntrega) => {
+    if (items.length === 0) return null;
+    if (!await confirmarAccion({
+      titulo: "¿Confirmar pedido?",
+      texto: "Se registrará el pedido con los datos de despacho indicados. Total: $" + totalCarrito(items).toLocaleString("es-CL"),
+      confirmButtonText: "Confirmar pedido",
+      icon: "question"
+    })) return null;
+    const pedido = await finalizarCompraApi(datosEntrega);
+    await recargar();
+    await mostrarExito("Pedido confirmado", "Tu pedido " + pedido.id + " quedó registrado correctamente.");
+    return pedido;
+  }, [items, recargar]);
+
+  const totalItems = useMemo(() => items.reduce((suma, item) => suma + item.cantidad, 0), [items]);
+  const total = useMemo(() => totalCarrito(items), [items]);
+  const valor = useMemo(() => ({
+    items, cargando, totalItems, total, agregar, cambiarCantidad, eliminar, vaciar, finalizarCompra, recargar
+  }), [items, cargando, totalItems, total, agregar, cambiarCantidad, eliminar, vaciar, finalizarCompra, recargar]);
+
+  return <CartContext.Provider value={valor}>{children}</CartContext.Provider>;
+}
