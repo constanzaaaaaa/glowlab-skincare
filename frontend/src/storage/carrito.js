@@ -1,19 +1,18 @@
 // Carrito persistente en localStorage; conserva los contratos de carritoApi.
 import { obtenerColeccion, guardarColeccion } from "./persistencia";
 import { fallar, numeroEntero, sesionInterna } from "./helpers";
-import { obtenerProducto } from "./productos";
+import { obtenerProducto, listarProductos } from "../api/productosApi";
+import { api, MODO_API } from "../api/http";
 import { calcularTotalProducto, etiquetaOferta } from "../utils/format";
 import { validarDatosEntrega } from "../utils/validaciones";
 
-function itemsConProducto() {
-  const productos = obtenerColeccion("productos");
+export async function obtenerCarrito() {
+  const productos = MODO_API ? await listarProductos() : obtenerColeccion("productos");
   return obtenerColeccion("carrito").flatMap((item) => {
     const producto = productos.find((p) => p.codigo === item.codigo);
     return producto ? [{ codigo: item.codigo, cantidad: item.cantidad, producto }] : [];
   });
 }
-
-export async function obtenerCarrito() { return itemsConProducto(); }
 
 export async function agregarItemCarrito(codigo, cantidad = 1) {
   const producto = await obtenerProducto(codigo);
@@ -53,8 +52,10 @@ export async function vaciarCarritoApi() { guardarColeccion("carrito", []); }
 
 // Registra el pedido y conserva una copia de los datos de despacho al momento de confirmar.
 export async function finalizarCompraApi(datosEntrega) {
-  const usuario = sesionInterna();
-  if (!usuario) fallar("Inicia sesión para confirmar la compra y guardar tu historial.");
+  if (!MODO_API) {
+    const usuario = sesionInterna();
+    if (!usuario) fallar("Inicia sesión para confirmar la compra y guardar tu historial.");
+  }
 
   const erroresEntrega = validarDatosEntrega(datosEntrega);
   if (erroresEntrega.length) fallar(erroresEntrega.join("\n"));
@@ -70,6 +71,26 @@ export async function finalizarCompraApi(datosEntrega) {
 
   const carrito = obtenerColeccion("carrito");
   if (carrito.length === 0) fallar("El carrito está vacío.");
+
+  if (MODO_API) {
+    const pedido = await api("/boletas", {
+      method: "POST",
+      body: {
+        items: carrito.map(({ codigo, cantidad }) => ({ codigo, cantidad })),
+        entrega: {
+          ...datosEntrega,
+          regionId,
+          comunaId,
+          region: region.nombre,
+          comuna: comuna.nombre
+        }
+      }
+    });
+    guardarColeccion("carrito", []);
+    return { ...pedido, ok: true };
+  }
+
+  const usuario = sesionInterna();
   const productos = obtenerColeccion("productos");
   const detalles = carrito.map(({ codigo, cantidad }) => {
     const producto = productos.find((p) => p.codigo === codigo);

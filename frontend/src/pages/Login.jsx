@@ -20,7 +20,7 @@ export default function Login() {
     try {
       const usuario = await login(correo, password);
       await mostrarExito("Bienvenido", "Inicio de sesión correcto.");
-      navigate(usuario.rolId === 1 || usuario.rolId === 2 ? "/admin" : "/");
+      navigate(usuario.rolId === 1 ? "/admin" : usuario.rolId === 2 ? "/admin/productos" : "/");
     } catch (error) { mostrarError(error.message); }
     finally { setOcupado(false); }
   }

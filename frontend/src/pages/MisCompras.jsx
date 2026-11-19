@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Badge, Card, Container, Spinner, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { listarMisPedidos } from "../storage/pedidos";
+import { listarMisPedidos } from "../api/pedidosApi";
 import { useAuth } from "../hooks/useAuth";
 import { formatearPrecio } from "../utils/format";
 

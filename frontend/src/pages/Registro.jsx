@@ -134,7 +134,7 @@ export default function Registro() {
               ["nombre", "Nombre"],
               ["apellidos", "Apellidos"],
               ["correo", "Correo electrónico (@gmail.com o @duocuc.cl)"],
-              ["password", "Contraseña (4 a 10 caracteres)"],
+              ["password", "Contraseña (8 a 72 caracteres)"],
               ["fechaNacimiento", "Fecha de nacimiento"]
             ].map(([campo, etiqueta]) => (
               <Col md={6} key={campo}>

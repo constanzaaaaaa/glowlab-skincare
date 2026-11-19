@@ -27,8 +27,8 @@ export function obtenerErrorPassword(password, opcional = false) {
   if (opcional && (password === "" || password === undefined || password === null)) return null;
   if (typeof password !== "string" || !password.length) return "Debes ingresar una contraseña.";
   if (password.trim().length === 0) return "La contraseña no puede contener solamente espacios.";
-  if (password.length < 4 || password.length > 10) {
-    return "La contraseña debe tener entre 4 y 10 caracteres (actualmente tiene " + password.length + ").";
+  if (password.length < 8 || password.length > 72) {
+    return "La contraseña debe tener entre 8 y 72 caracteres (actualmente tiene " + password.length + ").";
   }
   return null;
 }

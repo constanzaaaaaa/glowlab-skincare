@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Button, Card, Col, Form, ProgressBar, Row, Spinner, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { listarProductos } from "../../api/productosApi";
-import { obtenerInformeVentas } from "../../storage/pedidos";
+import { obtenerInformeVentas } from "../../api/pedidosApi";
 import { CLAVES, EVENTO_DATOS } from "../../storage/persistencia";
 import { useAuth } from "../../hooks/useAuth";
 import { formatearPrecio } from "../../utils/format";
@@ -94,7 +94,7 @@ export default function AdminPanel() {
   return (
     <>
       <h1 className="section-title">Dashboard de administración</h1>
-      <p>Bienvenido/a, {usuario?.nombre}. Ventas de demostración registradas en este navegador.</p>
+      <p>Bienvenido/a, {usuario?.nombre}. Revisa las ventas y el stock del catálogo.</p>
       {error && <p role="alert" className="text-danger">{error}</p>}
       {cargando && <Spinner animation="border" role="status" />}
       <Row className="g-3 mb-4">
@@ -189,7 +189,7 @@ export default function AdminPanel() {
           </Row>
           {informe.cantidadPedidos === 0 ? (
             <Card body className="mb-4">
-              No hay ventas simuladas en este período. Para generar un informe, inicia sesión con una cuenta, agrega productos y confirma una compra.
+              No hay pedidos registrados en este período.
             </Card>
           ) : (
             <>
