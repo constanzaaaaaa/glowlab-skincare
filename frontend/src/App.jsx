@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import AdminLayout from "./components/layout/AdminLayout";
 import Layout from "./components/layout/Layout";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
+import SoloTienda from "./components/layout/SoloTienda";
 import { ROLES } from "./context/AuthContext";
 import Blog from "./pages/Blog";
 import BlogDetalle from "./pages/BlogDetalle";
@@ -30,20 +31,22 @@ export default function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/productos" element={<Productos />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<Registro />} />
+        <Route element={<SoloTienda />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/productos" element={<Productos />} />
         <Route path="/ofertas" element={<Ofertas />} />
         <Route path="/productos/:codigo" element={<ProductoDetalle />} />
         <Route path="/carrito" element={<Carrito />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/registro" element={<Registro />} />
         <Route path="/nosotros" element={<Nosotros />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:id" element={<BlogDetalle />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/ayuda" element={<Ayuda />} />
+        </Route>
 
-        <Route element={<ProtectedRoute rolesPermitidos={[ROLES.ADMINISTRADOR, ROLES.VENDEDOR, ROLES.CLIENTE]} />}>
+        <Route element={<ProtectedRoute rolesPermitidos={[ROLES.ADMINISTRADOR, ROLES.CLIENTE]} />}>
           <Route path="/mis-compras" element={<MisCompras />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/mi-perfil" element={<MiPerfil />} />

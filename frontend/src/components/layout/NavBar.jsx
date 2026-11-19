@@ -21,28 +21,34 @@ export default function NavBar() {
         <Navbar.Toggle aria-controls="glow-menu" />
         <Navbar.Collapse id="glow-menu">
           <Nav className="me-auto">
-            <Nav.Link as={NavLink} to="/">Inicio</Nav.Link>
-            <Nav.Link as={NavLink} to="/productos">Productos</Nav.Link>
-            <Nav.Link as={NavLink} to="/ofertas">Ofertas</Nav.Link>
-            <Nav.Link as={NavLink} to="/nosotros">Nosotros</Nav.Link>
-            <Nav.Link as={NavLink} to="/blog">Blog</Nav.Link>
-            <Nav.Link as={NavLink} to="/contacto">Contacto</Nav.Link>
+            {!esVendedor && <>
+              <Nav.Link as={NavLink} to="/">Inicio</Nav.Link>
+              <Nav.Link as={NavLink} to="/productos">Productos</Nav.Link>
+              <Nav.Link as={NavLink} to="/ofertas">Ofertas</Nav.Link>
+              <Nav.Link as={NavLink} to="/nosotros">Nosotros</Nav.Link>
+              <Nav.Link as={NavLink} to="/blog">Blog</Nav.Link>
+              <Nav.Link as={NavLink} to="/contacto">Contacto</Nav.Link>
+            </>}
+            {esVendedor && <>
+              <Nav.Link as={NavLink} to="/admin/productos">Productos</Nav.Link>
+              <Nav.Link as={NavLink} to="/admin/ordenes">Órdenes</Nav.Link>
+            </>}
             {(esAdmin || esVendedor) && <Nav.Link as={NavLink} to={esAdmin ? "/admin" : "/admin/productos"}>Administración</Nav.Link>}
           </Nav>
           <Nav>
-            <Nav.Link as={NavLink} to="/carrito" aria-label="Ver carrito">
+            {!esVendedor && <Nav.Link as={NavLink} to="/carrito" aria-label="Ver carrito">
               <i className="bi bi-cart3 me-1" /> Carrito {totalItems > 0 && <Badge bg="info">{totalItems}</Badge>}
-            </Nav.Link>
-            {usuario && <Nav.Link as={NavLink} to="/mis-compras">Mis compras</Nav.Link>}
+            </Nav.Link>}
+            {usuario && !esVendedor && <Nav.Link as={NavLink} to="/mis-compras">Mis compras</Nav.Link>}}
             {usuario ? (
               
             <NavDropdown title={usuario.nombre} align="end">
 
-              <NavDropdown.Item as={NavLink} to="/mi-perfil">
+              {!esVendedor && <NavDropdown.Item as={NavLink} to="/mi-perfil">
                 Mi perfil
-              </NavDropdown.Item>
+              </NavDropdown.Item>}
 
-              <NavDropdown.Divider />
+              {!esVendedor && <NavDropdown.Divider />}
 
               <NavDropdown.Item onClick={salir}>
                 Cerrar sesión
