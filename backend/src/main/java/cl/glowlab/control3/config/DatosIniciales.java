@@ -15,7 +15,10 @@ public class DatosIniciales {
             UsuarioRepository usuarios,PasswordEncoder encoder,
             @Value("${app.bootstrap.admin-email}") String adminEmail,
             @Value("${app.bootstrap.admin-password}") String adminPassword,
-            @Value("${app.bootstrap.admin-run}") String adminRun) {
+            @Value("${app.bootstrap.admin-run}") String adminRun,
+            @Value("${app.bootstrap.vendedor-email}") String vendedorEmail,
+            @Value("${app.bootstrap.vendedor-password}") String vendedorPassword,
+            @Value("${app.bootstrap.vendedor-run}") String vendedorRun) {
         return args->{
             String[] nombres={"Limpiadores","Sueros","Hidratantes","Protector Solar",
               "Exfoliantes","Mascarillas","Contorno de Ojos"};
@@ -45,6 +48,16 @@ public class DatosIniciales {
                 p.categoria=c.get((String)fila[6]);p.imagen=(String)fila[7];
                 p.ofertaTipo=(String)fila[8];p.descuentoPorcentaje=(Integer)fila[9];
                 productos.save(p);
+            }
+            if(!vendedorEmail.isBlank() && !vendedorPassword.isBlank()) {
+                if(vendedorPassword.length()<8) throw new IllegalArgumentException("VENDEDOR_PASSWORD debe tener al menos 8 caracteres.");
+                if(!usuarios.existsById(vendedorRun) && !usuarios.existsByCorreoIgnoreCase(vendedorEmail)){
+                    Usuario vendedor=new Usuario();vendedor.run=vendedorRun;vendedor.nombre="Vendedor";
+                    vendedor.apellidos="GlowLab";vendedor.correo=vendedorEmail.trim().toLowerCase(Locale.ROOT);
+                    vendedor.claveHash=encoder.encode(vendedorPassword);vendedor.rol=Rol.VENDEDOR;
+                    vendedor.estado="Activo";vendedor.direccion="Por configurar";
+                    usuarios.save(vendedor);
+                }
             }
             if(!adminEmail.isBlank() && !adminPassword.isBlank()){
                 if(adminPassword.length()<8)throw new IllegalArgumentException("ADMIN_PASSWORD debe tener al menos 8 caracteres.");

@@ -90,7 +90,9 @@ public class UsuariosService {
     @Transactional
     public Map<String,Object> editarPerfil(String correo,Datos d){
         Usuario u=usuarios.findByCorreoIgnoreCase(correo).orElseThrow(()->error(HttpStatus.NOT_FOUND,"Usuario no encontrado."));
-        Datos seguro=new Datos(u.run,d.nombre(),d.apellidos(),d.correo(),null,d.fechaNacimiento(),null,d.regionId(),d.comunaId(),d.direccion(),null);
+        Datos seguro=new Datos(u.run,d.nombre(),d.apellidos(),u.correo,null,
+            u.fechaNacimiento==null?null:u.fechaNacimiento.toString(),null,
+            u.regionId,u.comunaId,d.direccion(),null);
         return Vistas.usuario(usuarios.save(aplicar(u,seguro,false)));
     }
     @Transactional
