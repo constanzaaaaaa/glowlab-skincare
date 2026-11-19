@@ -3,8 +3,8 @@ package cl.glowlab.control3.security;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +20,13 @@ import org.springframework.web.cors.*;
 public class SecurityConfig {
     @Bean
     PasswordEncoder encoder(){return new BCryptPasswordEncoder();}
+    // El filtro JWT solo debe ejecutarse dentro de Spring Security, no dos veces.
+    @Bean
+    FilterRegistrationBean<JwtCookieFilter> noRegistrarDosVeces(JwtCookieFilter filtro) {
+        FilterRegistrationBean<JwtCookieFilter> registro=new FilterRegistrationBean<>(filtro);
+        registro.setEnabled(false);
+        return registro;
+    }
     @Bean
     CorsConfigurationSource corsConfigurationSource(@Value("${app.frontend-origin}") String origen){
         CorsConfiguration config=new CorsConfiguration();
