@@ -39,7 +39,7 @@ export default function NavBar() {
             {!esVendedor && <Nav.Link as={NavLink} to="/carrito" aria-label="Ver carrito">
               <i className="bi bi-cart3 me-1" /> Carrito {totalItems > 0 && <Badge bg="info">{totalItems}</Badge>}
             </Nav.Link>}
-            {usuario && !esVendedor && <Nav.Link as={NavLink} to="/mis-compras">Mis compras</Nav.Link>}}
+            {usuario && !esVendedor && <Nav.Link as={NavLink} to="/mis-compras">Mis compras</Nav.Link>}
             {usuario ? (
               
             <NavDropdown title={usuario.nombre} align="end">
