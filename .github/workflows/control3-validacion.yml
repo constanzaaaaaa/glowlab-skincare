@@ -58,3 +58,64 @@ jobs:
           name: reportes-control3-react
           path: frontend/coverage/
           if-no-files-found: warn
+
+  mysql-integracion:
+    name: Spring Boot y MySQL real - API y roles
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_DATABASE: glowlab
+          MYSQL_USER: glowlab
+          MYSQL_PASSWORD: ci-glowlab
+          MYSQL_ROOT_PASSWORD: ci-root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -pci-root"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=15
+    env:
+      DB_URL: jdbc:mysql://127.0.0.1:3306/glowlab
+      DB_USERNAME: glowlab
+      DB_PASSWORD: ci-glowlab
+      JWT_SECRET_BASE64: AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=
+      ADMIN_EMAIL: admin@gmail.com
+      ADMIN_PASSWORD: ClavePruebaSoloCI2026
+      VENDEDOR_EMAIL: vendedor@gmail.com
+      VENDEDOR_PASSWORD: ClaveVendedorSoloCI2026
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+      - name: Empaquetar API Spring
+        run: mvn -B -ntp -f backend/pom.xml -DskipTests package
+      - name: Iniciar API con MySQL y esperar respuesta
+        run: |
+          nohup java -jar backend/target/glowlab-backend-1.0.0.jar > /tmp/glowlab-control3.log 2>&1 &
+          echo $! > /tmp/glowlab-control3.pid
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:8080/api/v1/productos > /tmp/glowlab-catalogo.json; then
+              echo "Spring Boot y MySQL responden"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "No se pudo iniciar Spring Boot con MySQL"
+          cat /tmp/glowlab-control3.log
+          exit 1
+      - name: Probar CRUD, usuarios JWT, órdenes y stock en MySQL
+        run: python3 backend/scripts/smoke_mysql.py
+      - name: Guardar log de integración MySQL
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidencias-control3-mysql
+          path: /tmp/glowlab-control3.log
+          if-no-files-found: warn
