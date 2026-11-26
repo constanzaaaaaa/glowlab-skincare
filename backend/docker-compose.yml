@@ -1,0 +1,21 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: glowlab-control3-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: glowlab
+      MYSQL_USER: glowlab
+      MYSQL_PASSWORD: glowlab_dev
+      MYSQL_ROOT_PASSWORD: glowlab_root_dev
+    ports:
+      - "3306:3306"
+    volumes:
+      - glowlab_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+volumes:
+  glowlab_mysql:

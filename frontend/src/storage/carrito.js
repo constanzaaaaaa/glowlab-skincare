@@ -1,0 +1,148 @@
+// Carrito persistente en localStorage; conserva los contratos de carritoApi.
+import { obtenerColeccion, guardarColeccion } from "./persistencia";
+import { fallar, numeroEntero, sesionInterna } from "./helpers";
+import { obtenerProducto, listarProductos } from "../api/productosApi";
+import { api, MODO_API } from "../api/http";
+import { calcularTotalProducto, etiquetaOferta } from "../utils/format";
+import { validarDatosEntrega } from "../utils/validaciones";
+
+export async function obtenerCarrito() {
+  const productos = MODO_API ? await listarProductos() : obtenerColeccion("productos");
+  return obtenerColeccion("carrito").flatMap((item) => {
+    const producto = productos.find((p) => p.codigo === item.codigo);
+    return producto ? [{ codigo: item.codigo, cantidad: item.cantidad, producto }] : [];
+  });
+}
+
+export async function agregarItemCarrito(codigo, cantidad = 1) {
+  const producto = await obtenerProducto(codigo);
+  if (producto.estado !== "Activo") fallar("Producto no disponible.");
+  if (!numeroEntero(cantidad, 1)) fallar("La cantidad debe ser un entero positivo.");
+  const carrito = obtenerColeccion("carrito");
+  const item = carrito.find((i) => i.codigo === codigo);
+  const siguiente = (item?.cantidad || 0) + Number(cantidad);
+  if (siguiente > producto.stock) fallar("Solo hay " + producto.stock + " unidades disponibles.");
+  if (item) item.cantidad = siguiente;
+  else carrito.push({ codigo, cantidad: siguiente });
+  guardarColeccion("carrito", carrito);
+  return { codigo, cantidad: siguiente, producto };
+}
+
+export async function actualizarItemCarrito(codigo, cantidad) {
+  if (!numeroEntero(cantidad)) fallar("La cantidad debe ser un entero no negativo.");
+  const carrito = obtenerColeccion("carrito");
+  const item = carrito.find((i) => i.codigo === codigo);
+  if (!item) fallar("No existe ese producto en el carrito.");
+  if (Number(cantidad) === 0) {
+    guardarColeccion("carrito", carrito.filter((i) => i.codigo !== codigo));
+    return { eliminado: true };
+  }
+  const producto = await obtenerProducto(codigo);
+  if (Number(cantidad) > producto.stock) fallar("Solo hay " + producto.stock + " unidades disponibles.");
+  item.cantidad = Number(cantidad);
+  guardarColeccion("carrito", carrito);
+  return { codigo, cantidad: item.cantidad, producto };
+}
+
+export async function eliminarItemCarrito(codigo) {
+  guardarColeccion("carrito", obtenerColeccion("carrito").filter((i) => i.codigo !== codigo));
+}
+
+export async function vaciarCarritoApi() { guardarColeccion("carrito", []); }
+
+// Registra el pedido y conserva una copia de los datos de despacho al momento de confirmar.
+export async function finalizarCompraApi(datosEntrega) {
+  if (!MODO_API) {
+    const usuario = sesionInterna();
+    if (!usuario) fallar("Inicia sesión para confirmar la compra y guardar tu historial.");
+  }
+
+  const erroresEntrega = validarDatosEntrega(datosEntrega);
+  if (erroresEntrega.length) fallar(erroresEntrega.join("\n"));
+
+  const regiones = obtenerColeccion("regiones");
+  const comunas = obtenerColeccion("comunas");
+  const regionId = Number(datosEntrega.regionId);
+  const comunaId = Number(datosEntrega.comunaId);
+  const region = regiones.find((item) => item.id === regionId);
+  const comuna = comunas.find((item) => item.id === comunaId && item.regionId === regionId);
+  if (!region) fallar("La región de despacho seleccionada no existe.");
+  if (!comuna) fallar("La comuna de despacho no corresponde a la región seleccionada.");
+
+  const carrito = obtenerColeccion("carrito");
+  if (carrito.length === 0) fallar("El carrito está vacío.");
+
+  if (MODO_API) {
+    const pedido = await api("/boletas", {
+      method: "POST",
+      body: {
+        items: carrito.map(({ codigo, cantidad }) => ({ codigo, cantidad })),
+        entrega: {
+          ...datosEntrega,
+          regionId,
+          comunaId,
+          region: region.nombre,
+          comuna: comuna.nombre
+        }
+      }
+    });
+    guardarColeccion("carrito", []);
+    return { ...pedido, ok: true };
+  }
+
+  const usuario = sesionInterna();
+  const productos = obtenerColeccion("productos");
+  const detalles = carrito.map(({ codigo, cantidad }) => {
+    const producto = productos.find((p) => p.codigo === codigo);
+    if (!producto || producto.estado !== "Activo") fallar("Producto no disponible: " + codigo);
+    if (!numeroEntero(cantidad, 1) || Number(cantidad) > producto.stock) {
+      fallar("Stock insuficiente para " + producto.nombre);
+    }
+    const calculo = calcularTotalProducto(producto, cantidad);
+    return {
+      codigo, nombre: producto.nombre, cantidad: Number(cantidad),
+      precioUnitario: producto.precio, subtotal: calculo.subtotal,
+      oferta: etiquetaOferta(producto), descuento: calculo.ahorro
+    };
+  });
+
+  const pedidos = obtenerColeccion("pedidos");
+  const numero = pedidos.reduce((mayor, pedido) => {
+    const n = Number(String(pedido.id).replace(/^PED-/, ""));
+    return Number.isInteger(n) ? Math.max(mayor, n) : mayor;
+  }, 0) + 1;
+
+  const entrega = {
+    nombre: datosEntrega.nombre.trim(),
+    apellidos: datosEntrega.apellidos.trim(),
+    correo: datosEntrega.correo.trim().toLowerCase(),
+    telefono: datosEntrega.telefono.trim(),
+    direccion: datosEntrega.direccion.trim(),
+    departamento: String(datosEntrega.departamento || "").trim(),
+    referencia: String(datosEntrega.referencia || "").trim(),
+    regionId,
+    region: region.nombre,
+    comunaId,
+    comuna: comuna.nombre
+  };
+
+  const pedido = {
+    id: "PED-" + String(numero).padStart(5, "0"),
+    fecha: new Date().toISOString(),
+    clienteRun: usuario.run,
+    clienteNombre: usuario.nombre + " " + usuario.apellidos,
+    entrega,
+    items: detalles,
+    unidades: detalles.reduce((suma, item) => suma + item.cantidad, 0),
+    total: detalles.reduce((suma, item) => suma + item.subtotal, 0),
+    estado: "Pedido registrado"
+  };
+
+  guardarColeccion("pedidos", [...pedidos, pedido]);
+  guardarColeccion("productos", productos.map((producto) => {
+    const comprado = detalles.find((item) => item.codigo === producto.codigo);
+    return comprado ? { ...producto, stock: producto.stock - comprado.cantidad } : producto;
+  }));
+  guardarColeccion("carrito", []);
+  return { ...pedido, ok: true };
+}

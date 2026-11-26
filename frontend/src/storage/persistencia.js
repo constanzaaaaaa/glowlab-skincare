@@ -1,0 +1,129 @@
+// Persistencia simulada del documento 040: JavaScript + localStorage.
+// Los datos de esta versión React están separados de static/js/storage.js (Jinja).
+import { ROLES, CATEGORIAS, REGIONES, COMUNAS, PRODUCTOS, USUARIOS, NOTICIAS } from "../data/datosIniciales";
+
+export const CLAVES = Object.freeze({
+  roles: "glowlab_react_roles_v1",
+  categorias: "glowlab_react_categorias_v1",
+  regiones: "glowlab_react_regiones_v1",
+  comunas: "glowlab_react_comunas_v1",
+  productos: "glowlab_react_productos_v1",
+  usuarios: "glowlab_react_usuarios_v1",
+  blog: "glowlab_react_blog_v1",
+  carrito: "glowlab_react_carrito_v1",
+  pedidos: "glowlab_react_pedidos_v1",
+  contactos: "glowlab_react_contactos_v1",
+  sesion: "glowlab_react_sesion_v1"
+});
+
+const SEMILLAS = {
+  roles: ROLES, categorias: CATEGORIAS, regiones: REGIONES, comunas: COMUNAS,
+  productos: PRODUCTOS, usuarios: USUARIOS, blog: NOTICIAS, carrito: [], pedidos: [], contactos: []
+};
+export const EVENTO_DATOS = "glowlab:datos";
+
+function storage() {
+  if (typeof window === "undefined" || !window.localStorage) {
+    throw new Error("La demostración necesita un navegador con localStorage.");
+  }
+  return window.localStorage;
+}
+
+export function inicializarDatos() {
+  for (const [tipo, valores] of Object.entries(SEMILLAS)) {
+    if (storage().getItem(CLAVES[tipo]) === null) {
+      storage().setItem(CLAVES[tipo], JSON.stringify(valores));
+    }
+  }
+
+  // Amplía solo los catálogos territoriales ya guardados en el navegador.
+  // Conserva los identificadores previos y no modifica usuarios, compras ni productos.
+  for (const [tipo, catalogo] of [["regiones", REGIONES], ["comunas", COMUNAS]]) {
+    const guardados = JSON.parse(storage().getItem(CLAVES[tipo]));
+    if (!Array.isArray(guardados)) continue;
+    const ids = new Set(guardados.map((item) => item.id));
+    const faltantes = catalogo.filter((item) => !ids.has(item.id));
+    if (faltantes.length) storage().setItem(CLAVES[tipo], JSON.stringify([...guardados, ...faltantes]));
+  }
+
+  // Migración de datos antiguos: conserva precios, stock, usuarios y pedidos existentes.
+  // Solo completa los campos de ofertas que todavía no existían.
+  const productos = JSON.parse(storage().getItem(CLAVES.productos));
+  if (Array.isArray(productos) && productos.some((p) => p.ofertaTipo === undefined)) {
+    const actualizados = productos.map((p) => {
+      if (p.ofertaTipo !== undefined) return p;
+      const ejemplo = PRODUCTOS.find((semilla) => semilla.codigo === p.codigo && semilla.nombre === p.nombre);
+      return {
+        ...p,
+        ofertaTipo: ejemplo?.ofertaTipo || "ninguna",
+        descuentoPorcentaje: ejemplo?.descuentoPorcentaje || 0
+      };
+    });
+    storage().setItem(CLAVES.productos, JSON.stringify(actualizados));
+  }
+
+  // Completa los artículos de demostración existentes sin borrar datos personalizados.
+  // Los textos nuevos se agregan solo cuando el artículo aún no tiene esa sección.
+  const noticias = JSON.parse(storage().getItem(CLAVES.blog));
+  if (Array.isArray(noticias)) {
+    let cambioNoticias = false;
+    const noticiasActualizadas = noticias.map((noticia) => {
+      const plantilla = NOTICIAS.find((semilla) => semilla.id === noticia.id);
+      if (!plantilla) return noticia;
+      const copia = { ...noticia };
+      ["categoria", "lecturaMinutos", "secciones", "consejos", "conclusion"].forEach((campo) => {
+        if (copia[campo] === undefined && plantilla[campo] !== undefined) {
+          copia[campo] = plantilla[campo];
+          cambioNoticias = true;
+        }
+      });
+      return copia;
+    });
+    if (cambioNoticias) storage().setItem(CLAVES.blog, JSON.stringify(noticiasActualizadas));
+  }
+
+  // Actualiza únicamente el correo de demostración antiguo de Diego.
+  // No cambia contraseñas, RUN ni los correos que haya creado el usuario.
+  const usuarios = JSON.parse(storage().getItem(CLAVES.usuarios));
+  if (Array.isArray(usuarios) &&
+      usuarios.some((u) => u.run === "201113334" && u.correo === "diego@duoc.cl")) {
+    storage().setItem(CLAVES.usuarios, JSON.stringify(usuarios.map((u) =>
+      u.run === "201113334" && u.correo === "diego@duoc.cl"
+        ? { ...u, correo: "diego@duocuc.cl" } : u)));
+  }
+}
+
+export function obtenerColeccion(tipo) {
+  if (!Object.prototype.hasOwnProperty.call(SEMILLAS, tipo)) {
+    throw new Error("Colección desconocida: " + tipo);
+  }
+  inicializarDatos();
+  const datos = JSON.parse(storage().getItem(CLAVES[tipo]));
+  if (!Array.isArray(datos)) throw new Error("Datos inválidos en la colección " + tipo);
+  return datos;
+}
+
+export function guardarColeccion(tipo, datos) {
+  if (!Object.prototype.hasOwnProperty.call(SEMILLAS, tipo) || !Array.isArray(datos)) {
+    throw new Error("No se puede guardar la colección " + tipo);
+  }
+  storage().setItem(CLAVES[tipo], JSON.stringify(datos));
+  window.dispatchEvent(new CustomEvent(EVENTO_DATOS, { detail: { tipo } }));
+}
+
+export function obtenerRunSesion() {
+  const valor = storage().getItem(CLAVES.sesion);
+  if (!valor) return null;
+  try {
+    const run = JSON.parse(valor);
+    return typeof run === "string" ? run : null;
+  } catch {
+    return null;
+  }
+}
+
+export function guardarRunSesion(run) {
+  if (run) storage().setItem(CLAVES.sesion, JSON.stringify(run));
+  else storage().removeItem(CLAVES.sesion);
+  window.dispatchEvent(new CustomEvent(EVENTO_DATOS, { detail: { tipo: "sesion" } }));
+}

@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+glowlab_react.sqlite
+instance/
+.env
+node_modules/
+dist/
+coverage/
