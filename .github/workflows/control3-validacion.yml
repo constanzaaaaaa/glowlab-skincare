@@ -22,6 +22,15 @@ jobs:
           cache-dependency-path: backend/pom.xml
       - name: Ejecutar pruebas del backend con H2
         run: mvn -B -ntp -f backend/pom.xml clean verify
+      - name: Guardar resultados de Maven y JaCoCo
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reportes-control3-spring
+          path: |
+            backend/target/surefire-reports/
+            backend/target/site/jacoco/
+          if-no-files-found: warn
 
   frontend:
     name: React - instalación y build
@@ -39,3 +48,13 @@ jobs:
       - name: Verificar compilación de React
         working-directory: frontend
         run: npm run build
+      - name: Ejecutar Jasmine y Karma con ChromeHeadless y cobertura
+        working-directory: frontend
+        run: npm run test:coverage
+      - name: Guardar cobertura Karma
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reportes-control3-react
+          path: frontend/coverage/
+          if-no-files-found: warn
