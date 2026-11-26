@@ -119,3 +119,23 @@ jobs:
           name: evidencias-control3-mysql
           path: /tmp/glowlab-control3.log
           if-no-files-found: warn
+
+  entregables-codigo:
+    name: Generar 07 y 08 desde el commit real
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Crear ZIP de frontend y backend con archivos versionados
+        run: |
+          git archive --format=zip --prefix=frontend/ -o 07-Proyecto-frontend-comprimido.zip HEAD:frontend
+          git archive --format=zip --prefix=backend/ -o 08-Proyecto-backend-comprimido.zip HEAD:backend
+          unzip -t 07-Proyecto-frontend-comprimido.zip | tail -n 1
+          unzip -t 08-Proyecto-backend-comprimido.zip | tail -n 1
+      - name: Publicar código comprimido para entrega
+        uses: actions/upload-artifact@v4
+        with:
+          name: codigo-control3-07-08
+          path: |
+            07-Proyecto-frontend-comprimido.zip
+            08-Proyecto-backend-comprimido.zip
+          if-no-files-found: error
