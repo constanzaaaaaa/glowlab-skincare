@@ -128,4 +128,5 @@ La boleta registra productos y despacho, verifica el stock y guarda el total en 
 - **Verificado automáticamente:** compila React, compila Spring Boot, pasan 7 pruebas Java y pasan 10 pruebas Jasmine/Karma.
 - **Cobertura medida:** JaCoCo backend líneas 328/419 (78,3 %), ramas 116/271 (42,8 %); Karma frontend líneas instrumentadas 186/454 (41,0 %), ramas 104/358 (29,1 %). La medición React corresponde únicamente a los módulos incluidos en Karma, no a toda la aplicación.
 - **Reportes descargables:** pestaña Artifacts de https://github.com/constanzaaaaaa/glowlab-skincare/actions/runs/45862728133.
-- **Pendiente:** levantar MySQL real y validar integración en navegador con backend funcionando, añadir capturas reales, ERS/documentación final, manual con pantallazos y video. No afirmar que la comprobación H2 es evidencia de una ejecución MySQL local.
+- **MySQL 8.4 verificado en GitHub Actions:** prueba HTTP con Spring Boot real, CRUD, JWT, roles, boletas y stock: https://github.com/constanzaaaaaa/glowlab-skincare/actions/runs/45863250203. El test está en backend/scripts/smoke_mysql.py.
+- **Pendiente:** comprobar la integración en el navegador React del computador del equipo, capturar Swagger y pantallas reales, completar documentación con evidencias y grabar videos. El MySQL de GitHub Actions es efímero y distinto al entorno local del equipo.

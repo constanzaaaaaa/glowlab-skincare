@@ -43,7 +43,7 @@ Fuentes: **100 CONTROL 3 - Enunciado (con la rúbrica)** y **101 CONTROL 3 - Ane
 
 La ejecución https://github.com/constanzaaaaaa/glowlab-skincare/actions/runs/45862728133 terminó correctamente: Java 21/Spring Boot con **7 pruebas aprobadas**, React compilado y **10 pruebas Jasmine/Karma aprobadas**. Cobertura JaCoCo: líneas 78,3 % (328/419) y ramas 42,8 % (116/271); Karma (módulos instrumentados): líneas 41,0 % (186/454) y ramas 29,1 % (104/358). Los informes originales se encuentran en los artifacts del workflow.
 
-**Esto verifica compilación y pruebas automatizadas, pero no sustituye la ejecución de MySQL y React en navegador real.**
+**Además está verificada la conexión a MySQL 8.4 en CI:** https://github.com/constanzaaaaaa/glowlab-skincare/actions/runs/45863250203. La prueba http://localhost:8080/api/v1 a través de backend/scripts/smoke_mysql.py comprueba CRUD, JWT, tres roles, pedidos y stock contra MySQL real en una instancia efímera del workflow. **Aún falta la demostración de React y MySQL en el navegador del equipo**, con capturas auténticas para la documentación.
 
 ## Entregables de la rúbrica aún por terminar y evidenciar
 
