@@ -39,6 +39,12 @@ Fuentes: **100 CONTROL 3 - Enunciado (con la rúbrica)** y **101 CONTROL 3 - Ane
 - `frontend/src/App.jsx`: rutas protegidas, evitando dashboard y formularios administrativos para vendedor.
 - `backend/src/test`: pruebas unitarias JWT y prueba de integración REST con H2.
 
+## Validaciones automáticas verificadas el 26-11-2026
+
+La ejecución https://github.com/constanzaaaaaa/glowlab-skincare/actions/runs/45862728133 terminó correctamente: Java 21/Spring Boot con **7 pruebas aprobadas**, React compilado y **10 pruebas Jasmine/Karma aprobadas**. Cobertura JaCoCo: líneas 78,3 % (328/419) y ramas 42,8 % (116/271); Karma (módulos instrumentados): líneas 41,0 % (186/454) y ramas 29,1 % (104/358). Los informes originales se encuentran en los artifacts del workflow.
+
+**Esto verifica compilación y pruebas automatizadas, pero no sustituye la ejecución de MySQL y React en navegador real.**
+
 ## Entregables de la rúbrica aún por terminar y evidenciar
 
 - `01-README.txt` con integrantes, RUN, asignatura y enlaces reales de GitHub frontend y backend.

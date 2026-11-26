@@ -62,7 +62,8 @@ npm.cmd run dev
 
 La terminal debe estar dentro de `frontend`. La página queda en `http://localhost:5173`. Es necesario reiniciar Vite después de modificar `.env`.
 
-**Sin `VITE_API_BASE_URL`**, React continúa en modo local del Control 2. Para mostrar el Control 3 se debe configurar el backend.
+**En esta rama React usa Spring Boot de forma predeterminada** en http://localhost:8080.
+Para cambiar la URL del backend configura VITE_API_BASE_URL en frontend/.env. El modo local solo se activa si se configura expresamente VITE_API_BASE_URL sin valor; **no utilizar el modo local como evidencia del Control 3**.
 
 ## 5. Ejecutar pruebas
 
@@ -71,9 +72,9 @@ cd backend
 mvn test
 ```
 
-Las pruebas Spring Boot del perfil `test` utilizan H2 en memoria, sin necesitar Docker. Se incluyen pruebas de JWT y una prueba REST de registro, sesión y acceso. **No hay un resultado aprobado verificado todavía**: ejecútalas en tu computador.
+Las pruebas Spring Boot del perfil `test` utilizan H2 en memoria, sin necesitar Docker. Hay **7 pruebas Java aprobadas (3 JWT + 4 de integración REST)** en GitHub Actions el 26-11-2026: https://github.com/constanzaaaaaa/glowlab-skincare/actions/runs/45862728133. Se deben repetir al probar cambios nuevos.
 
-En React, desde `frontend`:
+En React, desde `frontend` (la ejecución automática en GitHub verificó **10 pruebas aprobadas** con ChromeHeadless):
 
 ```powershell
 npm.cmd test
@@ -122,6 +123,9 @@ Los repositorios JPA se encuentran en `repo/`, la lógica de negocio en `service
 
 La boleta registra productos y despacho, verifica el stock y guarda el total en la base de datos. **No efectúa cobros bancarios ni envíos reales**, porque la pauta exige API, BD y seguridad, no pasarela de pago.
 
-## Estado de implementación
+## Estado de implementación (26-11-2026)
 
-La estructura, endpoints y pruebas están incorporados al repositorio. Falta **verificar compilación, tests y conexión real con MySQL** en un equipo que tenga Maven y Docker. Después deberán realizarse las evidencias con capturas, ERS, cobertura, documentación de APIs, manual y video requeridos por la rúbrica.
+- **Verificado automáticamente:** compila React, compila Spring Boot, pasan 7 pruebas Java y pasan 10 pruebas Jasmine/Karma.
+- **Cobertura medida:** JaCoCo backend líneas 328/419 (78,3 %), ramas 116/271 (42,8 %); Karma frontend líneas instrumentadas 186/454 (41,0 %), ramas 104/358 (29,1 %). La medición React corresponde únicamente a los módulos incluidos en Karma, no a toda la aplicación.
+- **Reportes descargables:** pestaña Artifacts de https://github.com/constanzaaaaaa/glowlab-skincare/actions/runs/45862728133.
+- **Pendiente:** levantar MySQL real y validar integración en navegador con backend funcionando, añadir capturas reales, ERS/documentación final, manual con pantallazos y video. No afirmar que la comprobación H2 es evidencia de una ejecución MySQL local.

@@ -1,6 +1,7 @@
 // Integración REST del Control 3. En la rama anterior se conservó localStorage.
-// Vite selecciona el backend al definir VITE_API_BASE_URL=http://localhost:8080.
-const BASE = (import.meta.env?.VITE_API_BASE_URL || "").replace(/\/$/, "");
+// En Control 3 la integración con Spring Boot viene habilitada de forma predeterminada.
+// Para utilizar otro servidor, establece VITE_API_BASE_URL; el modo local queda como legado explícito.
+const BASE = (import.meta.env?.VITE_API_BASE_URL ?? "http://localhost:8080").replace(/\/$/, "");
 export const MODO_API = Boolean(BASE);
 
 async function peticion(ruta, opciones = {}) {
