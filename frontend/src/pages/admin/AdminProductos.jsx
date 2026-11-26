@@ -32,8 +32,9 @@ export default function AdminProductos() {
       { campo: "stock", titulo: "Stock" }, { campo: "estado", titulo: "Estado" },
       { campo: "ofertaTipo", titulo: "Oferta", render: (p) => etiquetaOferta(p) || "Sin oferta" }
     ]} acciones={esAdmin ? (p) => <>
+      <Button as={Link} to={"/admin/productos/detalle/" + p.codigo} size="sm" variant="outline-secondary" className="me-2">Ver detalle</Button>
       <Button as={Link} to={"/admin/productos/editar/" + p.codigo} size="sm" variant="outline-primary" className="me-2">Editar</Button>
       <Button size="sm" variant="outline-danger" onClick={() => borrar(p.codigo)}>Eliminar</Button>
-    </> : undefined} />
+    </> : (p) => <Button as={Link} to={"/admin/productos/detalle/" + p.codigo} size="sm" variant="outline-secondary">Ver detalle</Button>} />
   </>;
 }

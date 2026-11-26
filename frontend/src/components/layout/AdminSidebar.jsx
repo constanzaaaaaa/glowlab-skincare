@@ -12,7 +12,7 @@ export default function AdminSidebar() {
         <Nav.Link as={NavLink} to="/admin/productos">Productos</Nav.Link>
         <Nav.Link as={NavLink} to="/admin/ordenes">Órdenes</Nav.Link>
         {esAdmin && <Nav.Link as={NavLink} to="/admin/usuarios">Usuarios</Nav.Link>}
-        <Nav.Link as={NavLink} to="/">Volver a tienda</Nav.Link>
+        {esAdmin && <Nav.Link as={NavLink} to="/">Volver a tienda</Nav.Link>}
       </Nav>
     </aside>
   );

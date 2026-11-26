@@ -6,7 +6,7 @@ import { actualizarUsuario, crearUsuario, obtenerUsuario } from "../../api/usuar
 import { mostrarError, mostrarErrores, mostrarExito, mostrarInfo } from "../../utils/swal";
 import { validarCorreo, validarDatosUsuario } from "../../utils/validaciones";
 
-const INICIAL = { run: "", nombre: "", apellidos: "", correo: "", fechaNacimiento: "", rolId: 3, regionId: "", comunaId: "", direccion: "", estado: "Activo" };
+const INICIAL = { run: "", nombre: "", apellidos: "", correo: "", fechaNacimiento: "", rolId: 3, regionId: "", comunaId: "", direccion: "", estado: "Activo", password: "" };
 
 export default function AdminUsuarioForm() {
   const { run } = useParams();
@@ -45,7 +45,7 @@ export default function AdminUsuarioForm() {
 
   async function guardar(e) {
     e.preventDefault();
-    const errores = validarDatosUsuario(datos, { edicion: Boolean(run), administrador: true, omitirPassword: true });
+    const errores = validarDatosUsuario(datos, { edicion: Boolean(run), administrador: true, omitirPassword: Boolean(run) });
     if (errores.length) { await mostrarErrores(errores); return; }
     if (!comunas.some((c) => c.id === Number(datos.comunaId))) {
       await mostrarError("La comuna elegida no corresponde a la región seleccionada.");
@@ -104,6 +104,11 @@ export default function AdminUsuarioForm() {
               <option>Activo</option><option>Inactivo</option>
             </Form.Select>
           </Col>
+          {!run && <Col md={12}>
+            <Form.Label htmlFor="usuario-password">Contraseña inicial (8 a 72 caracteres)</Form.Label>
+            <Form.Control id="usuario-password" type="password" required minLength={8} maxLength={72}
+              autoComplete="new-password" value={datos.password || ""} onChange={cambiar("password")} />
+          </Col>}
           <Col md={12}>
             <div className="border-top pt-3 mt-2">
               <Form.Label className="fw-semibold">Contraseña</Form.Label>

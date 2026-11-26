@@ -78,6 +78,8 @@ public class UsuariosService {
     public Map<String,Object> crearAdmin(Datos d){
         String run=validarRun(d.run());
         if(usuarios.existsById(run))throw error(HttpStatus.CONFLICT,"RUN ya registrado.");
+        if(d.password()==null || d.password().isBlank())
+            throw error(HttpStatus.BAD_REQUEST,"Indica una contraseña inicial para la nueva cuenta.");
         Usuario u=new Usuario();u.run=run;
         return Vistas.usuario(usuarios.save(aplicar(u,d,true)));
     }

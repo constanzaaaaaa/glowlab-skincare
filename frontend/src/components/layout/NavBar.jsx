@@ -17,7 +17,7 @@ export default function NavBar() {
   return (
     <Navbar expand="lg" className="glow-navbar sticky-top" collapseOnSelect>
       <Container>
-        <Navbar.Brand as={NavLink} to="/" className="glow-brand">GLOWLAB Skincare</Navbar.Brand>
+        <Navbar.Brand as={NavLink} to={esVendedor ? "/admin/productos" : "/"} className="glow-brand">GLOWLAB Skincare</Navbar.Brand>
         <Navbar.Toggle aria-controls="glow-menu" />
         <Navbar.Collapse id="glow-menu">
           <Nav className="me-auto">
@@ -33,7 +33,7 @@ export default function NavBar() {
               <Nav.Link as={NavLink} to="/admin/productos">Productos</Nav.Link>
               <Nav.Link as={NavLink} to="/admin/ordenes">Órdenes</Nav.Link>
             </>}
-            {(esAdmin || esVendedor) && <Nav.Link as={NavLink} to={esAdmin ? "/admin" : "/admin/productos"}>Administración</Nav.Link>}
+            {esAdmin && <Nav.Link as={NavLink} to="/admin">Administración</Nav.Link>}
           </Nav>
           <Nav>
             {!esVendedor && <Nav.Link as={NavLink} to="/carrito" aria-label="Ver carrito">
